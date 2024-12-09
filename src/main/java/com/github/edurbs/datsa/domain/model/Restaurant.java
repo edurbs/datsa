@@ -12,9 +12,10 @@ public class Restaurant {
     @Id
     private Long id;
 
+    @Column
     private String name;
 
-    @Column(name="shipping_fee")
+    @Column
     private BigDecimal shippingFee;
 
     public Long getId() {
