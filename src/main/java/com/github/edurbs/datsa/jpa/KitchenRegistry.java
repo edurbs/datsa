@@ -21,7 +21,16 @@ public class KitchenRegistry {
     }
 
     @Transactional
-    public Kitchen add(Kitchen kitchen){
+    public Kitchen save(Kitchen kitchen){
         return manager.merge(kitchen);
+    }
+
+    public Kitchen findById(Long id) {
+        return manager.find(Kitchen.class, id);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        manager.remove(findById(id));
     }
 }

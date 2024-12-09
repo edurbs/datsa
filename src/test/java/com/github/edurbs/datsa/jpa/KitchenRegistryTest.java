@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder.In;
+
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ class KitchenRegistryTest {
     @Transactional
     void testAdd() {
         var kitchen1 = Instancio.create(Kitchen.class);
-        var kitchenAdded = kitchenRegistry.add(kitchen1);
+        var kitchenAdded = kitchenRegistry.save(kitchen1);
         kitchen1.setId(kitchenAdded.getId());
         assertThat(kitchenAdded).isEqualTo(kitchen1);
     }
@@ -32,9 +34,34 @@ class KitchenRegistryTest {
     void testFindAll() {
         Instancio.stream(Kitchen.class)
                 .limit(10)
-                .forEach(kitchenRegistry::add);
+                .forEach(kitchenRegistry::save);
         List<Kitchen> kitchens = kitchenRegistry.findAll();
         assertThat(kitchens).hasSize(10);
+    }
 
+    @Test
+    void testFindById() {
+        var kitchen1 = Instancio.create(Kitchen.class);
+        var kitchenAdded = kitchenRegistry.save(kitchen1);
+        assertThat(kitchenRegistry.findById(kitchenAdded.getId())).isEqualTo(kitchenAdded);
+    }
+
+    @Test
+    void testChangeEntity(){
+        var kitchen1 = Instancio.create(Kitchen.class);
+        var kitchenAdded = kitchenRegistry.save(kitchen1);
+        kitchenAdded.setName("new name");
+        kitchenRegistry.save(kitchenAdded);
+        assertThat(kitchenRegistry.findById(kitchenAdded.getId()).getName()).isEqualTo("new name");
+    }
+
+    @Test
+    void testDelete(){
+        var kitchen1 = Instancio.create(Kitchen.class);
+        var kitchenAdded = kitchenRegistry.save(kitchen1);
+        var kitchen2 = Instancio.create(Kitchen.class);
+        kitchenRegistry.save(kitchen2);
+        kitchenRegistry.delete(kitchenAdded.getId());
+        assertThat(kitchenRegistry.findById(kitchenAdded.getId())).isNull();
     }
 }
