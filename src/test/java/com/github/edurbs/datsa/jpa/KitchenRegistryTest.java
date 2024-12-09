@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder.In;
-
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +45,7 @@ class KitchenRegistryTest {
     }
 
     @Test
-    void testChangeEntity(){
+    void testChangeEntity() {
         var kitchen1 = Instancio.create(Kitchen.class);
         var kitchenAdded = kitchenRegistry.save(kitchen1);
         kitchenAdded.setName("new name");
@@ -56,7 +54,7 @@ class KitchenRegistryTest {
     }
 
     @Test
-    void testDelete(){
+    void testDelete() {
         var kitchen1 = Instancio.create(Kitchen.class);
         var kitchenAdded = kitchenRegistry.save(kitchen1);
         var kitchen2 = Instancio.create(Kitchen.class);

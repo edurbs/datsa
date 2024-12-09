@@ -26,5 +26,5 @@ public class Restaurant {
 
     @Column
     private BigDecimal shippingFee;
-    
+
 }
