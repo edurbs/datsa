@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.model.Kitchen;
+import com.github.edurbs.datsa.domain.repository.KitchenRepository;
 import com.github.edurbs.datsa.domain.service.KitchenRegistryService;
 
 @WebMvcTest(KitchenController.class)

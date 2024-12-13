@@ -5,15 +5,21 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 
+import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.model.Kitchen;
+import com.github.edurbs.datsa.domain.repository.KitchenRepository;
 
 @SpringBootTest
 class KitchenRegistryServiceTest {
@@ -21,59 +27,63 @@ class KitchenRegistryServiceTest {
     @Autowired
     private KitchenRegistryService kitchenRegistryService;
 
+    @MockBean
+    private KitchenRepository kitchenRepository;
+
+    @Mock
+    private Kitchen kitchen = Instancio.create(Kitchen.class);
+
     @Test
-    @Transactional
-    void shouldAddValidKitchen() {
-        var kitchen1 = Instancio.create(Kitchen.class);
-        var kitchenAdded = kitchenRegistryService.save(kitchen1);
-        kitchen1.setId(kitchenAdded.getId());
-        assertThat(kitchenAdded).isEqualTo(kitchen1);
+    void whenAddValidKitchen_thenReturnKitchen() {
+
+        Mockito.when(kitchenRepository.save(Mockito.any(Kitchen.class))).thenReturn(kitchen);
+        var kitchenAdded = kitchenRegistryService.save(kitchen);
+        assertThat(kitchenAdded).isEqualTo(kitchen);
     }
 
     @Test
-    @Transactional
-    void shouldFindAll() {
-        Instancio.stream(Kitchen.class)
-                .limit(10)
-                .forEach(kitchenRegistryService::save);
+    void whenGetAll_thenReturnKitchens() {
+
+        Mockito.when(kitchenRepository.findAll())
+                .thenReturn(Instancio.ofList(Kitchen.class).size(10).create());
         List<Kitchen> kitchens = kitchenRegistryService.getAll();
-        assertThat(kitchens).hasSizeGreaterThan(0);
+        assertThat(kitchens).hasSize(10);
     }
 
     @Test
-    void shouldFindByIdValidKitchen() {
-        var kitchen1 = Instancio.create(Kitchen.class);
-        var kitchenAdded = kitchenRegistryService.save(kitchen1);
-        assertThat(kitchenRegistryService.getById(kitchenAdded.getId()))
-                .isEqualTo(kitchenAdded);
+    void whenGetValidKitchenId_thenReturnKitchen() {
+        Mockito.when(kitchenRepository.findById(1L)).thenReturn(Optional.of(kitchen));
+        assertThat(kitchenRegistryService.getById(1L))
+                .isEqualTo(kitchen);
     }
 
     @Test
-    void shouldChangeNameValidKitchen() {
-        var kitchen1 = Instancio.create(Kitchen.class);
-        var kitchenAdded = kitchenRegistryService.save(kitchen1);
-        String name = "new name";
-        kitchenAdded.setName(name);
-        kitchenRegistryService.save(kitchenAdded);
-        assertThat(kitchenRegistryService.getById(kitchenAdded.getId()).getName())
-                .isEqualTo(name);
-    }
-
-    @Test
-    void shouldDeleteValidKitchen() {
-        var kitchen1 = Instancio.create(Kitchen.class);
-        var kitchenAdded = kitchenRegistryService.save(kitchen1);
-
-        kitchenRegistryService.remove(kitchenAdded.getId());
-        var id = kitchenAdded.getId();
+    void whenGetInvalidKitchenId_thenThrowsModelNotFoundException() {
+        Mockito.when(kitchenRepository.findById(999L)).thenReturn(Optional.empty());
         assertThatExceptionOfType(ModelNotFoundException.class)
-                .isThrownBy(() -> kitchenRegistryService.getById(id));
+                .isThrownBy(() -> kitchenRegistryService.getById(999L));
+    }
 
+
+    @Test
+    void whenDeleteValidKitchen_thenReturnsNothing() {
+        Mockito.when(kitchenRepository.existsById(1L)).thenReturn(true);
+        kitchenRegistryService.remove(1L);
+        Mockito.verify(kitchenRepository).deleteById(1L);
     }
 
     @Test
-    void shouldThrowsWhenDeleteInvalidKitchen(){
+    void WhenDeleteInvalidKitchen_thenThrowsModelNotFoundException() {
+        Mockito.when(kitchenRepository.existsById(1L)).thenReturn(false);
         assertThrows(ModelNotFoundException.class, () -> kitchenRegistryService.remove(Long.MAX_VALUE));
 
+    }
+
+    @Test
+    void whenDeleteModelInUse_thenThrowsModelInUseException() {
+        Mockito.when(kitchenRepository.existsById(1L)).thenReturn(true);
+        Mockito.doThrow(new DataIntegrityViolationException("msg")).when(kitchenRepository).deleteById(1L);
+        assertThatExceptionOfType(ModelInUseException.class)
+                .isThrownBy(() -> kitchenRegistryService.remove(1L));
     }
 }
