@@ -28,27 +28,25 @@ public class KitchenRegistryService {
 
     public Kitchen getById(Long id) {
         return kitchenRepository.findById(id)
-                .orElseThrow(ModelNotFoundException::new);
-
+                .orElseThrow(() -> new ModelNotFoundException("Kitchen id %d does not exists".formatted(id)));
     }
 
     @Transactional
-    public void remove(Long id){
-        if(exists(id)){
+    public void remove(Long id) {
+        if (exists(id)) {
             try {
                 kitchenRepository.deleteById(id);
                 kitchenRepository.flush();
             } catch (DataIntegrityViolationException e) {
-                throw new ModelInUseException();
+                throw new ModelInUseException("Kitchen id %d in use".formatted(id));
             }
-        }else{
-            throw new ModelNotFoundException();
+        } else {
+            throw new ModelNotFoundException("Kitchen id %d does not exists".formatted(id));
         }
     }
 
-    private boolean exists(Long id){
+    private boolean exists(Long id) {
         return kitchenRepository.existsById(id);
     }
-
 
 }

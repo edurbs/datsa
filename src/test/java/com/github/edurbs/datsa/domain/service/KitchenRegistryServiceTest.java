@@ -64,7 +64,6 @@ class KitchenRegistryServiceTest {
                 .isThrownBy(() -> kitchenRegistryService.getById(999L));
     }
 
-
     @Test
     void whenDeleteValidKitchen_thenReturnsNothing() {
         Mockito.when(kitchenRepository.existsById(1L)).thenReturn(true);
@@ -73,10 +72,17 @@ class KitchenRegistryServiceTest {
     }
 
     @Test
-    void WhenDeleteInvalidKitchen_thenThrowsModelNotFoundException() {
+    void whenDeleteInvalidKitchen_thenThrowsModelNotFoundException() {
         Mockito.when(kitchenRepository.existsById(1L)).thenReturn(false);
         assertThrows(ModelNotFoundException.class, () -> kitchenRegistryService.remove(Long.MAX_VALUE));
 
+    }
+
+    @Test
+    void whenDeleteInvalidKitchen_thenThrowsModelNotFoundExceptionWithMessage() {
+        Mockito.when(kitchenRepository.existsById(1L)).thenReturn(false);
+        assertThrows(ModelNotFoundException.class, () -> kitchenRegistryService.remove(1L),
+                "Kitchen id 1 does not exists");
     }
 
     @Test

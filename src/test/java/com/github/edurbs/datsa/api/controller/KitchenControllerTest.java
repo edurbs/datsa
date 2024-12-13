@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.model.Kitchen;
-import com.github.edurbs.datsa.domain.repository.KitchenRepository;
 import com.github.edurbs.datsa.domain.service.KitchenRegistryService;
 
 @WebMvcTest(KitchenController.class)
@@ -60,7 +59,7 @@ class KitchenControllerTest {
     void whenGetValidKitchenId_thenStatus200() throws Exception {
         Mockito.when(kitchenRegistryService.getById(1L)).thenReturn(Instancio.create(Kitchen.class));
 
-        mockMvc.perform(MockMvcRequestBuilders.get(KITCHEN_URL+"/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get(KITCHEN_URL + "/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -68,7 +67,7 @@ class KitchenControllerTest {
     void whenGetInvalidKitchenId_thenStatus404() throws Exception {
         Mockito.when(kitchenRegistryService.getById(999L)).thenThrow(new ModelNotFoundException());
 
-        mockMvc.perform(MockMvcRequestBuilders.get(KITCHEN_URL+"/999"))
+        mockMvc.perform(MockMvcRequestBuilders.get(KITCHEN_URL + "/999"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
@@ -101,13 +100,12 @@ class KitchenControllerTest {
         Mockito.when(kitchenRegistryService.save(Mockito.any(Kitchen.class))).thenReturn(kitchenOriginal);
 
         // when
-        mockMvc.perform(MockMvcRequestBuilders.put(KITCHEN_URL+"/"+kitchenOriginal.getId())
+        mockMvc.perform(MockMvcRequestBuilders.put(KITCHEN_URL + "/" + kitchenOriginal.getId())
                 .content("""
-                    {
-                        "name":"%s"
-                    }
-                    """.formatted(kitchenUpdated.getName())
-                ).contentType("application/json"))
+                        {
+                            "name":"%s"
+                        }
+                        """.formatted(kitchenUpdated.getName())).contentType("application/json"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         // then
@@ -121,20 +119,19 @@ class KitchenControllerTest {
     @Test
     void whenAlterInvalidKitchen_thenStatus404() throws Exception {
         Mockito.when(kitchenRegistryService.getById(999L)).thenThrow(new ModelNotFoundException());
-        mockMvc.perform(MockMvcRequestBuilders.put(KITCHEN_URL+"/999")
+        mockMvc.perform(MockMvcRequestBuilders.put(KITCHEN_URL + "/999")
                 .content("""
-                    {
-                        "name":"%s"
-                    }
-                    """.formatted("new name")
-                ).contentType("application/json"))
+                        {
+                            "name":"%s"
+                        }
+                        """.formatted("new name")).contentType("application/json"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
     void whenDeleteValidKitchen_thenStatus200() throws Exception {
         Mockito.doNothing().when(kitchenRegistryService).remove(1L);
-        mockMvc.perform(MockMvcRequestBuilders.delete(KITCHEN_URL+"/1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete(KITCHEN_URL + "/1"))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
         testRemoveArgument();
     }
@@ -142,7 +139,7 @@ class KitchenControllerTest {
     @Test
     void whenDeleteInvalidKitchen_thenStatus404() throws Exception {
         Mockito.doThrow(new ModelNotFoundException()).when(kitchenRegistryService).remove(1L);
-        mockMvc.perform(MockMvcRequestBuilders.delete(KITCHEN_URL+"/1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete(KITCHEN_URL + "/1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
         testRemoveArgument();
     }
@@ -150,7 +147,7 @@ class KitchenControllerTest {
     @Test
     void whenDeleteModelInUse_thenStatus409() throws Exception {
         Mockito.doThrow(new ModelInUseException()).when(kitchenRegistryService).remove(1L);
-        mockMvc.perform(MockMvcRequestBuilders.delete(KITCHEN_URL+"/1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete(KITCHEN_URL + "/1"))
                 .andExpect(MockMvcResultMatchers.status().isConflict());
         testRemoveArgument();
     }
@@ -160,6 +157,5 @@ class KitchenControllerTest {
         Mockito.verify(kitchenRegistryService).remove(idCaptor.capture());
         assertEquals(1L, idCaptor.getValue());
     }
-
 
 }
