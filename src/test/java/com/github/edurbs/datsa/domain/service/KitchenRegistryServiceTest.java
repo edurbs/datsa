@@ -74,7 +74,7 @@ class KitchenRegistryServiceTest {
     @Test
     void whenDeleteInvalidKitchen_thenThrowsModelNotFoundException() {
         Mockito.when(kitchenRepository.existsById(1L)).thenReturn(false);
-        assertThrows(ModelNotFoundException.class, () -> kitchenRegistryService.remove(Long.MAX_VALUE));
+        assertThrows(ModelNotFoundException.class, () -> kitchenRegistryService.remove(1L));
 
     }
 
