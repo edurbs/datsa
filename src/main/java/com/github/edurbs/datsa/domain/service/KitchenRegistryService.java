@@ -1,12 +1,13 @@
 package com.github.edurbs.datsa.domain.service;
 
-import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.model.Kitchen;
 import com.github.edurbs.datsa.domain.repository.KitchenRepository;
@@ -34,8 +35,12 @@ public class KitchenRegistryService {
     @Transactional
     public void remove(Long id){
         if(exists(id)){
-            kitchenRepository.deleteById(id);
-            kitchenRepository.flush();
+            try {
+                kitchenRepository.deleteById(id);
+                kitchenRepository.flush();
+            } catch (DataIntegrityViolationException e) {
+                throw new ModelInUseException();
+            }
         }else{
             throw new ModelNotFoundException();
         }

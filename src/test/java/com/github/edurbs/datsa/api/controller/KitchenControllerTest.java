@@ -8,17 +8,15 @@ import org.hamcrest.Matchers;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.model.Kitchen;
 import com.github.edurbs.datsa.domain.service.KitchenRegistryService;
@@ -131,4 +129,36 @@ class KitchenControllerTest {
                 ).contentType("application/json"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
+
+    @Test
+    void whenDeleteValidKitchen_thenStatus200() throws Exception {
+        Mockito.doNothing().when(kitchenRegistryService).remove(1L);
+        mockMvc.perform(MockMvcRequestBuilders.delete(KITCHEN_URL+"/1"))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+        testRemoveArgument();
+    }
+
+    @Test
+    void whenDeleteInvalidKitchen_thenStatus404() throws Exception {
+        Mockito.doThrow(new ModelNotFoundException()).when(kitchenRegistryService).remove(1L);
+        mockMvc.perform(MockMvcRequestBuilders.delete(KITCHEN_URL+"/1"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+        testRemoveArgument();
+    }
+
+    @Test
+    void whenDeleteModelInUse_thenStatus409() throws Exception {
+        Mockito.doThrow(new ModelInUseException()).when(kitchenRegistryService).remove(1L);
+        mockMvc.perform(MockMvcRequestBuilders.delete(KITCHEN_URL+"/1"))
+                .andExpect(MockMvcResultMatchers.status().isConflict());
+        testRemoveArgument();
+    }
+
+    private void testRemoveArgument() {
+        ArgumentCaptor<Long> idCaptor = ArgumentCaptor.forClass(Long.class);
+        Mockito.verify(kitchenRegistryService).remove(idCaptor.capture());
+        assertEquals(1L, idCaptor.getValue());
+    }
+
+
 }
