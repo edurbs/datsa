@@ -36,7 +36,7 @@ class KitchenControllerTest {
 
     @Test
     void whenGetInvalidUrl_thenStatus404() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(KITCHEN_URL))
+        mockMvc.perform(MockMvcRequestBuilders.get("/invalid"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
 
     }
@@ -117,5 +117,18 @@ class KitchenControllerTest {
         var alteredKitchen = kitchenCaptor.getValue();
         assertEquals(kitchenUpdated.getName(), alteredKitchen.getName());
         assertEquals(kitchenOriginal.getId(), alteredKitchen.getId());
+    }
+
+    @Test
+    void whenAlterInvalidKitchen_thenStatus404() throws Exception {
+        Mockito.when(kitchenRegistryService.getById(999L)).thenThrow(new ModelNotFoundException());
+        mockMvc.perform(MockMvcRequestBuilders.put(KITCHEN_URL+"/999")
+                .content("""
+                    {
+                        "name":"%s"
+                    }
+                    """.formatted("new name")
+                ).contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }

@@ -3,6 +3,7 @@ package com.github.edurbs.datsa.api.controller;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,7 @@ public class KitchenController {
         try {
             return ResponseEntity.ok(kitchenRegistryService.getById(kitchenId));
         } catch (ModelNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -52,11 +53,15 @@ public class KitchenController {
 
     @PutMapping("/{kitchenId}")
     public ResponseEntity<Kitchen> alter(@PathVariable Long kitchenId, @RequestBody Kitchen kitchen) {
-        var alteredKitchen = kitchenRegistryService.getById(kitchenId);
-        BeanUtils.copyProperties(kitchen, alteredKitchen, "id");
-        alteredKitchen = kitchenRegistryService.save(alteredKitchen);
+        try {
+            var alteredKitchen = kitchenRegistryService.getById(kitchenId);
+            BeanUtils.copyProperties(kitchen, alteredKitchen, "id");
+            alteredKitchen = kitchenRegistryService.save(alteredKitchen);
 
-        return ResponseEntity.ok(alteredKitchen);
+            return ResponseEntity.ok(alteredKitchen);
+        } catch (ModelNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 
