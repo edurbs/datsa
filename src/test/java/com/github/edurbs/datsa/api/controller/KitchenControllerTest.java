@@ -1,16 +1,20 @@
 package com.github.edurbs.datsa.api.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Collections;
 
 import org.hamcrest.Matchers;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcResultHandlersDsl;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -22,6 +26,8 @@ import com.github.edurbs.datsa.domain.service.KitchenRegistryService;
 @WebMvcTest(KitchenController.class)
 class KitchenControllerTest {
 
+    private static final String KITCHEN_URL = "/kitchens";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -30,14 +36,14 @@ class KitchenControllerTest {
 
     @Test
     void whenGetInvalidUrl_thenStatus404() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/kitchen"))
+        mockMvc.perform(MockMvcRequestBuilders.get(KITCHEN_URL))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
 
     }
 
     @Test
     void whenGetAll_thenStatus200() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/kitchens"))
+        mockMvc.perform(MockMvcRequestBuilders.get(KITCHEN_URL))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
     }
@@ -45,7 +51,7 @@ class KitchenControllerTest {
     @Test
     void whenGetAll_andNoneKitchen_thenStatus404() throws Exception {
         Mockito.when(kitchenRegistryService.getAll()).thenReturn(Collections.emptyList());
-        mockMvc.perform(MockMvcRequestBuilders.get("/kitchens"))
+        mockMvc.perform(MockMvcRequestBuilders.get(KITCHEN_URL))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(0)));
 
@@ -55,7 +61,7 @@ class KitchenControllerTest {
     void whenGetValidKitchenId_thenStatus200() throws Exception {
         Mockito.when(kitchenRegistryService.getById(1L)).thenReturn(Instancio.create(Kitchen.class));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/kitchens/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get(KITCHEN_URL+"/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -63,7 +69,53 @@ class KitchenControllerTest {
     void whenGetInvalidKitchenId_thenStatus404() throws Exception {
         Mockito.when(kitchenRegistryService.getById(999L)).thenThrow(new ModelNotFoundException());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/kitchens/999"))
+        mockMvc.perform(MockMvcRequestBuilders.get(KITCHEN_URL+"/999"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    void whenAddValidKitchen_thenStatus201() throws Exception {
+        var kitchenTest = Instancio.create(Kitchen.class);
+        Mockito.when(kitchenRegistryService.save(Mockito.any(Kitchen.class))).thenReturn(kitchenTest);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(KITCHEN_URL)
+                .content("""
+                        {
+                            "name":"%s"
+                        }
+                        """.formatted(kitchenTest.getName()))
+                .contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
+    void whenAlterValidKitchen_thenStatus200() throws Exception {
+        // given
+        var kitchenOriginal = new Kitchen();
+        kitchenOriginal.setId(1L);
+        kitchenOriginal.setName("some name");
+
+        var kitchenUpdated = new Kitchen();
+        kitchenUpdated.setName("new name");
+
+        Mockito.when(kitchenRegistryService.getById(kitchenOriginal.getId())).thenReturn(kitchenOriginal);
+        Mockito.when(kitchenRegistryService.save(Mockito.any(Kitchen.class))).thenReturn(kitchenOriginal);
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.put(KITCHEN_URL+"/"+kitchenOriginal.getId())
+                .content("""
+                    {
+                        "name":"%s"
+                    }
+                    """.formatted(kitchenUpdated.getName())
+                ).contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        // then
+        ArgumentCaptor<Kitchen> kitchenCaptor = ArgumentCaptor.forClass(Kitchen.class);
+        Mockito.verify(kitchenRegistryService).save(kitchenCaptor.capture());
+        var alteredKitchen = kitchenCaptor.getValue();
+        assertEquals(kitchenUpdated.getName(), alteredKitchen.getName());
+        assertEquals(kitchenOriginal.getId(), alteredKitchen.getId());
     }
 }
