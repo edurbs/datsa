@@ -2,6 +2,7 @@ package com.github.edurbs.datsa.api.controller;
 
 import java.util.Collections;
 
+import org.hamcrest.Matchers;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -9,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcResultHandlersDsl;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
@@ -36,6 +39,15 @@ class KitchenControllerTest {
     void whenGetAll_thenStatus200() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/kitchens"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
+
+    @Test
+    void whenGetAll_andNoneKitchen_thenStatus404() throws Exception {
+        Mockito.when(kitchenRegistryService.getAll()).thenReturn(Collections.emptyList());
+        mockMvc.perform(MockMvcRequestBuilders.get("/kitchens"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(0)));
 
     }
 
