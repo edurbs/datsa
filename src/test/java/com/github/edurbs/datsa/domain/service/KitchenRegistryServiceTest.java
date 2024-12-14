@@ -2,6 +2,7 @@ package com.github.edurbs.datsa.domain.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
@@ -25,20 +26,20 @@ import com.github.edurbs.datsa.domain.repository.KitchenRepository;
 class KitchenRegistryServiceTest {
 
     @Autowired
-    private KitchenRegistryService kitchenRegistryService;
+    private KitchenRegistryService sut;
 
     @MockBean
     private KitchenRepository kitchenRepository;
 
     @Mock
-    private Kitchen kitchen = Instancio.create(Kitchen.class);
+    private Kitchen kitchenMock = Instancio.create(Kitchen.class);
 
     @Test
     void whenAddValidKitchen_thenReturnKitchen() {
 
-        Mockito.when(kitchenRepository.save(Mockito.any(Kitchen.class))).thenReturn(kitchen);
-        var kitchenAdded = kitchenRegistryService.save(kitchen);
-        assertThat(kitchenAdded).isEqualTo(kitchen);
+        Mockito.when(kitchenRepository.save(Mockito.any(Kitchen.class))).thenReturn(kitchenMock);
+        var kitchenAdded = sut.save(kitchenMock);
+        assertThat(kitchenAdded).isEqualTo(kitchenMock);
     }
 
     @Test
@@ -46,42 +47,42 @@ class KitchenRegistryServiceTest {
 
         Mockito.when(kitchenRepository.findAll())
                 .thenReturn(Instancio.ofList(Kitchen.class).size(10).create());
-        List<Kitchen> kitchens = kitchenRegistryService.getAll();
+        List<Kitchen> kitchens = sut.getAll();
         assertThat(kitchens).hasSize(10);
     }
 
     @Test
     void whenGetValidKitchenId_thenReturnKitchen() {
-        Mockito.when(kitchenRepository.findById(1L)).thenReturn(Optional.of(kitchen));
-        assertThat(kitchenRegistryService.getById(1L))
-                .isEqualTo(kitchen);
+        Mockito.when(kitchenRepository.findById(1L)).thenReturn(Optional.of(kitchenMock));
+        assertThat(sut.getById(1L))
+                .isEqualTo(kitchenMock);
     }
 
     @Test
     void whenGetInvalidKitchenId_thenThrowsModelNotFoundException() {
         Mockito.when(kitchenRepository.findById(999L)).thenReturn(Optional.empty());
         assertThatExceptionOfType(ModelNotFoundException.class)
-                .isThrownBy(() -> kitchenRegistryService.getById(999L));
+                .isThrownBy(() -> sut.getById(999L));
     }
 
     @Test
     void whenDeleteValidKitchen_thenReturnsNothing() {
         Mockito.when(kitchenRepository.existsById(1L)).thenReturn(true);
-        kitchenRegistryService.remove(1L);
+        assertDoesNotThrow(() -> sut.remove(1L));
         Mockito.verify(kitchenRepository).deleteById(1L);
     }
 
     @Test
     void whenDeleteInvalidKitchen_thenThrowsModelNotFoundException() {
         Mockito.when(kitchenRepository.existsById(1L)).thenReturn(false);
-        assertThrows(ModelNotFoundException.class, () -> kitchenRegistryService.remove(1L));
+        assertThrows(ModelNotFoundException.class, () -> sut.remove(1L));
 
     }
 
     @Test
     void whenDeleteInvalidKitchen_thenThrowsModelNotFoundExceptionWithMessage() {
         Mockito.when(kitchenRepository.existsById(1L)).thenReturn(false);
-        assertThrows(ModelNotFoundException.class, () -> kitchenRegistryService.remove(1L),
+        assertThrows(ModelNotFoundException.class, () -> sut.remove(1L),
                 "Kitchen id 1 does not exists");
     }
 
@@ -90,6 +91,6 @@ class KitchenRegistryServiceTest {
         Mockito.when(kitchenRepository.existsById(1L)).thenReturn(true);
         Mockito.doThrow(new DataIntegrityViolationException("msg")).when(kitchenRepository).deleteById(1L);
         assertThatExceptionOfType(ModelInUseException.class)
-                .isThrownBy(() -> kitchenRegistryService.remove(1L));
+                .isThrownBy(() -> sut.remove(1L));
     }
 }

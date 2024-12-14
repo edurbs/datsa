@@ -2,6 +2,7 @@ package com.github.edurbs.datsa.domain.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
+import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.model.Kitchen;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
@@ -50,7 +52,7 @@ class RestaurantRegistryServiceTest {
     void whenAddRestaurantWithNullKitchen_thenThrowsModelNotFoundException() {
         Mockito.when(restaurantMock.getKitchen()).thenReturn(null);
         Mockito.when(restaurantRepository.save(Mockito.any(Restaurant.class))).thenReturn(restaurantMock);
-        assertThatExceptionOfType(ModelNotFoundException.class)
+        assertThatExceptionOfType(ModelValidationException.class)
                 .isThrownBy(() -> sut.save(restaurantMock));
     }
 
@@ -59,7 +61,7 @@ class RestaurantRegistryServiceTest {
         Mockito.when(kitchenMock.getId()).thenReturn(null);
         Mockito.when(restaurantMock.getKitchen()).thenReturn(kitchenMock);
         Mockito.when(restaurantRepository.save(Mockito.any(Restaurant.class))).thenReturn(restaurantMock);
-        assertThatExceptionOfType(ModelNotFoundException.class)
+        assertThatExceptionOfType(ModelValidationException.class)
                 .isThrownBy(() -> sut.save(restaurantMock));
     }
 
@@ -98,7 +100,7 @@ class RestaurantRegistryServiceTest {
     @Test
     void whenDeleteValidRestaurant_thenReturnsNothing() {
         Mockito.when(restaurantRepository.existsById(1L)).thenReturn(true);
-        sut.remove(1L);
+        assertDoesNotThrow(() -> sut.remove(1L));
         Mockito.verify(restaurantRepository).deleteById(1L);
     }
 

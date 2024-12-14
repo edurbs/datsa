@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
+import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 
@@ -44,9 +44,15 @@ public class RestaurantController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Restaurant add(@RequestBody Restaurant restaurant) {
-        return restaurantRegistryService.save(restaurant);
+    public ResponseEntity<Restaurant> add(@RequestBody Restaurant restaurant) {
+        try {
+            var restaurantAdded = restaurantRegistryService.save(restaurant);
+            return ResponseEntity.status(HttpStatus.CREATED).body(restaurantAdded);
+        } catch (ModelNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (ModelValidationException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/{restaurantId}")

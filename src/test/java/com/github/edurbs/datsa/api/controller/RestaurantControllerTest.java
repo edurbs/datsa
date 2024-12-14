@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
+import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 
@@ -77,12 +78,52 @@ class RestaurantControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post(RESTAURANT_URL)
                 .content("""
                         {
-                            "name":"%s"
+                            "name": "%s",
+                            "shippingFee": 1,
+                            "kitchen": {
+                                "id": 1
+                            }
                         }
                         """.formatted(restaurantTest.getName()))
                 .contentType("application/json"))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
+
+
+    @Test
+    void whenAddRestaurantWithNullKitchen_thenStatus400() throws Exception {
+        Mockito.when(restaurantRegistryService.save(Mockito.any(Restaurant.class)))
+        .thenThrow(new ModelValidationException());
+        mockMvc.perform(MockMvcRequestBuilders.post(RESTAURANT_URL)
+                .content("""
+                        {
+                            "name": "nome restaurant same",
+                            "shippingFee": 1
+                        }
+                        """)
+                .contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    void whenAddRestaurantWithKitchenWithoutId_thenStatus404() throws Exception {
+        Mockito.when(restaurantRegistryService.save(Mockito.any(Restaurant.class)))
+                .thenThrow(new ModelNotFoundException());
+
+        mockMvc.perform(MockMvcRequestBuilders.post(RESTAURANT_URL)
+                .content("""
+                        {
+                            "name": "nome restaurant same",
+                            "shippingFee": 1,
+                            "kitchen": {
+                                "id": 1
+                            }
+                        }
+                        """)
+                .contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
 
     @Test
     void whenDeleteValidRestaurant_thenStatus204() throws Exception {
@@ -125,21 +166,29 @@ class RestaurantControllerTest {
         // then
         ArgumentCaptor<Restaurant> restaurantCaptor = ArgumentCaptor.forClass(Restaurant.class);
         Mockito.verify(restaurantRegistryService).save(restaurantCaptor.capture());
-        var alteredrestaurant = restaurantCaptor.getValue();
-        assertEquals(restaurantUpdated.getName(), alteredrestaurant.getName());
-        assertEquals(restaurantOriginal.getId(), alteredrestaurant.getId());
+        var alteredRestaurant = restaurantCaptor.getValue();
+        assertEquals(restaurantUpdated.getName(), alteredRestaurant.getName());
+        assertEquals(restaurantOriginal.getId(), alteredRestaurant.getId());
     }
 
     @Test
-    void whenAlterInvalidrestaurant_thenStatus404() throws Exception {
+    void whenAlterNotFoundRestaurant_thenStatus404() throws Exception {
         Mockito.when(restaurantRegistryService.getById(999L)).thenThrow(new ModelNotFoundException());
         mockMvc.perform(MockMvcRequestBuilders.put(RESTAURANT_URL + "/999")
                 .content("""
                         {
-                            "name":"%s"
+                            "name":"new name"
                         }
-                        """.formatted("new name")).contentType("application/json"))
+                        """)
+                .contentType("application/json"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
+
+    @Test
+    void whenAlterWithInvalidKitchen_thenStatus400() throws Exception {
+
+    }
+
+
 
 }

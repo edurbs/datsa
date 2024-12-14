@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
+import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
 
@@ -23,15 +24,13 @@ public class RestaurantRegistryService {
 
     public Restaurant save(Restaurant restaurant) {
         if(restaurant.getKitchen() == null) {
-            throw new ModelNotFoundException("Kitchen not informed");
+            throw new ModelValidationException("Kitchen not informed");
         }
         var kitchen = restaurant.getKitchen();
         if(kitchen.getId() == null) {
-            throw new ModelNotFoundException("Kitchen id not informed");
+            throw new ModelValidationException("Kitchen id not informed");
         }
-        var kitchenId = kitchen.getId();
-        var kitchenFound = kitchenRegistryService.getById(kitchenId);
-        restaurant.setKitchen(kitchenFound);
+        kitchenRegistryService.getById(kitchen.getId());
         return restaurantRepository.save(restaurant);
     }
 
