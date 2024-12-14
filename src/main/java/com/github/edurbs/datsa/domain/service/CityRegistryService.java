@@ -45,23 +45,22 @@ public class CityRegistryService {
 
     @Transactional
     public void remove(Long id) {
-        if (exists(id)) {
-            if(countStatesByCityId(id) > 0) {
-                throw new ModelInUseException("City id %d in use".formatted(id));
-            }
-            try {
-                cityRepository.deleteById(id);
-                cityRepository.flush();
-            } catch (DataIntegrityViolationException e) {
-                throw new ModelInUseException("City id %d in use".formatted(id));
-            }
-        } else {
+        if (notExists(id)) {
             throw new ModelNotFoundException("City id %d does not exists".formatted(id));
         }
+        if (countStatesByCityId(id) > 0) {
+            throw new ModelInUseException("City id %d in use".formatted(id));
+        }
+        cityRepository.deleteById(id);
+        cityRepository.flush();
     }
 
-    public boolean exists(Long id) {
+    private boolean exists(Long id) {
         return cityRepository.existsById(id);
+    }
+
+    private boolean notExists(Long id) {
+        return !exists(id);
     }
 
     public Long countStatesByCityId(Long id) {

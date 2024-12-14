@@ -32,20 +32,23 @@ public class StateRegistryService {
 
     @Transactional
     public void remove(Long id) {
-        if (exists(id)) {
-            try {
-                stateRepository.deleteById(id);
-                stateRepository.flush();
-            } catch (DataIntegrityViolationException e) {
-                throw new ModelInUseException("State id %d in use".formatted(id));
-            }
-        } else {
+        if (notExists(id)) {
             throw new ModelNotFoundException("State id %d does not exist".formatted(id));
+        }
+        try {
+            stateRepository.deleteById(id);
+            stateRepository.flush();
+        } catch (DataIntegrityViolationException e) {
+            throw new ModelInUseException("State id %d in use".formatted(id));
         }
     }
 
-    public boolean exists(Long id) {
+    private boolean exists(Long id) {
         return stateRepository.existsById(id);
+    }
+
+    private boolean notExists(Long id) {
+        return !exists(id);
     }
 
 }

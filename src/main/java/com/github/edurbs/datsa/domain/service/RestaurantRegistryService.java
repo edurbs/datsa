@@ -23,11 +23,11 @@ public class RestaurantRegistryService {
     private KitchenRegistryService kitchenRegistryService;
 
     public Restaurant save(Restaurant restaurant) {
-        if(restaurant.getKitchen() == null) {
+        if (restaurant.getKitchen() == null) {
             throw new ModelValidationException("Kitchen not informed");
         }
         var kitchen = restaurant.getKitchen();
-        if(kitchen.getId() == null) {
+        if (kitchen.getId() == null) {
             throw new ModelValidationException("Kitchen id not informed");
         }
         kitchenRegistryService.getById(kitchen.getId());
@@ -45,20 +45,23 @@ public class RestaurantRegistryService {
 
     @Transactional
     public void remove(Long id) {
-        if (exists(id)) {
-            try {
-                restaurantRepository.deleteById(id);
-                restaurantRepository.flush();
-            } catch (DataIntegrityViolationException e) {
-                throw new ModelInUseException("Restaurant id %d in use".formatted(id));
-            }
-        } else {
+        if (notExists(id)) {
             throw new ModelNotFoundException("Restaurant id %d does not exists".formatted(id));
+        }
+        try {
+            restaurantRepository.deleteById(id);
+            restaurantRepository.flush();
+        } catch (DataIntegrityViolationException e) {
+            throw new ModelInUseException("Restaurant id %d in use".formatted(id));
         }
     }
 
     private boolean exists(Long id) {
         return restaurantRepository.existsById(id);
+    }
+
+    private boolean notExists(Long id) {
+        return !exists(id);
     }
 
 }

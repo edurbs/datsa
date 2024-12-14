@@ -33,20 +33,23 @@ public class KitchenRegistryService {
 
     @Transactional
     public void remove(Long id) {
-        if (exists(id)) {
-            try {
-                kitchenRepository.deleteById(id);
-                kitchenRepository.flush();
-            } catch (DataIntegrityViolationException e) {
-                throw new ModelInUseException("Kitchen id %d in use".formatted(id));
-            }
-        } else {
+        if (notExists(id)) {
             throw new ModelNotFoundException("Kitchen id %d does not exists".formatted(id));
+        }
+        try {
+            kitchenRepository.deleteById(id);
+            kitchenRepository.flush();
+        } catch (DataIntegrityViolationException e) {
+            throw new ModelInUseException("Kitchen id %d in use".formatted(id));
         }
     }
 
     private boolean exists(Long id) {
         return kitchenRepository.existsById(id);
+    }
+
+    private boolean notExists(Long id) {
+        return !exists(id);
     }
 
 }
