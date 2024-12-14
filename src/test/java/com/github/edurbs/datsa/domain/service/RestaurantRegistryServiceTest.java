@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
+import com.github.edurbs.datsa.domain.model.Kitchen;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
 
@@ -23,53 +24,87 @@ import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
 class RestaurantRegistryServiceTest {
 
     @Autowired
-    private RestaurantRegistryService restaurantRegistryService;
+    private RestaurantRegistryService sut;
 
     @MockBean
     private RestaurantRepository restaurantRepository;
 
+    @MockBean
+    private KitchenRegistryService kitchenRegistryServiceMock;
+
     @Mock
-    private Restaurant restaurant = Instancio.create(Restaurant.class);
+    private Restaurant restaurantMock = Instancio.create(Restaurant.class);
+    @Mock
+    private Kitchen kitchenMock = Instancio.create(Kitchen.class);
 
     @Test
     void whenAddValidRestaurant_thenReturnRestaurant() {
-        Mockito.when(restaurantRepository.save(Mockito.any(Restaurant.class))).thenReturn(restaurant);
-        var restaurantAdded = restaurantRegistryService.save(restaurant);
-        assertThat(restaurantAdded).isEqualTo(restaurant);
+        Mockito.when(restaurantMock.getKitchen()).thenReturn(kitchenMock);
+        Mockito.when(kitchenRegistryServiceMock.getById(kitchenMock.getId())).thenReturn(kitchenMock);
+        Mockito.when(restaurantRepository.save(Mockito.any(Restaurant.class))).thenReturn(restaurantMock);
+        var restaurantAdded = sut.save(restaurantMock);
+        assertThat(restaurantAdded).isEqualTo(restaurantMock);
+    }
+
+    @Test
+    void whenAddRestaurantWithNullKitchen_thenThrowsModelNotFoundException() {
+        Mockito.when(restaurantMock.getKitchen()).thenReturn(null);
+        Mockito.when(restaurantRepository.save(Mockito.any(Restaurant.class))).thenReturn(restaurantMock);
+        assertThatExceptionOfType(ModelNotFoundException.class)
+                .isThrownBy(() -> sut.save(restaurantMock));
+    }
+
+    @Test
+    void whenAddRestaurantWithKitchenWithoutId_thenThrowsModelNotFoundException() {
+        Mockito.when(kitchenMock.getId()).thenReturn(null);
+        Mockito.when(restaurantMock.getKitchen()).thenReturn(kitchenMock);
+        Mockito.when(restaurantRepository.save(Mockito.any(Restaurant.class))).thenReturn(restaurantMock);
+        assertThatExceptionOfType(ModelNotFoundException.class)
+                .isThrownBy(() -> sut.save(restaurantMock));
+    }
+
+    @Test
+    void whenAddRestaurantWithKitchenInexistent_thenThrowsModelNotFoundException() {
+        Mockito.when(kitchenMock.getId()).thenReturn(1L);
+        Mockito.doThrow(new ModelNotFoundException()).when(kitchenRegistryServiceMock).getById(1L);
+        Mockito.when(restaurantMock.getKitchen()).thenReturn(kitchenMock);
+        Mockito.when(restaurantRepository.save(Mockito.any(Restaurant.class))).thenReturn(restaurantMock);
+        assertThatExceptionOfType(ModelNotFoundException.class)
+                .isThrownBy(() -> sut.save(restaurantMock));
     }
 
     @Test
     void whenGetAll_thenStatus200() {
         Mockito.when(restaurantRepository.findAll())
                 .thenReturn(Instancio.ofList(Restaurant.class).size(10).create());
-        List<Restaurant> restaurants = restaurantRegistryService.getAll();
+        List<Restaurant> restaurants = sut.getAll();
         assertThat(restaurants).hasSize(10);
     }
 
     @Test
     void whenGetValidRestaurantId_thenReturnRestaurant() {
-        Mockito.when(restaurantRepository.findById(1L)).thenReturn(Optional.of(restaurant));
-        assertThat(restaurantRegistryService.getById(1L))
-                .isEqualTo(restaurant);
+        Mockito.when(restaurantRepository.findById(1L)).thenReturn(Optional.of(restaurantMock));
+        assertThat(sut.getById(1L))
+                .isEqualTo(restaurantMock);
     }
 
     @Test
     void whenGetInvalidRestaurantId_thenThrowsModelNotFoundException() {
         Mockito.when(restaurantRepository.findById(999L)).thenReturn(Optional.empty());
         assertThatExceptionOfType(ModelNotFoundException.class)
-                .isThrownBy(() -> restaurantRegistryService.getById(999L));
+                .isThrownBy(() -> sut.getById(999L));
     }
 
     @Test
     void whenDeleteValidRestaurant_thenReturnsNothing() {
         Mockito.when(restaurantRepository.existsById(1L)).thenReturn(true);
-        restaurantRegistryService.remove(1L);
+        sut.remove(1L);
         Mockito.verify(restaurantRepository).deleteById(1L);
     }
 
     @Test
     void whenDeleteInvalidRestaurant_thenThrowsModelNotFoundException() {
         Mockito.when(restaurantRepository.existsById(1L)).thenReturn(false);
-        assertThrows(ModelNotFoundException.class, () -> restaurantRegistryService.remove(1L));
+        assertThrows(ModelNotFoundException.class, () -> sut.remove(1L));
     }
 }
