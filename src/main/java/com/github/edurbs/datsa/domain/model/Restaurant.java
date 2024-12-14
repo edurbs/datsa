@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import lombok.Data;
@@ -22,13 +23,14 @@ public class Restaurant {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
     private BigDecimal shippingFee;
 
     @ManyToOne
+    @JoinColumn(name = "kitchen_id", nullable = false)
     private Kitchen kitchen;
 
 }
