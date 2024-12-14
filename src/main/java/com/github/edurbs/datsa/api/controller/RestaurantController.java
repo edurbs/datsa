@@ -59,7 +59,7 @@ public class RestaurantController {
     public ResponseEntity<Restaurant> alter(@PathVariable Long restaurantId, @RequestBody Restaurant restaurant) {
         try {
             var alteredRestaurant = restaurantRegistryService.getById(restaurantId);
-            BeanUtils.copyProperties(restaurant, alteredRestaurant, "id", "paymentMethods");
+            BeanUtils.copyProperties(restaurant, alteredRestaurant, "id", "paymentMethods", "address", "registrationDate");
             alteredRestaurant = restaurantRegistryService.save(alteredRestaurant);
 
             return ResponseEntity.ok(alteredRestaurant);
