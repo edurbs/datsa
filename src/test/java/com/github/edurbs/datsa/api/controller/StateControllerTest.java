@@ -100,7 +100,7 @@ public class StateControllerTest {
     }
 
     @Test
-    void whenDeleteValidState_thenStatus200() throws Exception {
+    void whenDeleteValidState_thenStatus204() throws Exception {
         Mockito.doNothing().when(stateRegistryService).remove(1L);
         mockMvc.perform(MockMvcRequestBuilders.delete(STATE_URL + "/1"))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
