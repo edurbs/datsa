@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
@@ -58,7 +59,6 @@ class RestaurantControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-
     @Test
     void whenGetAll_andNoneRestaurant_thenStatus404() throws Exception {
         Mockito.when(restaurantRegistryService.getAll()).thenReturn(Collections.emptyList());
@@ -79,28 +79,21 @@ class RestaurantControllerTest {
     @Test
     void whenAddValidRestaurant_thenStatus201() throws Exception {
         var restaurantTest = Instancio.create(Restaurant.class);
-        Mockito.when(restaurantRegistryService.save(Mockito.any(Restaurant.class))).thenReturn(restaurantTest);
+        restaurantTest.setId(null);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        String json = objectMapper.writeValueAsString(restaurantTest);
+
+        Mockito.when(restaurantRegistryService.save(restaurantTest)).thenReturn(restaurantTest);
 
         mockMvc.perform(MockMvcRequestBuilders.post(END_POINT_PATH)
-                .content("""
-                        {
-                            "name": "%s",
-                            "shippingFee": 1,
-                            "kitchen": {
-                                "id": 1
-                            }
-                        }
-                        """.formatted(restaurantTest.getName()))
+                .content(json)
                 .contentType("application/json"))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
-
     @Test
     void whenAddRestaurantWithNullKitchen_thenStatus400() throws Exception {
         var restaurant = Instancio.create(Restaurant.class);
-        //restaurant.setKitchen(null);
-
         String json = objectMapper.writeValueAsString(restaurant);
 
         Mockito.when(restaurantRegistryService.save(restaurant))
@@ -111,6 +104,7 @@ class RestaurantControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
         Mockito.verify(restaurantRegistryService, times(1)).save(restaurant);
     }
+
     @Test
     void whenAddRestaurantWithKitchenWithoutId_thenStatus404() throws Exception {
         var restaurantTest = new Restaurant();
@@ -137,7 +131,6 @@ class RestaurantControllerTest {
                 .contentType("application/json"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
-
 
     @Test
     void whenDeleteValidRestaurant_thenStatus204() throws Exception {

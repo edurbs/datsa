@@ -19,7 +19,7 @@ import com.github.edurbs.datsa.domain.model.State;
 import com.github.edurbs.datsa.domain.service.StateRegistryService;
 
 @WebMvcTest(StateController.class)
-public class StateControllerTest {
+class StateControllerTest {
 
     private static final String STATE_URL = "/states";
 
