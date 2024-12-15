@@ -9,6 +9,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
 import org.instancio.Instancio;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,14 +29,16 @@ class RestaurantTest {
     }
 
     @Test
-    void whenCreateValidRestaurant_thenCreate() {
+    @DisplayName("When create a valid Restaurant, should not be violations")
+    void one () {
         var restaurant = restaurantFactory();
 
         assertTrue(violations(restaurant).isEmpty());
     }
 
     @Test
-    void whenCreateRestaurantWithNullKitchen_thenInvalidate() {
+    @DisplayName("When create a Restaurant with null Kitchen, then should be one violation")
+    void two () {
         var restaurant = restaurantFactory();
         restaurant.setKitchen(null);
 
@@ -43,7 +46,8 @@ class RestaurantTest {
     }
 
     @Test
-    void whenCreateRestauranteWithKithenIdNull_thenInvalidate() {
+    @DisplayName("When create a Restaurant with Kitchen with null id, then should be one violation")
+    void three () {
         var restaurant = restaurantFactory();
         restaurant.getKitchen().setId(null);
 

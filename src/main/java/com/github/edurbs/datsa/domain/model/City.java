@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
-import com.github.edurbs.datsa.infra.Groups;
+import com.github.edurbs.datsa.core.validation.Groups;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
