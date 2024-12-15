@@ -48,6 +48,7 @@ public class Restaurant {
     private String name;
 
     @Column(nullable = false)
+    @NotNull
     @PositiveOrZero
     private BigDecimal shippingFee;
 
