@@ -15,7 +15,7 @@ import javax.persistence.ManyToMany;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@Entity
+@Entity(name = "group_system")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Group {
