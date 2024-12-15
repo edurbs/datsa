@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -31,6 +32,27 @@ import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final String GENERIC_USER_ERROR_MESSAGE = "An unexpected internal system error has occurred. Please try again and if the problem persists, contact your system administrator.";
+
+    @Override
+    protected @NonNull ResponseEntity<Object> handleMethodArgumentNotValid(
+            @NonNull MethodArgumentNotValidException ex,
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatus status,
+            @NonNull WebRequest request) {
+        ProblemType problemType = ProblemType.VALIDATION_ERROR;
+        String detail = "Validation error";
+        List<Problem.Field> fields = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> Problem.Field.builder()
+                        .name(error.getField())
+                        .userMessage(error.getDefaultMessage())
+                        .build())
+                .toList();
+        Problem problem = createProblemBuilder(status, problemType, detail)
+                .userMessage(detail)
+                .fields(fields)
+                .build();
+        return handleExceptionInternal(ex, problem, headers, status, request);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGenericException(Exception ex, WebRequest request) {

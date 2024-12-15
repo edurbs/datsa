@@ -1,17 +1,16 @@
 package com.github.edurbs.datsa.api.exceptionhandler;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Builder
-@Setter
 public class Problem {
 
     private Integer status;
@@ -20,4 +19,12 @@ public class Problem {
     private String title;
     private String detail;
     private String userMessage;
+    private List<Field> fields;
+
+    @Getter
+    @Builder
+    public static class Field{
+        private String name;
+        private String userMessage;
+    }
 }

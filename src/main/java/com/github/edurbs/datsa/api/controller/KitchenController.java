@@ -2,6 +2,8 @@ package com.github.edurbs.datsa.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,43 +36,27 @@ public class KitchenController {
     }
 
     @GetMapping("/{kitchenId}")
-    public ResponseEntity<Kitchen> getById(@PathVariable Long kitchenId) {
-        try {
-            return ResponseEntity.ok(kitchenRegistryService.getById(kitchenId));
-        } catch (ModelNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public Kitchen getById(@PathVariable Long kitchenId) {
+        return kitchenRegistryService.getById(kitchenId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Kitchen add(@RequestBody Kitchen kitchen) {
+    public Kitchen add(@RequestBody @Valid Kitchen kitchen) {
         return kitchenRegistryService.save(kitchen);
     }
 
     @PutMapping("/{kitchenId}")
-    public ResponseEntity<Kitchen> alter(@PathVariable Long kitchenId, @RequestBody Kitchen kitchen) {
-        try {
-            var alteredKitchen = kitchenRegistryService.getById(kitchenId);
-            BeanUtils.copyProperties(kitchen, alteredKitchen, "id");
-            alteredKitchen = kitchenRegistryService.save(alteredKitchen);
-
-            return ResponseEntity.ok(alteredKitchen);
-        } catch (ModelNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public Kitchen alter(@PathVariable Long kitchenId, @RequestBody @Valid Kitchen kitchen) {
+        var alteredKitchen = kitchenRegistryService.getById(kitchenId);
+        BeanUtils.copyProperties(kitchen, alteredKitchen, "id");
+        return kitchenRegistryService.save(alteredKitchen);
     }
 
     @DeleteMapping("/{kitchenId}")
-    public ResponseEntity<Void> delete(@PathVariable Long kitchenId) {
-        try {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long kitchenId) {
             kitchenRegistryService.remove(kitchenId);
-            return ResponseEntity.noContent().build();
-        } catch (ModelNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (ModelInUseException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
     }
 
 }

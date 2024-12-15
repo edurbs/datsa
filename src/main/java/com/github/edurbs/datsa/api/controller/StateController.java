@@ -2,6 +2,8 @@ package com.github.edurbs.datsa.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,12 +39,12 @@ public class StateController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public State add(@RequestBody State state) {
+    public State add(@RequestBody @Valid State state) {
         return stateRegistryService.save(state);
     }
 
     @PutMapping("/{stateId}")
-    public State alter(@PathVariable Long stateId, @RequestBody State state) {
+    public State alter(@PathVariable Long stateId, @RequestBody @Valid State state) {
         var alteredState = stateRegistryService.getById(stateId);
         BeanUtils.copyProperties(state, alteredState, "id");
         return stateRegistryService.save(alteredState);

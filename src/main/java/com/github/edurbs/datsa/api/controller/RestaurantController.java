@@ -3,6 +3,8 @@ package com.github.edurbs.datsa.api.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,14 +40,14 @@ public class RestaurantController {
     }
 
     @PostMapping
-    public ResponseEntity<Restaurant> add(@RequestBody Restaurant restaurant) {
+    public ResponseEntity<Restaurant> add(@RequestBody @Valid Restaurant restaurant) {
         var restaurantAdded = restaurantRegistryService.save(restaurant);
         URI uri = URI.create("/restaurants/"+restaurantAdded.getId());
         return ResponseEntity.created(uri).body(restaurantAdded);
     }
 
     @PutMapping("/{restaurantId}")
-    public Restaurant alter(@PathVariable Long restaurantId, @RequestBody Restaurant restaurant) {
+    public Restaurant alter(@PathVariable Long restaurantId, @RequestBody @Valid Restaurant restaurant) {
         var alteredRestaurant = restaurantRegistryService.getById(restaurantId);
         BeanUtils.copyProperties(restaurant, alteredRestaurant, "id", "paymentMethods", "address", "registrationDate",
                 "products");

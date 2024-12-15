@@ -2,6 +2,8 @@ package com.github.edurbs.datsa.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,12 +40,12 @@ public class CityController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public City add(@RequestBody City city) {
+    public City add(@RequestBody @Valid City city) {
         return cityRegistryService.save(city);
     }
 
     @PutMapping("/{cityId}")
-    public City alter(@PathVariable Long cityId, @RequestBody City city) {
+    public City alter(@PathVariable Long cityId, @RequestBody @Valid City city) {
         var alteredCity = cityRegistryService.getById(cityId);
         BeanUtils.copyProperties(city, alteredCity, "id");
         return cityRegistryService.save(alteredCity);

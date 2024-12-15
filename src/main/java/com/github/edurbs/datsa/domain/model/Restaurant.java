@@ -17,12 +17,18 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.repository.cdi.Eager;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.edurbs.datsa.infra.Groups;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,13 +43,17 @@ public class Restaurant {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @NotBlank
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
+    @PositiveOrZero
     private BigDecimal shippingFee;
 
-    @JsonIgnore
+    @Valid
+    @ConvertGroup(from = Default.class, to = Groups.KitchenId.class)
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kitchen_id", nullable = false)
     private Kitchen kitchen;
