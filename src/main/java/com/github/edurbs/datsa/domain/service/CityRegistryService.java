@@ -30,7 +30,11 @@ public class CityRegistryService {
         if (state.getId() == null) {
             throw new ModelValidationException("State id not informed");
         }
-        stateRegistryService.getById(state.getId());
+        try {
+            stateRegistryService.getById(state.getId());
+        } catch (ModelNotFoundException e) {
+            throw new ModelValidationException("State id %d not found".formatted(state.getId()));
+        }
         return cityRepository.save(city);
     }
 
