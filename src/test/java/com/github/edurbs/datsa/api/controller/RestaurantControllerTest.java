@@ -7,6 +7,7 @@ import java.util.Collections;
 
 import org.hamcrest.Matchers;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -38,6 +39,11 @@ class RestaurantControllerTest {
 
     @MockBean
     private RestaurantRegistryService restaurantRegistryService;
+
+    @BeforeEach
+    void setUp() {
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    }
 
     @Test
     void whenGetInvalidRestaurant_thenReturnStatus404() throws Exception {
