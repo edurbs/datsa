@@ -1,5 +1,6 @@
 package com.github.edurbs.datsa.api.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -13,18 +14,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.edurbs.datsa.domain.exception.ModelInUseException;
-import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
-import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 
 @RestController
 @RequestMapping("/restaurants")
 public class RestaurantController {
-    private static final String RESTAURANT_URL = "/restaurants";
 
     @Autowired
     private RestaurantRegistryService restaurantRegistryService;
@@ -35,48 +33,28 @@ public class RestaurantController {
     }
 
     @GetMapping("/{restaurantId}")
-    public ResponseEntity<Restaurant> getById(@PathVariable Long restaurantId) {
-        try {
-            return ResponseEntity.ok(restaurantRegistryService.getById(restaurantId));
-        } catch (ModelNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public Restaurant getById(@PathVariable Long restaurantId) {
+        return restaurantRegistryService.getById(restaurantId);
     }
 
     @PostMapping
     public ResponseEntity<Restaurant> add(@RequestBody Restaurant restaurant) {
-        try {
-            var restaurantAdded = restaurantRegistryService.save(restaurant);
-            return ResponseEntity.status(HttpStatus.CREATED).body(restaurantAdded);
-        } catch (ModelNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (ModelValidationException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        var restaurantAdded = restaurantRegistryService.save(restaurant);
+        URI uri = URI.create("/restaurants/"+restaurantAdded.getId());
+        return ResponseEntity.created(uri).body(restaurantAdded);
     }
 
     @PutMapping("/{restaurantId}")
-    public ResponseEntity<Restaurant> alter(@PathVariable Long restaurantId, @RequestBody Restaurant restaurant) {
-        try {
-            var alteredRestaurant = restaurantRegistryService.getById(restaurantId);
-            BeanUtils.copyProperties(restaurant, alteredRestaurant, "id", "paymentMethods", "address", "registrationDate", "products");
-            alteredRestaurant = restaurantRegistryService.save(alteredRestaurant);
-
-            return ResponseEntity.ok(alteredRestaurant);
-        } catch (ModelNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public Restaurant alter(@PathVariable Long restaurantId, @RequestBody Restaurant restaurant) {
+        var alteredRestaurant = restaurantRegistryService.getById(restaurantId);
+        BeanUtils.copyProperties(restaurant, alteredRestaurant, "id", "paymentMethods", "address", "registrationDate",
+                "products");
+        return restaurantRegistryService.save(alteredRestaurant);
     }
 
     @DeleteMapping("/{restaurantId}")
-    public ResponseEntity<Void> delete(@PathVariable Long restaurantId) {
-        try {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long restaurantId) {
             restaurantRegistryService.remove(restaurantId);
-            return ResponseEntity.noContent().build();
-        } catch (ModelNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (ModelInUseException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
     }
 }

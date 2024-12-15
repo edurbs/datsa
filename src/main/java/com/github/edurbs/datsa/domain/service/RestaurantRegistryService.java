@@ -30,7 +30,11 @@ public class RestaurantRegistryService {
         if (kitchen.getId() == null) {
             throw new ModelValidationException("Kitchen id not informed");
         }
-        kitchenRegistryService.getById(kitchen.getId());
+        try {
+            kitchenRegistryService.getById(kitchen.getId());
+        } catch (ModelNotFoundException e) {
+            throw new ModelValidationException("Kitchen id %d not found".formatted(kitchen.getId()));
+        }
         return restaurantRepository.save(restaurant);
     }
 
