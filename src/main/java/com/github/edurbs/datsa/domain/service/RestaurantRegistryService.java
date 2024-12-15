@@ -22,19 +22,10 @@ public class RestaurantRegistryService {
     @Autowired
     private KitchenRegistryService kitchenRegistryService;
 
+    @Transactional
     public Restaurant save(Restaurant restaurant) {
-        // if (restaurant.getKitchen() == null) {
-        //     throw new ModelValidationException("Kitchen not informed");
-        // }
         var kitchen = restaurant.getKitchen();
-        // if (kitchen.getId() == null) {
-        //     throw new ModelValidationException("Kitchen id not informed");
-        // }
-        // try {
-            kitchenRegistryService.getById(kitchen.getId());
-        // } catch (ModelNotFoundException e) {
-        //     throw new ModelValidationException("Kitchen id %d not found".formatted(kitchen.getId()));
-        // }
+        kitchenRegistryService.getById(kitchen.getId());
         return restaurantRepository.save(restaurant);
     }
 

@@ -17,6 +17,7 @@ public class StateRegistryService {
     @Autowired
     private StateRepository stateRepository;
 
+    @Transactional
     public State save(State state) {
         return stateRepository.save(state);
     }

@@ -22,6 +22,7 @@ public class CityRegistryService {
     @Autowired
     private StateRegistryService stateRegistryService;
 
+    @Transactional
     public City save(City city) {
         if (city.getState() == null) {
             throw new ModelValidationException("State not informed");

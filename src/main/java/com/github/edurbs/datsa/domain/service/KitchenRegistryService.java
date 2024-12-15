@@ -18,6 +18,7 @@ public class KitchenRegistryService {
     @Autowired
     private KitchenRepository kitchenRepository;
 
+    @Transactional
     public Kitchen save(Kitchen kitchen) {
         return kitchenRepository.save(kitchen);
     }
