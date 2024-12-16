@@ -1,7 +1,7 @@
 package com.github.edurbs.datsa.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,12 +66,12 @@ public class Restaurant {
     @JsonIgnore
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
-    private LocalDateTime registrationDate;
+    private OffsetDateTime registrationDate;
 
     @JsonIgnore
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
-    private LocalDateTime lastUpdateDate;
+    private OffsetDateTime lastUpdateDate;
 
     @JsonIgnore
     @ManyToMany

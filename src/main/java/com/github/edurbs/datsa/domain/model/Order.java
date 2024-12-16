@@ -1,7 +1,7 @@
 package com.github.edurbs.datsa.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,16 +34,16 @@ public class Order {
     private BigDecimal shippingFee;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
-    private LocalDateTime confirmedAt;
+    private OffsetDateTime confirmedAt;
 
-    private LocalDateTime canceledAt;
+    private OffsetDateTime canceledAt;
 
-    private LocalDateTime deliveredAt;
+    private OffsetDateTime deliveredAt;
 
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    private OffsetDateTime updatedAt;
 
     @Embedded
     private Address address;

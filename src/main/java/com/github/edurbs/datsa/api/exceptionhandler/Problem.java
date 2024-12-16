@@ -1,6 +1,6 @@
 package com.github.edurbs.datsa.api.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,7 +14,7 @@ import lombok.Getter;
 public class Problem {
 
     private Integer status;
-    private LocalDateTime timestamp;
+    private OffsetDateTime timestamp;
     private String type;
     private String title;
     private String detail;
