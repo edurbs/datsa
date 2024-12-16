@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.edurbs.datsa.api.dto.input.CityInput;
+import com.github.edurbs.datsa.api.dto.output.CityOutput;
+import com.github.edurbs.datsa.api.mapper.CityMapper;
 import com.github.edurbs.datsa.domain.model.City;
 import com.github.edurbs.datsa.domain.service.CityRegistryService;
 
@@ -28,27 +31,33 @@ public class CityController {
     @Autowired
     private CityRegistryService cityRegistryService;
 
+    @Autowired
+    private CityMapper cityMapper;
+
     @GetMapping
-    public List<City> listAll() {
-        return cityRegistryService.getAll();
+    public List<CityOutput> listAll() {
+        return cityMapper.toOutputList(cityRegistryService.getAll());
     }
 
     @GetMapping("/{cityId}")
-    public City getById(@PathVariable Long cityId) {
-        return cityRegistryService.getById(cityId);
+    public CityOutput getById(@PathVariable Long cityId) {
+        return cityMapper.toOutput(cityRegistryService.getById(cityId));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public City add(@RequestBody @Valid City city) {
-        return cityRegistryService.save(city);
+    public CityOutput add(@RequestBody @Valid CityInput cityInput) {
+        var city = cityMapper.toDomain(cityInput);
+        var cityAdded = cityRegistryService.save(city);
+        return cityMapper.toOutput(cityAdded);
     }
 
     @PutMapping("/{cityId}")
-    public City alter(@PathVariable Long cityId, @RequestBody @Valid City city) {
-        var alteredCity = cityRegistryService.getById(cityId);
-        BeanUtils.copyProperties(city, alteredCity, "id");
-        return cityRegistryService.save(alteredCity);
+    public CityOutput alter(@PathVariable Long cityId, @RequestBody @Valid CityInput cityInput) {
+        var city = cityRegistryService.getById(cityId);
+        cityMapper.copyToDomain(cityInput, city);
+        var alteredCity = cityRegistryService.save(city);
+        return cityMapper.toOutput(alteredCity);
     }
 
     @DeleteMapping("/{cityId}")

@@ -45,7 +45,7 @@ public class RestaurantRegistryService {
         }
         try {
             restaurantRepository.deleteById(id);
-            restaurantRepository.flush();
+            restaurantRepository.flush(); // delete now
         } catch (DataIntegrityViolationException e) {
             throw new ModelInUseException("Restaurant id %d in use".formatted(id));
         }

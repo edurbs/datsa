@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.edurbs.datsa.domain.model.Restaurant;
+import com.github.edurbs.datsa.api.dto.input.RestaurantInput;
+import com.github.edurbs.datsa.api.dto.output.RestaurantOutput;
+import com.github.edurbs.datsa.api.mapper.RestaurantMapper;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 
 @RestController
@@ -29,29 +31,35 @@ public class RestaurantController {
     @Autowired
     private RestaurantRegistryService restaurantRegistryService;
 
+    @Autowired
+    private RestaurantMapper restaurantMapper;
+
     @GetMapping
-    public List<Restaurant> listAll() {
-        return restaurantRegistryService.getAll();
+    public List<RestaurantOutput> listAll() {
+        return restaurantMapper.toOutputList(restaurantRegistryService.getAll());
     }
 
     @GetMapping("/{restaurantId}")
-    public Restaurant getById(@PathVariable Long restaurantId) {
-        return restaurantRegistryService.getById(restaurantId);
+    public RestaurantOutput getById(@PathVariable Long restaurantId) {
+        return restaurantMapper.toOutput(restaurantRegistryService.getById(restaurantId));
     }
 
     @PostMapping
-    public ResponseEntity<Restaurant> add(@RequestBody @Valid Restaurant restaurant) {
+    public ResponseEntity<RestaurantOutput> add(@RequestBody @Valid RestaurantInput restaurantInput) {
+        var restaurant = restaurantMapper.toDomain(restaurantInput);
         var restaurantAdded = restaurantRegistryService.save(restaurant);
-        URI uri = URI.create("/restaurants/"+restaurantAdded.getId());
-        return ResponseEntity.created(uri).body(restaurantAdded);
+        var uri = URI.create("/restaurants/"+restaurantAdded.getId());
+        var restaurantOutput = restaurantMapper.toOutput(restaurantAdded);
+        return ResponseEntity.created(uri).body(restaurantOutput);
     }
 
     @PutMapping("/{restaurantId}")
-    public Restaurant alter(@PathVariable Long restaurantId, @RequestBody @Valid Restaurant restaurant) {
-        var alteredRestaurant = restaurantRegistryService.getById(restaurantId);
-        BeanUtils.copyProperties(restaurant, alteredRestaurant, "id", "paymentMethods", "address", "registrationDate",
-                "products");
-        return restaurantRegistryService.save(alteredRestaurant);
+    public RestaurantOutput alter(@PathVariable Long restaurantId, @RequestBody @Valid RestaurantInput restaurantInput) {
+        var restaurant = restaurantRegistryService.getById(restaurantId);
+        restaurantMapper.copyToDomain(restaurantInput, restaurant);
+        var restaurantAltered = restaurantRegistryService.save(restaurant);
+        return restaurantMapper.toOutput(restaurantAltered);
+
     }
 
     @DeleteMapping("/{restaurantId}")

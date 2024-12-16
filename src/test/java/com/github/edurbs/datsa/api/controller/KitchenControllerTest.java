@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.github.edurbs.datsa.api.mapper.KitchenMapper;
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.model.Kitchen;
@@ -31,6 +32,9 @@ class KitchenControllerTest {
 
     @MockBean
     private KitchenRegistryService kitchenRegistryService;
+
+    @MockBean
+    private KitchenMapper kitchenMapper;
 
     @Test
     void whenGetInvalidUrl_thenStatus404() throws Exception {

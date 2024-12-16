@@ -6,6 +6,7 @@ import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -13,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.github.edurbs.datsa.api.mapper.CityMapper;
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
@@ -29,6 +31,12 @@ class CityControllerTest {
 
     @MockBean
     private CityRegistryService cityRegistryService;
+
+    @MockBean
+    private CityMapper cityMapper;
+
+    // @Autowired
+    // private ModelMapper modelMapper;
 
     @Test
     void whenGetInvalidUrl_thenStatus404() throws Exception {

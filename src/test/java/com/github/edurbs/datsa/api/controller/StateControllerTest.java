@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.github.edurbs.datsa.api.mapper.StateMapper;
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.model.State;
@@ -28,6 +29,9 @@ class StateControllerTest {
 
     @MockBean
     private StateRegistryService stateRegistryService;
+
+    @MockBean
+    private StateMapper stateMapper;
 
     @Test
     void whenGetInvalidUrl_thenStatus404() throws Exception {

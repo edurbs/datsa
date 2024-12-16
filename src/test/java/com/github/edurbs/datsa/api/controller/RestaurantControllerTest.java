@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.edurbs.datsa.api.mapper.RestaurantMapper;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.model.Kitchen;
@@ -39,6 +40,9 @@ class RestaurantControllerTest {
 
     @MockBean
     private RestaurantRegistryService restaurantRegistryService;
+
+    @MockBean
+    private RestaurantMapper restaurantMapper;
 
     @BeforeEach
     void setUp() {
