@@ -13,4 +13,5 @@ public class RestaurantOutput {
     private String name;
     private BigDecimal shippingFee;
     private KitchenOutput kitchen;
+    private Boolean active;
 }

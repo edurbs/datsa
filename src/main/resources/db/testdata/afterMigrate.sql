@@ -1,28 +1,47 @@
 set foreign_key_checks = 0;
 
 delete from city;
+
 delete from kitchen;
+
 delete from state;
+
 delete from payment_method;
+
 delete from group_system;
+
 delete from group_permission;
+
 delete from permission;
+
 delete from product;
+
 delete from restaurant;
+
 delete from restaurant_payment_method;
+
 delete from user;
+
 delete from user_group;
 
 set foreign_key_checks = 1;
 
 alter table city auto_increment = 1;
+
 alter table kitchen auto_increment = 1;
+
 alter table state auto_increment = 1;
+
 alter table payment_method auto_increment = 1;
+
 alter table group_system auto_increment = 1;
+
 alter table permission auto_increment = 1;
+
 alter table product auto_increment = 1;
+
 alter table restaurant auto_increment = 1;
+
 alter table user auto_increment = 1;
 
 insert ignore into kitchen (id, name) values (1, 'Tailandesa');
@@ -91,6 +110,7 @@ insert ignore into
         kitchen_id,
         registration_date,
         last_update_date,
+        `active`,
         address_city_id,
         address_zip_code,
         address_street,
@@ -105,6 +125,7 @@ values (
         utc_timestamp,
         utc_timestamp,
         1,
+        1,
         '38400-999',
         'Rua João Pinheiro',
         '1000',
@@ -118,7 +139,8 @@ insert ignore into
         shipping_fee,
         kitchen_id,
         registration_date,
-        last_update_date
+        last_update_date,
+        `active`
     )
 values (
         2,
@@ -126,7 +148,8 @@ values (
         9.50,
         1,
         utc_timestamp,
-        utc_timestamp
+        utc_timestamp,
+        1
     );
 
 insert ignore into
@@ -136,7 +159,8 @@ insert ignore into
         shipping_fee,
         kitchen_id,
         registration_date,
-        last_update_date
+        last_update_date,
+        `active`
     )
 values (
         3,
@@ -144,7 +168,8 @@ values (
         15,
         2,
         utc_timestamp,
-        utc_timestamp
+        utc_timestamp,
+        1
     );
 
 insert ignore into kitchen (id, name) values (3, 'Argentina');
@@ -158,7 +183,8 @@ insert ignore into
         shipping_fee,
         kitchen_id,
         registration_date,
-        last_update_date
+        last_update_date,
+        `active`
     )
 values (
         4,
@@ -166,7 +192,8 @@ values (
         12,
         3,
         utc_timestamp,
-        utc_timestamp
+        utc_timestamp,
+        1
     );
 
 insert ignore into
@@ -176,7 +203,8 @@ insert ignore into
         shipping_fee,
         kitchen_id,
         registration_date,
-        last_update_date
+        last_update_date,
+        `active`
     )
 values (
         5,
@@ -184,7 +212,8 @@ values (
         11,
         4,
         utc_timestamp,
-        utc_timestamp
+        utc_timestamp,
+        1
     );
 
 insert ignore into
@@ -194,7 +223,8 @@ insert ignore into
         shipping_fee,
         kitchen_id,
         registration_date,
-        last_update_date
+        last_update_date,
+        `active`
     )
 values (
         6,
@@ -202,7 +232,8 @@ values (
         6,
         4,
         utc_timestamp,
-        utc_timestamp
+        utc_timestamp,
+        1
     );
 
 insert ignore into

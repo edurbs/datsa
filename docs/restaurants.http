@@ -1,0 +1,21 @@
+@hostname = localhost
+@port = 8080
+@host = http://{{hostname}}:{{port}}
+@contentType = application/json
+
+###----------------------
+@r = restaurants
+GET {{host}}/{{r}}
+###
+GET {{host}}/{{r}}/1
+###
+PUT {{host}}/{{r}}/1/active
+###
+DELETE {{host}}/{{r}}/1/active
+###
+POST https://example.com/comments HTTP/1.1
+{{contentType}}
+{
+    "name": "sample",
+    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+}

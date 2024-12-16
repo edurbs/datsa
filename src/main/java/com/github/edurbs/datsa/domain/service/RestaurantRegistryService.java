@@ -51,6 +51,24 @@ public class RestaurantRegistryService {
         }
     }
 
+    @Transactional
+    public void activate(Long id) {
+        var restaurant = getById(id);
+        if(restaurant.isActive()) {
+            throw new ModelValidationException("Restaurant id %d already active".formatted(id));
+        }
+        restaurant.activate();
+    }
+
+    @Transactional
+    public void inactivate(Long id) {
+        var restaurant = getById(id);
+        if(restaurant.isInactive()) {
+            throw new ModelValidationException("Restaurant id %d already inactive".formatted(id));
+        }
+        restaurant.inactivate();
+    }
+
     private boolean exists(Long id) {
         return restaurantRepository.existsById(id);
     }
@@ -58,5 +76,7 @@ public class RestaurantRegistryService {
     private boolean notExists(Long id) {
         return !exists(id);
     }
+
+
 
 }

@@ -21,19 +21,14 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class City{
 
-
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
     @Column
-    @NotBlank
     private String name;
 
-    @NotNull
-    @ConvertGroup(from = Default.class, to = Groups.StateId.class)
     @ManyToOne
     private State state;
 }
