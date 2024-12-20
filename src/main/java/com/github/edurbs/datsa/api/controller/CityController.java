@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.edurbs.datsa.api.dto.input.CityInput;
 import com.github.edurbs.datsa.api.dto.output.CityOutput;
 import com.github.edurbs.datsa.api.mapper.CityMapper;
-import com.github.edurbs.datsa.domain.model.City;
 import com.github.edurbs.datsa.domain.service.CityRegistryService;
 
 @RestController

@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.edurbs.datsa.api.dto.input.KitchenInput;
 import com.github.edurbs.datsa.api.dto.output.KitchenOutput;
 import com.github.edurbs.datsa.api.mapper.KitchenMapper;
-import com.github.edurbs.datsa.domain.model.Kitchen;
 import com.github.edurbs.datsa.domain.service.KitchenRegistryService;
 
 @RestController
