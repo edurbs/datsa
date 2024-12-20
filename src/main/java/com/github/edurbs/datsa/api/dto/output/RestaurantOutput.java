@@ -14,4 +14,6 @@ public class RestaurantOutput {
     private BigDecimal shippingFee;
     private KitchenOutput kitchen;
     private Boolean active;
+    private AddressOutput address;
+
 }

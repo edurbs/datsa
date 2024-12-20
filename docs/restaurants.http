@@ -1,0 +1,15 @@
+@hostname = localhost
+@port = 8080
+@host = http://{{hostname}}:{{port}}
+@contentType = content-type: application/json
+@r = restaurants
+
+###----------------------
+GET {{host}}/{{r}}
+###
+GET {{host}}/{{r}}/1
+###
+PUT {{host}}/{{r}}/1/active
+###
+DELETE {{host}}/{{r}}/1/active
+
