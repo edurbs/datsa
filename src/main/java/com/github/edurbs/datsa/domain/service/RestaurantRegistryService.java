@@ -22,10 +22,23 @@ public class RestaurantRegistryService {
     @Autowired
     private KitchenRegistryService kitchenRegistryService;
 
+    @Autowired
+    private CityRegistryService cityRegistryService;
+
     @Transactional
     public Restaurant save(Restaurant restaurant) {
         var kitchen = restaurant.getKitchen();
-        kitchenRegistryService.getById(kitchen.getId());
+        kitchen = kitchenRegistryService.getById(kitchen.getId());
+        restaurant.setKitchen(kitchen);
+
+        var address = restaurant.getAddress();
+        if(address!=null){
+            var city = address.getCity();
+            city = cityRegistryService.getById(city.getId());
+            address.setCity(city);
+        }
+
+
         return restaurantRepository.save(restaurant);
     }
 

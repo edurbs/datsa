@@ -1,7 +1,6 @@
 package com.github.edurbs.datsa.api.mapper;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.github.edurbs.datsa.api.dto.input.RestaurantInput;
 import com.github.edurbs.datsa.api.dto.output.RestaurantOutput;
+import com.github.edurbs.datsa.domain.model.City;
 import com.github.edurbs.datsa.domain.model.Kitchen;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 
@@ -24,6 +24,9 @@ public class RestaurantMapper {
 
     public void copyToDomain(RestaurantInput restaurantInput, Restaurant restaurant) {
         restaurant.setKitchen(new Kitchen());
+        if(restaurant.getAddress()!=null){
+            restaurant.getAddress().setCity(new City());
+        }
         modelMapper.map(restaurantInput, restaurant);
     }
 

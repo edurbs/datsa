@@ -1,6 +1,7 @@
 package com.github.edurbs.datsa.domain.service;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
-import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
+import com.github.edurbs.datsa.domain.exception.StateNotFoundException;
 import com.github.edurbs.datsa.domain.model.State;
 import com.github.edurbs.datsa.domain.repository.StateRepository;
 
@@ -28,13 +29,13 @@ public class StateRegistryService {
 
     public State getById(Long id) {
         return stateRepository.findById(id)
-                .orElseThrow(() -> new ModelNotFoundException("State id %d does not exist".formatted(id)));
+                .orElseThrow(launchNotFoundException(id));
     }
 
     @Transactional
     public void remove(Long id) {
         if (notExists(id)) {
-            throw new ModelNotFoundException("State id %d does not exist".formatted(id));
+            launchNotFoundException(id);
         }
         try {
             stateRepository.deleteById(id);
@@ -42,6 +43,10 @@ public class StateRegistryService {
         } catch (DataIntegrityViolationException e) {
             throw new ModelInUseException("State id %d in use".formatted(id));
         }
+    }
+
+    private Supplier<StateNotFoundException> launchNotFoundException(Long id) {
+        return () -> new StateNotFoundException("State id %d does not exist".formatted(id));
     }
 
     private boolean exists(Long id) {

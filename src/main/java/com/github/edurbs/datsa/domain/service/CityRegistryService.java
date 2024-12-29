@@ -1,12 +1,13 @@
 package com.github.edurbs.datsa.domain.service;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.edurbs.datsa.domain.exception.CityNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
@@ -31,11 +32,7 @@ public class CityRegistryService {
         if (state.getId() == null) {
             throw new ModelValidationException("State id not informed");
         }
-        try {
-            stateRegistryService.getById(state.getId());
-        } catch (ModelNotFoundException e) {
-            throw new ModelValidationException("State id %d not found".formatted(state.getId()));
-        }
+        stateRegistryService.getById(state.getId());
         return cityRepository.save(city);
     }
 
@@ -45,13 +42,13 @@ public class CityRegistryService {
 
     public City getById(Long id) {
         return cityRepository.findById(id)
-                .orElseThrow(() -> new ModelNotFoundException("City id %d does not exists".formatted(id)));
+                .orElseThrow(launtCityNotFoundException(id));
     }
 
     @Transactional
     public void remove(Long id) {
         if (notExists(id)) {
-            throw new ModelNotFoundException("City id %d does not exists".formatted(id));
+            launtCityNotFoundException(id);
         }
         if (countStatesByCityId(id) > 0) {
             throw new ModelInUseException("City id %d in use".formatted(id));
@@ -66,6 +63,10 @@ public class CityRegistryService {
 
     private boolean notExists(Long id) {
         return !exists(id);
+    }
+
+    private Supplier<CityNotFoundException> launtCityNotFoundException(Long id) {
+        return () -> new CityNotFoundException("City id %d does not exists".formatted(id));
     }
 
     public Long countStatesByCityId(Long id) {

@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.edurbs.datsa.api.dto.input.RestaurantInput;
 import com.github.edurbs.datsa.api.dto.output.RestaurantOutput;
 import com.github.edurbs.datsa.api.mapper.RestaurantMapper;
+import com.github.edurbs.datsa.domain.exception.CityNotFoundException;
+import com.github.edurbs.datsa.domain.exception.ModelValidationException;
+import com.github.edurbs.datsa.domain.exception.StateNotFoundException;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 
 @RestController
@@ -46,20 +48,27 @@ public class RestaurantController {
 
     @PostMapping
     public ResponseEntity<RestaurantOutput> add(@RequestBody @Valid RestaurantInput restaurantInput) {
-        var restaurant = restaurantMapper.toDomain(restaurantInput);
-        var restaurantAdded = restaurantRegistryService.save(restaurant);
-        var uri = URI.create("/restaurants/"+restaurantAdded.getId());
-        var restaurantOutput = restaurantMapper.toOutput(restaurantAdded);
-        return ResponseEntity.created(uri).body(restaurantOutput);
+        try {
+            var restaurant = restaurantMapper.toDomain(restaurantInput);
+            var restaurantAdded = restaurantRegistryService.save(restaurant);
+            var uri = URI.create("/restaurants/"+restaurantAdded.getId());
+            var restaurantOutput = restaurantMapper.toOutput(restaurantAdded);
+            return ResponseEntity.created(uri).body(restaurantOutput);
+        } catch (CityNotFoundException | StateNotFoundException e) {
+            throw new ModelValidationException(e.getMessage());
+        }
     }
 
     @PutMapping("/{restaurantId}")
     public RestaurantOutput alter(@PathVariable Long restaurantId, @RequestBody @Valid RestaurantInput restaurantInput) {
-        var restaurant = restaurantRegistryService.getById(restaurantId);
-        restaurantMapper.copyToDomain(restaurantInput, restaurant);
-        var restaurantAltered = restaurantRegistryService.save(restaurant);
-        return restaurantMapper.toOutput(restaurantAltered);
-
+        try {
+            var restaurant = restaurantRegistryService.getById(restaurantId);
+            restaurantMapper.copyToDomain(restaurantInput, restaurant);
+            var restaurantAltered = restaurantRegistryService.save(restaurant);
+            return restaurantMapper.toOutput(restaurantAltered);
+        } catch (CityNotFoundException | StateNotFoundException e) {
+            throw new ModelValidationException(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{restaurantId}")
