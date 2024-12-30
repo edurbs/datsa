@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AddressOutput {
+public class AddressOutput implements OutputModel {
 
     private String zipCode;
     private String street;

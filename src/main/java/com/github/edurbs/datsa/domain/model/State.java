@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class State {
+public class State implements DomainModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

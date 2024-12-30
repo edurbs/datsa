@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class KitchenOutput {
+public class KitchenOutput implements OutputModel {
 
     private Long id;
     private String name;

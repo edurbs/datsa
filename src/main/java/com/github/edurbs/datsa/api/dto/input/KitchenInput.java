@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class KitchenInput {
+public class KitchenInput implements InputModel{
 
     @NotBlank
     private String name;

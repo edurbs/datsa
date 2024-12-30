@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Data
 @Embeddable
-public class Address {
+public class Address  {
 
     @Column(name = "address_zip_code")
     private String zipCode;

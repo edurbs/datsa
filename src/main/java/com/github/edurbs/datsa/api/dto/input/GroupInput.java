@@ -1,14 +1,17 @@
 package com.github.edurbs.datsa.api.dto.input;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class PaymentMethodInput implements InputModel{
+public class GroupInput implements InputModel {
 
-    @NotBlank
+    @NotNull
+    private String name;
+
+    @NotNull
     private String description;
 }

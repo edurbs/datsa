@@ -21,7 +21,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Kitchen {
+public class Kitchen implements DomainModel {
 
 
     @Id

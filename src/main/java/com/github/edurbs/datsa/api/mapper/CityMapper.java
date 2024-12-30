@@ -12,7 +12,7 @@ import com.github.edurbs.datsa.domain.model.City;
 import com.github.edurbs.datsa.domain.model.State;
 
 @Component
-public class CityMapper {
+public class CityMapper implements IMapper<City, CityInput, CityOutput> {
 
     @Autowired
     private ModelMapper modelMapper;
@@ -27,7 +27,9 @@ public class CityMapper {
     }
 
     public CityOutput toOutput(City city) {
-        return modelMapper.map(city, CityOutput.class);
+        var cityOutput = modelMapper.map(city, CityOutput.class);
+        cityOutput.getState().setName(city.getState().getName());
+        return cityOutput;
     }
 
     public List<CityOutput> toOutputList(List<City> cities) {

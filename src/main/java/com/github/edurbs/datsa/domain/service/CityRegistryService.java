@@ -32,7 +32,8 @@ public class CityRegistryService {
         if (state.getId() == null) {
             throw new ModelValidationException("State id not informed");
         }
-        stateRegistryService.getById(state.getId());
+        var stateFromDB = stateRegistryService.getById(state.getId());
+        state.setName(stateFromDB.getName());
         return cityRepository.save(city);
     }
 
@@ -42,13 +43,13 @@ public class CityRegistryService {
 
     public City getById(Long id) {
         return cityRepository.findById(id)
-                .orElseThrow(launtCityNotFoundException(id));
+                .orElseThrow(() -> new CityNotFoundException("City id %d does not exists".formatted(id)));
     }
 
     @Transactional
     public void remove(Long id) {
         if (notExists(id)) {
-            launtCityNotFoundException(id);
+            throw new CityNotFoundException("City id %d does not exists".formatted(id));
         }
         if (countStatesByCityId(id) > 0) {
             throw new ModelInUseException("City id %d in use".formatted(id));
@@ -63,10 +64,6 @@ public class CityRegistryService {
 
     private boolean notExists(Long id) {
         return !exists(id);
-    }
-
-    private Supplier<CityNotFoundException> launtCityNotFoundException(Long id) {
-        return () -> new CityNotFoundException("City id %d does not exists".formatted(id));
     }
 
     public Long countStatesByCityId(Long id) {

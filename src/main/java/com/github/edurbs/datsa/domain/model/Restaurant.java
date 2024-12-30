@@ -36,7 +36,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Restaurant {
+public class Restaurant implements DomainModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

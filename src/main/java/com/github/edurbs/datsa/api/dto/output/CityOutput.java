@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CityOutput {
+public class CityOutput implements OutputModel {
 
     private Long id;
     private String name;

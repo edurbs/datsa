@@ -14,7 +14,6 @@ import com.github.edurbs.datsa.domain.model.Kitchen;
 public class KitchenMapper {
     private final ModelMapper modelMapper;
 
-    @Autowired
     public KitchenMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }

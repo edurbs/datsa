@@ -27,7 +27,7 @@ POST {{host}}/{{r}}
     "complement": null,
     "neighborhood": "Centro",
     "city": {
-      "id": 1
+      "id": 100
     }
   }
 }
@@ -48,7 +48,7 @@ PUT {{host}}/{{r}}/7
     "complement": null,
     "neighborhood": "Centro",
     "city": {
-      "id": 1
+      "id": 100
     }
   }
 }

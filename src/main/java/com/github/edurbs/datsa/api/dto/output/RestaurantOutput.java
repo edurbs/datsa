@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class RestaurantOutput {
+public class RestaurantOutput implements OutputModel {
 
     private Long id;
     private String name;

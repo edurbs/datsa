@@ -1,0 +1,29 @@
+@hostname = localhost
+@port = 8080
+@host = http://{{hostname}}:{{port}}
+@contentType = content-type: application/json
+@r = groups
+
+###----------------------
+GET {{host}}/{{r}}
+###
+GET {{host}}/{{r}}/4
+###
+POST {{host}}/{{r}}
+{{contentType}}
+
+ {
+    "name": "GERENTE",
+    "description": "Gerente"
+  }
+###
+PUT {{host}}/{{r}}/4
+{{contentType}}
+
+ {
+    "name": "GERENTEAlterado",
+    "description": "Gerente"
+  }
+###
+DELETE {{host}}/{{r}}/4
+###

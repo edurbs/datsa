@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class OrderItem {
+public class OrderItem implements DomainModel {
 
     @Id
     @EqualsAndHashCode.Include

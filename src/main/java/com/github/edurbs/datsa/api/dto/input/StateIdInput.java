@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StateIdInput {
+public class StateIdInput implements InputModel{
 
     @NotNull
     private Long id;

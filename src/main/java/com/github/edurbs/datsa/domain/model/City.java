@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class City{
+public class City implements DomainModel{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

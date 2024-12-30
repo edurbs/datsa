@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 @Entity(name = "group_system")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Group {
+public class Group implements DomainModel{
 
     @Id
     @EqualsAndHashCode.Include

@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AddressInput {
+public class AddressInput implements InputModel {
 
     @NotBlank
     private String zipCode;

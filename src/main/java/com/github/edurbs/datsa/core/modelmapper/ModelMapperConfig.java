@@ -13,6 +13,7 @@ public class ModelMapperConfig {
     @Bean
     public ModelMapper modelMapper() {
         var mapper = new ModelMapper();
+
         var addressDomainToOutput = mapper.createTypeMap(Address.class, AddressOutput.class);
         addressDomainToOutput.<String>addMapping(
             domain -> domain.getCity().getState().getName(),

@@ -19,12 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.edurbs.datsa.api.dto.input.CityInput;
 import com.github.edurbs.datsa.api.dto.output.CityOutput;
 import com.github.edurbs.datsa.api.mapper.CityMapper;
+import com.github.edurbs.datsa.domain.exception.CityNotFoundException;
+import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
+import com.github.edurbs.datsa.domain.exception.ModelValidationException;
+import com.github.edurbs.datsa.domain.exception.StateNotFoundException;
 import com.github.edurbs.datsa.domain.service.CityRegistryService;
 
 @RestController
 @RequestMapping("/cities")
 public class CityController {
-    private static final String CITY_URL = "/cities";
 
     @Autowired
     private CityRegistryService cityRegistryService;
@@ -39,23 +42,37 @@ public class CityController {
 
     @GetMapping("/{cityId}")
     public CityOutput getById(@PathVariable Long cityId) {
-        return cityMapper.toOutput(cityRegistryService.getById(cityId));
+        try {
+            return cityMapper.toOutput(cityRegistryService.getById(cityId));
+        } catch (CityNotFoundException e) {
+            throw new ModelNotFoundException(e.getMessage());
+        }
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CityOutput add(@RequestBody @Valid CityInput cityInput) {
-        var city = cityMapper.toDomain(cityInput);
-        var cityAdded = cityRegistryService.save(city);
-        return cityMapper.toOutput(cityAdded);
+        try {
+            var city = cityMapper.toDomain(cityInput);
+            var cityAdded = cityRegistryService.save(city);
+            return cityMapper.toOutput(cityAdded);
+        } catch (StateNotFoundException e) {
+            throw new ModelValidationException(e.getMessage());
+        }
     }
 
     @PutMapping("/{cityId}")
     public CityOutput alter(@PathVariable Long cityId, @RequestBody @Valid CityInput cityInput) {
-        var city = cityRegistryService.getById(cityId);
-        cityMapper.copyToDomain(cityInput, city);
-        var alteredCity = cityRegistryService.save(city);
-        return cityMapper.toOutput(alteredCity);
+        try {
+            var city = cityRegistryService.getById(cityId);
+            cityMapper.copyToDomain(cityInput, city);
+            var alteredCity = cityRegistryService.save(city);
+            return cityMapper.toOutput(alteredCity);
+        } catch (CityNotFoundException e) {
+            throw new ModelNotFoundException(e.getMessage());
+        } catch (StateNotFoundException e){
+            throw new ModelValidationException(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{cityId}")

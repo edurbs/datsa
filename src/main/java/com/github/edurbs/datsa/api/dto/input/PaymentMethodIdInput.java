@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PaymentMethodIdInput {
+public class PaymentMethodIdInput implements InputModel{
 
     @NotBlank
     private Long id;

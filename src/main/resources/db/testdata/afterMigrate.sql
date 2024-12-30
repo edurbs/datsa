@@ -396,3 +396,28 @@ values (1, 1),
     (5, 1),
     (5, 2),
     (6, 3);
+
+INSERT IGNORE INTO
+    group_system (id, name, description)
+values (
+        1,
+        'ADMIN',
+        'Administrador do sistema'
+    );
+
+INSERT IGNORE INTO
+    group_system (id, name, description)
+values (
+        2,
+        'USER',
+        'Usuário do sistema'
+    );
+
+
+INSERT IGNORE INTO
+    group_system (id, name, description)
+values (
+        3,
+        'USER',
+        'Gerente do restaurante'
+    );

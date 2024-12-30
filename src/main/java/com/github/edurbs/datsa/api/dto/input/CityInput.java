@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CityInput {
+public class CityInput implements InputModel {
 
     @NotBlank
     private String name;
