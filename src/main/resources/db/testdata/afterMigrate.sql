@@ -1,109 +1,65 @@
 set foreign_key_checks = 0;
-
 delete from city;
-
 delete from kitchen;
-
 delete from state;
-
 delete from payment_method;
-
 delete from group_system;
-
 delete from group_permission;
-
 delete from permission;
-
 delete from product;
-
 delete from restaurant;
-
 delete from restaurant_payment_method;
-
 delete from user;
-
 delete from user_group;
-
 set foreign_key_checks = 1;
-
 alter table city auto_increment = 1;
-
 alter table kitchen auto_increment = 1;
-
 alter table state auto_increment = 1;
-
 alter table payment_method auto_increment = 1;
-
 alter table group_system auto_increment = 1;
-
 alter table permission auto_increment = 1;
-
 alter table product auto_increment = 1;
-
 alter table restaurant auto_increment = 1;
-
 alter table user auto_increment = 1;
-
-insert ignore into kitchen (id, name) values (1, 'Tailandesa');
-
-insert ignore into kitchen (id, name) values (2, 'Indiana');
-
-insert ignore into state (id, name) values (1, 'Minas Gerais');
-
-insert ignore into state (id, name) values (2, 'São Paulo');
-
-insert ignore into state (id, name) values (3, 'Ceará');
-
-insert ignore into
-    city (id, name, state_id)
+insert ignore into kitchen (id, name)
+values (1, 'Tailandesa');
+insert ignore into kitchen (id, name)
+values (2, 'Indiana');
+insert ignore into state (id, name)
+values (1, 'Minas Gerais');
+insert ignore into state (id, name)
+values (2, 'São Paulo');
+insert ignore into state (id, name)
+values (3, 'Ceará');
+insert ignore into city (id, name, state_id)
 values (1, 'Uberlândia', 1);
-
-insert ignore into
-    city (id, name, state_id)
+insert ignore into city (id, name, state_id)
 values (2, 'Belo Horizonte', 1);
-
-insert ignore into
-    city (id, name, state_id)
+insert ignore into city (id, name, state_id)
 values (3, 'São Paulo', 2);
-
-insert ignore into
-    city (id, name, state_id)
+insert ignore into city (id, name, state_id)
 values (4, 'Campinas', 2);
-
-insert ignore into
-    city (id, name, state_id)
+insert ignore into city (id, name, state_id)
 values (5, 'Fortaleza', 3);
-
-insert ignore into
-    payment_method (id, description)
+insert ignore into payment_method (id, description)
 values (1, 'Cartão de crédito');
-
-insert ignore into
-    payment_method (id, description)
+insert ignore into payment_method (id, description)
 values (2, 'Cartão de débito');
-
-insert ignore into
-    payment_method (id, description)
+insert ignore into payment_method (id, description)
 values (3, 'Dinheiro');
-
-insert ignore into
-    permission (id, name, description)
+insert ignore into permission (id, name, description)
 values (
         1,
         'CONSULTAR_COZINHAS',
         'Permite consultar cozinhas'
     );
-
-insert ignore into
-    permission (id, name, description)
+insert ignore into permission (id, name, description)
 values (
         2,
         'EDITAR_COZINHAS',
         'Permite editar cozinhas'
     );
-
-insert ignore into
-    restaurant (
+insert ignore into restaurant (
         id,
         name,
         shipping_fee,
@@ -131,9 +87,7 @@ values (
         '1000',
         'Centro'
     );
-
-insert ignore into
-    restaurant (
+insert ignore into restaurant (
         id,
         name,
         shipping_fee,
@@ -151,9 +105,7 @@ values (
         utc_timestamp,
         1
     );
-
-insert ignore into
-    restaurant (
+insert ignore into restaurant (
         id,
         name,
         shipping_fee,
@@ -171,13 +123,11 @@ values (
         utc_timestamp,
         1
     );
-
-insert ignore into kitchen (id, name) values (3, 'Argentina');
-
-insert ignore into kitchen (id, name) values (4, 'Brasileira');
-
-insert ignore into
-    restaurant (
+insert ignore into kitchen (id, name)
+values (3, 'Argentina');
+insert ignore into kitchen (id, name)
+values (4, 'Brasileira');
+insert ignore into restaurant (
         id,
         name,
         shipping_fee,
@@ -195,9 +145,7 @@ values (
         utc_timestamp,
         1
     );
-
-insert ignore into
-    restaurant (
+insert ignore into restaurant (
         id,
         name,
         shipping_fee,
@@ -215,9 +163,7 @@ values (
         utc_timestamp,
         1
     );
-
-insert ignore into
-    restaurant (
+insert ignore into restaurant (
         id,
         name,
         shipping_fee,
@@ -235,9 +181,7 @@ values (
         utc_timestamp,
         1
     );
-
-insert ignore into
-    product (
+insert ignore into product (
         name,
         DESCRIPTION,
         price,
@@ -251,9 +195,7 @@ values (
         1,
         1
     );
-
-insert ignore into
-    product (
+insert ignore into product (
         name,
         DESCRIPTION,
         price,
@@ -267,9 +209,7 @@ values (
         1,
         1
     );
-
-insert ignore into
-    product (
+insert ignore into product (
         name,
         DESCRIPTION,
         price,
@@ -283,9 +223,7 @@ values (
         1,
         2
     );
-
-insert ignore into
-    product (
+insert ignore into product (
         name,
         DESCRIPTION,
         price,
@@ -299,9 +237,7 @@ values (
         1,
         3
     );
-
-insert ignore into
-    product (
+insert ignore into product (
         name,
         DESCRIPTION,
         price,
@@ -315,9 +251,7 @@ values (
         1,
         3
     );
-
-insert ignore into
-    product (
+insert ignore into product (
         name,
         DESCRIPTION,
         price,
@@ -331,9 +265,7 @@ values (
         1,
         4
     );
-
-insert ignore into
-    product (
+insert ignore into product (
         name,
         DESCRIPTION,
         price,
@@ -347,9 +279,7 @@ values (
         1,
         4
     );
-
-insert ignore into
-    product (
+insert ignore into product (
         name,
         DESCRIPTION,
         price,
@@ -363,9 +293,7 @@ values (
         1,
         5
     );
-
-insert ignore into
-    product (
+insert ignore into product (
         name,
         DESCRIPTION,
         price,
@@ -379,9 +307,7 @@ values (
         1,
         6
     );
-
-insert ignore into
-    restaurant_payment_method (
+insert ignore into restaurant_payment_method (
         restaurant_id,
         payment_method_id
     )
@@ -396,28 +322,27 @@ values (1, 1),
     (5, 1),
     (5, 2),
     (6, 3);
-
-INSERT IGNORE INTO
-    group_system (id, name, description)
+INSERT IGNORE INTO group_system (id, name, description)
 values (
         1,
         'ADMIN',
         'Administrador do sistema'
     );
-
-INSERT IGNORE INTO
-    group_system (id, name, description)
+INSERT IGNORE INTO group_system (id, name, description)
 values (
         2,
         'USER',
         'Usuário do sistema'
     );
-
-
-INSERT IGNORE INTO
-    group_system (id, name, description)
+INSERT IGNORE INTO group_system (id, name, description)
 values (
         3,
         'USER',
         'Gerente do restaurante'
     );
+INSERT IGNORE INTO user (id, name, email, password)
+VALUES (1, 'Eduardo', 'edu77@asd.com', '123456');
+INSERT IGNORE INTO user (id, name, email, password)
+VALUES (2, 'Maria', 'maria2@asd.com', '123456');
+INSERT IGNORE INTO user (id, name, email, password)
+VALUES (3, 'José', 'jose@asd.com', '123456');
