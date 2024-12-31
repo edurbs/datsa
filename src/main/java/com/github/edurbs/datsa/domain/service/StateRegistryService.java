@@ -29,13 +29,13 @@ public class StateRegistryService {
 
     public State getById(Long id) {
         return stateRepository.findById(id)
-                .orElseThrow(launchNotFoundException(id));
+                .orElseThrow(() -> new StateNotFoundException(id));
     }
 
     @Transactional
     public void remove(Long id) {
         if (notExists(id)) {
-            launchNotFoundException(id);
+            throw new StateNotFoundException(id);
         }
         try {
             stateRepository.deleteById(id);
@@ -43,10 +43,6 @@ public class StateRegistryService {
         } catch (DataIntegrityViolationException e) {
             throw new ModelInUseException("State id %d in use".formatted(id));
         }
-    }
-
-    private Supplier<StateNotFoundException> launchNotFoundException(Long id) {
-        return () -> new StateNotFoundException("State id %d does not exist".formatted(id));
     }
 
     private boolean exists(Long id) {
