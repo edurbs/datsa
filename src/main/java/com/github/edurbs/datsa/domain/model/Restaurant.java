@@ -17,18 +17,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.github.edurbs.datsa.core.validation.Groups;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -86,6 +77,10 @@ public class Restaurant implements DomainModel {
 
     public boolean isInactive() {
         return !active;
+    }
+
+    public boolean removePaymentMethod(PaymentMethod paymentMethod){
+        return getPaymentMethods().remove(paymentMethod);
     }
 
 }

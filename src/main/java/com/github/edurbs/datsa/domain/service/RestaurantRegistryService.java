@@ -25,6 +25,9 @@ public class RestaurantRegistryService {
     @Autowired
     private CityRegistryService cityRegistryService;
 
+    @Autowired
+    private PaymentMethodRegistryService paymentMethodRegistryService;
+
     @Transactional
     public Restaurant save(Restaurant restaurant) {
         var kitchen = restaurant.getKitchen();
@@ -80,6 +83,14 @@ public class RestaurantRegistryService {
             throw new ModelValidationException("Restaurant id %d already inactive".formatted(id));
         }
         restaurant.inactivate();
+    }
+
+    @Transactional
+    public void disassociatePaymentMethod(Long restaurantId, Long paymentMethodId){
+        var restaurant = getById(restaurantId);
+        var paymentMethod = paymentMethodRegistryService.getById(paymentMethodId);
+        restaurant.removePaymentMethod(paymentMethod);
+        // will be auto saved by JPA
     }
 
     private boolean exists(Long id) {
