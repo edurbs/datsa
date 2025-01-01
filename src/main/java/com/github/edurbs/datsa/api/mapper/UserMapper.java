@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.github.edurbs.datsa.api.dto.input.UserInput;
+import com.github.edurbs.datsa.api.dto.input.UserUpdateInput;
 import com.github.edurbs.datsa.api.dto.output.UserOutput;
 import com.github.edurbs.datsa.domain.model.User;
 
@@ -19,6 +20,10 @@ public class UserMapper implements IMapper<User, UserInput, UserOutput> {
     @Override
     public User toDomain(UserInput inputModel) {
         return mapper.map(inputModel, User.class);
+    }
+
+    public void copyToDomain(UserUpdateInput userUpdateInput, User domainModel){
+        mapper.map(userUpdateInput, domainModel);
     }
 
     @Override
