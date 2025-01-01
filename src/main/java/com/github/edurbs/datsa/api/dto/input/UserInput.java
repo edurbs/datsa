@@ -1,6 +1,7 @@
 package com.github.edurbs.datsa.api.dto.input;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -11,10 +12,11 @@ import lombok.Setter;
 @Setter
 public class UserInput implements InputModel {
 
-    @NotNull
+    @NotBlank
     private String name;
 
     @Email
+    @NotBlank
     private String email;
 
     @NotNull

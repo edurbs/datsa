@@ -1,6 +1,6 @@
 package com.github.edurbs.datsa.api.dto.input;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class UserPasswordInput implements InputModel {
 
-    @NotNull
+    @NotBlank
     private String oldPassword;
 
     @Size(min = 8)
