@@ -90,7 +90,15 @@ public class RestaurantRegistryService {
         var restaurant = getById(restaurantId);
         var paymentMethod = paymentMethodRegistryService.getById(paymentMethodId);
         restaurant.removePaymentMethod(paymentMethod);
-        // will be auto saved by JPA
+        // will be auto saved by JPA Transactional
+    }
+
+    @Transactional
+    public void associatePaumentMethod(Long restaurantId, Long paymentMethodId){
+        var restaurant = getById(restaurantId);
+        var paymentMethod = paymentMethodRegistryService.getById(paymentMethodId);
+        restaurant.addPaymentMethod(paymentMethod);
+        // will be auto saved by JPA Transactional
     }
 
     private boolean exists(Long id) {

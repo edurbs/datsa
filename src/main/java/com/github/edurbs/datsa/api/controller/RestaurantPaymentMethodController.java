@@ -1,12 +1,13 @@
 package com.github.edurbs.datsa.api.controller;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +27,7 @@ public class RestaurantPaymentMethodController {
     private PaymentMethodMapper paymentMethodMapper;
 
     @GetMapping
-    public List<PaymentMethodOutput> listAll(@PathVariable Long restaurantId) {
+    public Set<PaymentMethodOutput> listAll(@PathVariable Long restaurantId) {
         var restaurant = restaurantRegistryService.getById(restaurantId);
 
         return paymentMethodMapper.toOutputList(restaurant.getPaymentMethods());
@@ -37,5 +38,13 @@ public class RestaurantPaymentMethodController {
     public void disassociate(@PathVariable Long restaurantId, @PathVariable Long paymentMethodId){
         restaurantRegistryService.disassociatePaymentMethod(restaurantId, paymentMethodId);
     }
+
+    @PutMapping("/{paymentMethodId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void associate(@PathVariable Long restaurantId, @PathVariable Long paymentMethodId){
+        restaurantRegistryService.associatePaumentMethod(restaurantId, paymentMethodId);
+    }
+
+
 
 }

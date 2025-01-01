@@ -64,7 +64,8 @@ create table restaurant (
 
 create table restaurant_payment_method (
     restaurant_id bigint not null,
-    payment_method_id bigint not null
+    payment_method_id bigint not null,
+    primary key (restaurant_id, payment_method_id)
 ) engine = InnoDB;
 
 create table state (
