@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.github.edurbs.datsa.api.dto.input.UserInput;
 import com.github.edurbs.datsa.api.dto.output.UserOutput;
 import com.github.edurbs.datsa.domain.model.User;
 
+@Component
 public class UserMapper implements IMapper<User, UserInput, UserOutput> {
 
     @Autowired
