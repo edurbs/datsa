@@ -1,0 +1,56 @@
+@hostname = localhost
+@port = 8080
+@contentType = content-type: application/json
+@r = restaurants
+@host = http://{{hostname}}:{{port}}/{{r}}
+@mp = payment-methods
+
+###----------------------
+GET {{host}}/1/{{mp}}
+###
+GET {{host}}/1/{{mp}}
+###
+DELETE {{host}}/{{r}}/1/active
+###
+POST {{host}}/{{r}}
+{{contentType}}
+
+{
+  "name": "Thai Gourmet",
+  "shippingFee": 10.00,
+  "kitchen": {
+    "id": 1
+  },
+  "address": {
+    "zipCode": "38400-999",
+    "street": "Rua João Pinheiro",
+    "number": "1000",
+    "complement": null,
+    "neighborhood": "Centro",
+    "city": {
+      "id": 100
+    }
+  }
+}
+###
+PUT {{host}}/{{r}}/7
+{{contentType}}
+
+{
+  "name": "Thai Gourmet",
+  "shippingFee": 10.00,
+  "kitchen": {
+    "id": 1
+  },
+  "address": {
+    "zipCode": "38400-999",
+    "street": "Rua João Pinheiro",
+    "number": "2000",
+    "complement": null,
+    "neighborhood": "Centro",
+    "city": {
+      "id": 100
+    }
+  }
+}
+
