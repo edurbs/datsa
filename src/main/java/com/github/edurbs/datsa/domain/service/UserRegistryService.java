@@ -7,7 +7,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.edurbs.datsa.api.dto.output.UserOutput;
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
+import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.exception.UserNotFoundException;
 import com.github.edurbs.datsa.domain.model.User;
 import com.github.edurbs.datsa.domain.repository.UserRepository;
@@ -47,5 +49,19 @@ public class UserRegistryService {
 
     private boolean notExists(Long id){
         return !repository.existsById(id);
+    }
+
+    @Transactional
+    public User changePassword(Long id, String oldPassword, String newPassword) {
+        var user = getById(id);
+        if(wrongOldPassword(oldPassword, user)){
+            throw new ModelValidationException("Wrong password");
+        }
+        user.setPassword(newPassword);
+        return repository.save(user);
+    }
+
+    private boolean wrongOldPassword(String oldPassword, User user) {
+        return !oldPassword.equals(user.getPassword());
     }
 }

@@ -22,9 +22,17 @@ PUT {{host}}/{{r}}/4
 {{contentType}}
 
  {
-    "name": "GERENTEAlterado",
-    "description": "Gerente"
+    "name": "nome alterado",
+    "email": "gerente@gerenteAlterado.com"
   }
 ###
 DELETE {{host}}/{{r}}/4
+###
+PUT {{host}}/{{r}}/1/password
+{{contentType}}
+
+{
+    "oldPassword" : "",
+    "newPassword" : ""
+}
 ###

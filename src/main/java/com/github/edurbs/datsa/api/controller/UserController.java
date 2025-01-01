@@ -5,17 +5,21 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.edurbs.datsa.api.dto.input.UserInput;
+import com.github.edurbs.datsa.api.dto.input.UserPasswordInput;
 import com.github.edurbs.datsa.api.dto.input.UserUpdateInput;
 import com.github.edurbs.datsa.api.dto.output.UserOutput;
 import com.github.edurbs.datsa.api.mapper.UserMapper;
 import com.github.edurbs.datsa.domain.service.UserRegistryService;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +51,7 @@ public class UserController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public UserOutput add(@RequestBody @Valid UserInput userInput) {
         var domainUser = mapper.toDomain(userInput);
         var userSaved = service.save(domainUser);
@@ -59,6 +64,18 @@ public class UserController {
         mapper.copyToDomain(userUpdateInput, domainUser);
         var alteredUser = service.save(domainUser);
         return mapper.toOutput(alteredUser);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remove(@PathVariable Long id){
+        service.remove(id);
+    }
+
+    @PutMapping("/{id}/password")
+    public UserOutput alterPassword(@PathVariable Long id, @RequestBody @Valid UserPasswordInput userPasswordInput) {
+        var domainUser = service.changePassword(id, userPasswordInput.getOldPassword(), userPasswordInput.getNewPassword());
+        return mapper.toOutput(domainUser);
     }
 
 
