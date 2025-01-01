@@ -340,9 +340,15 @@ values (
         'USER',
         'Gerente do restaurante'
     );
-INSERT IGNORE INTO user (id, name, email, password)
-VALUES (1, 'Eduardo', 'edu77@asd.com', '123456');
-INSERT IGNORE INTO user (id, name, email, password)
-VALUES (2, 'Maria', 'maria2@asd.com', '123456');
-INSERT IGNORE INTO user (id, name, email, password)
-VALUES (3, 'José', 'jose@asd.com', '123456');
+INSERT IGNORE INTO user (id, name, email, password, registration_date,
+        last_update_date)
+VALUES (1, 'Eduardo', 'edu77@asd.com', '123456', utc_timestamp,
+        utc_timestamp);
+INSERT IGNORE INTO user (id, name, email, password, registration_date,
+        last_update_date)
+VALUES (2, 'Maria', 'maria2@asd.com', '123456', utc_timestamp,
+        utc_timestamp);
+INSERT IGNORE INTO user (id, name, email, password, registration_date,
+        last_update_date)
+VALUES (3, 'José', 'jose@asd.com', '123456', utc_timestamp,
+        utc_timestamp);
