@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class UserOutput {
+public class UserOutput implements OutputModel {
 
     private Long id;
     private String name;

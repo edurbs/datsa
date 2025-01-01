@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserUpdateInput {
+public class UserUpdateInput implements InputModel {
 
     @NotNull
     private String name;

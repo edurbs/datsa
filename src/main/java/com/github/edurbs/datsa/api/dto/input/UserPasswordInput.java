@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserPasswordInput {
+public class UserPasswordInput implements InputModel {
 
     @NotNull
     private String oldPassword;

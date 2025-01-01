@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserInput {
+public class UserInput implements InputModel {
 
     @NotNull
     private String name;
