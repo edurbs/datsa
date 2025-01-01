@@ -52,4 +52,12 @@ public class User implements DomainModel {
             inverseJoinColumns = @JoinColumn(name = "group_id"))
     private List<Group> groups = new ArrayList<>();
 
+    public boolean passwordEqualsTo(String password){
+        return this.password.equals(password);
+    }
+
+    public boolean passwordNotEqualsTo(String password){
+        return !passwordEqualsTo(password);
+    }
+
 }

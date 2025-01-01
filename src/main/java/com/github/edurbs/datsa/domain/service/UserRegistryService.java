@@ -54,14 +54,11 @@ public class UserRegistryService {
     @Transactional
     public User changePassword(Long id, String oldPassword, String newPassword) {
         var user = getById(id);
-        if(wrongOldPassword(oldPassword, user)){
+        if(user.passwordNotEqualsTo(oldPassword)){
             throw new ModelValidationException("Wrong password");
         }
         user.setPassword(newPassword);
         return repository.save(user);
     }
 
-    private boolean wrongOldPassword(String oldPassword, User user) {
-        return !oldPassword.equals(user.getPassword());
-    }
 }
