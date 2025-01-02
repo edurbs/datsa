@@ -8,49 +8,8 @@
 ###----------------------
 GET {{host}}/1/{{mp}}
 ###
-PUT {{host}}/1/{{mp}}/2
+PUT {{host}}/1/{{mp}}/3
 ###
 DELETE {{host}}/1/{{mp}}/1
 ###
-POST {{host}}/{{r}}
-{{contentType}}
-
-{
-  "name": "Thai Gourmet",
-  "shippingFee": 10.00,
-  "kitchen": {
-    "id": 1
-  },
-  "address": {
-    "zipCode": "38400-999",
-    "street": "Rua João Pinheiro",
-    "number": "1000",
-    "complement": null,
-    "neighborhood": "Centro",
-    "city": {
-      "id": 100
-    }
-  }
-}
-###
-PUT {{host}}/{{r}}/7
-{{contentType}}
-
-{
-  "name": "Thai Gourmet",
-  "shippingFee": 10.00,
-  "kitchen": {
-    "id": 1
-  },
-  "address": {
-    "zipCode": "38400-999",
-    "street": "Rua João Pinheiro",
-    "number": "2000",
-    "complement": null,
-    "neighborhood": "Centro",
-    "city": {
-      "id": 100
-    }
-  }
-}
 

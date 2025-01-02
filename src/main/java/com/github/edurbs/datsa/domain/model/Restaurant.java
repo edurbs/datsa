@@ -67,7 +67,7 @@ public class Restaurant implements DomainModel {
     private Set<PaymentMethod> paymentMethods = new HashSet<>();
 
     @OneToMany(mappedBy = "restaurant")
-    private List<Product> products = new ArrayList<>();
+    private Set<Product> products = new HashSet<>();
 
     public void activate() {
         setActive(true);

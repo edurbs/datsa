@@ -32,7 +32,13 @@ public class PaymentMethodMapper {
         return modelMapper.map(domain, PaymentMethodOutput.class);
     }
 
-    public Set<PaymentMethodOutput> toOutputList(Set<PaymentMethod> domains){
+    public List<PaymentMethodOutput> toOutputList(List<PaymentMethod> domains){
+        return domains.stream()
+                .map(this::toOutput)
+                .toList();
+    }
+
+    public Set<PaymentMethodOutput> toOutputSet(Set<PaymentMethod> domains){
         return domains.stream()
                 .map(this::toOutput)
                 .collect(Collectors.toSet());

@@ -30,7 +30,7 @@ public class RestaurantPaymentMethodController {
     public Set<PaymentMethodOutput> listAll(@PathVariable Long restaurantId) {
         var restaurant = restaurantRegistryService.getById(restaurantId);
 
-        return paymentMethodMapper.toOutputList(restaurant.getPaymentMethods());
+        return paymentMethodMapper.toOutputSet(restaurant.getPaymentMethods());
     }
 
     @DeleteMapping("/{paymentMethodId}")
