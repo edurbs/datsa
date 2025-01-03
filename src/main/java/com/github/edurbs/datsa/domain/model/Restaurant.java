@@ -2,9 +2,8 @@ package com.github.edurbs.datsa.domain.model;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -22,6 +21,8 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.github.edurbs.datsa.domain.exception.ProductNotFoundException;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -87,6 +88,13 @@ public class Restaurant implements DomainModel {
 
     public boolean addPaymentMethod(PaymentMethod paymentMethod){
         return getPaymentMethods().add(paymentMethod);
+    }
+
+    public Product getProduct(Long id){
+        return getProducts().stream()
+            .filter(product -> product.getId().equals(id))
+            .findFirst()
+            .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
 }

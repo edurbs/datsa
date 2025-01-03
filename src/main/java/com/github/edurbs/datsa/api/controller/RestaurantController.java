@@ -22,7 +22,9 @@ import com.github.edurbs.datsa.api.dto.input.RestaurantInput;
 import com.github.edurbs.datsa.api.dto.output.RestaurantOutput;
 import com.github.edurbs.datsa.api.mapper.RestaurantMapper;
 import com.github.edurbs.datsa.domain.exception.CityNotFoundException;
+import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
+import com.github.edurbs.datsa.domain.exception.RestaurantNotFoundException;
 import com.github.edurbs.datsa.domain.exception.StateNotFoundException;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 
@@ -43,7 +45,11 @@ public class RestaurantController {
 
     @GetMapping("/{restaurantId}")
     public RestaurantOutput getById(@PathVariable Long restaurantId) {
-        return restaurantMapper.toOutput(restaurantRegistryService.getById(restaurantId));
+        try {
+            return restaurantMapper.toOutput(restaurantRegistryService.getById(restaurantId));
+        } catch (RestaurantNotFoundException e) {
+            throw new ModelNotFoundException(e.getMessage());
+        }
     }
 
     @PostMapping
@@ -68,25 +74,39 @@ public class RestaurantController {
             return restaurantMapper.toOutput(restaurantAltered);
         } catch (CityNotFoundException | StateNotFoundException e) {
             throw new ModelValidationException(e.getMessage());
+        } catch (RestaurantNotFoundException e){
+            throw new ModelNotFoundException(e.getMessage());
         }
     }
 
     @DeleteMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long restaurantId) {
+        try {
             restaurantRegistryService.remove(restaurantId);
+        } catch (RestaurantNotFoundException e) {
+            throw new ModelNotFoundException(e.getMessage());
+        }
     }
 
     @PutMapping("/{restaurantId}/active")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void activate(@PathVariable Long restaurantId) {
-        restaurantRegistryService.activate(restaurantId);
+        try {
+            restaurantRegistryService.activate(restaurantId);
+        } catch (RestaurantNotFoundException e) {
+            throw new ModelNotFoundException(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{restaurantId}/active")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inactivate(@PathVariable Long restaurantId) {
-        restaurantRegistryService.inactivate(restaurantId);
+        try {
+            restaurantRegistryService.inactivate(restaurantId);
+        } catch (RestaurantNotFoundException e) {
+            throw new ModelNotFoundException(e.getMessage());
+        }
     }
 
 

@@ -1,6 +1,7 @@
 package com.github.edurbs.datsa.domain.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -10,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
+import com.github.edurbs.datsa.domain.exception.RestaurantNotFoundException;
+import com.github.edurbs.datsa.domain.model.Product;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
 
@@ -51,13 +54,13 @@ public class RestaurantRegistryService {
 
     public Restaurant getById(Long id) {
         return restaurantRepository.findById(id)
-                .orElseThrow(() -> new ModelNotFoundException("Restaurant id %d does not exists".formatted(id)));
+                .orElseThrow(() -> new RestaurantNotFoundException(id));
     }
 
     @Transactional
     public void remove(Long id) {
         if (notExists(id)) {
-            throw new ModelNotFoundException("Restaurant id %d does not exists".formatted(id));
+            throw new RestaurantNotFoundException(id);
         }
         try {
             restaurantRepository.deleteById(id);
@@ -99,6 +102,16 @@ public class RestaurantRegistryService {
         var paymentMethod = paymentMethodRegistryService.getById(paymentMethodId);
         restaurant.addPaymentMethod(paymentMethod);
         // will be auto saved by JPA Transactional
+    }
+
+    public Set<Product> getAllProducts(Long restaurantId){
+        var restaurant = getById(restaurantId);
+        return restaurant.getProducts();
+    }
+
+    public Product getProduct(Long restaurantId, Long productId){
+        var restaurant = getById(restaurantId);
+        return restaurant.getProduct(productId);
     }
 
     private boolean exists(Long id) {

@@ -1,0 +1,36 @@
+@hostname = localhost
+@port = 8080
+@contentType = content-type: application/json
+@r = restaurants
+@host = http://{{hostname}}:{{port}}/{{r}}
+@mp = products
+
+###----------------------
+GET {{host}}/1/{{mp}}
+###
+GET {{host}}/1/{{mp}}/10
+###
+POST {{host}}/1/{{mp}}
+{{contentType}}
+
+{
+    "name": "Pamonha",
+    "description": "Pamonha especial",
+    "price": 99,
+    "active": true
+}
+###
+PUT {{host}}/1/{{mp}}/10
+{{contentType}}
+
+{
+    "name": "Pamonha alterada",
+    "description": "Pamonha especial",
+    "price": 99.99,
+    "active": true
+}
+
+###
+DELETE {{host}}/1/{{mp}}/1
+###
+
