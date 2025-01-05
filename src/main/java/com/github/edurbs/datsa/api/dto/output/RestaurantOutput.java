@@ -14,6 +14,7 @@ public class RestaurantOutput implements OutputModel {
     private BigDecimal shippingFee;
     private KitchenOutput kitchen;
     private Boolean active;
+    private Boolean open;
     private AddressOutput address;
 
 }
