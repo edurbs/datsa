@@ -104,4 +104,13 @@ public class Restaurant implements DomainModel {
         open=true;
     }
 
+    public void close(){
+        open=false;
+    }
+
+    public boolean isClosed() {
+        return !isOpen();
+    }
+
+
 }

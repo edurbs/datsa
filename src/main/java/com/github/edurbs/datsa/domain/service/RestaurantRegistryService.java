@@ -133,6 +133,15 @@ public class RestaurantRegistryService {
         restaurant.open();
     }
 
+    @Transactional
+    public void close(Long restaurantId) {
+        var restaurant = getById(restaurantId);
+        if(restaurant.isClosed()){
+            throw new ModelValidationException("Restaurant id %s is already closed.".formatted(restaurantId));
+        }
+        restaurant.close();
+    }
+
 
 
 }
