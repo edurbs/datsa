@@ -34,7 +34,7 @@ public class GroupController {
     @GetMapping
     public List<GroupOutput> getAll() {
         var groups = registryService.getAll();
-        return mapper.toOutputList(groups);
+        return mapper.toOutputList(groups).stream().toList();
     }
 
     @GetMapping("/{id}")

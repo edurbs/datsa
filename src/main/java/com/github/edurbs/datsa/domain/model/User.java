@@ -1,8 +1,8 @@
 package com.github.edurbs.datsa.domain.model;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,7 +50,7 @@ public class User implements DomainModel {
     @JoinTable(name = "user_group",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private List<Group> groups = new ArrayList<>();
+    private Set<Group> groups = new HashSet<>();
 
     public boolean passwordEqualsTo(String password){
         return this.password.equals(password);
@@ -58,6 +58,14 @@ public class User implements DomainModel {
 
     public boolean passwordNotEqualsTo(String password){
         return !passwordEqualsTo(password);
+    }
+
+    public boolean addGroup(Group group) {
+        return groups.add(group);
+    }
+
+    public boolean removeGroup(Group group){
+        return groups.remove(group);
     }
 
 }
