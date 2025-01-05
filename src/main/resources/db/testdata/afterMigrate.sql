@@ -59,6 +59,12 @@ values (
         'EDITAR_COZINHAS',
         'Permite editar cozinhas'
     );
+insert ignore into permission (id, name, description)
+values (
+        3,
+        'EXCLUIR_COZINHAS',
+        'Permite excluir cozinhas'
+    );
 insert ignore into restaurant (
         id,
         name,
@@ -340,6 +346,12 @@ values (
         'USER',
         'Gerente do restaurante'
     );
+INSERT IGNORE INTO group_system (id, name, description)
+values (
+        4,
+        'SELLER',
+        'Vendedor do restaurante'
+    );
 INSERT IGNORE INTO user (id, name, email, password, registration_date,
         last_update_date)
 VALUES (1, 'Eduardo', 'edu77@asd.com', '12345678', utc_timestamp,
@@ -352,3 +364,9 @@ INSERT IGNORE INTO user (id, name, email, password, registration_date,
         last_update_date)
 VALUES (3, 'José', 'jose@asd.com', '12345678', utc_timestamp,
         utc_timestamp);
+INSERT ignore into group_permission (group_id, permission_id) VALUES (1,1);
+INSERT ignore into group_permission (group_id, permission_id) VALUES (1,2);
+INSERT ignore into group_permission (group_id, permission_id) VALUES (1,3);
+INSERT ignore into group_permission (group_id, permission_id) VALUES (2,1);
+INSERT ignore into group_permission (group_id, permission_id) VALUES (2,2);
+INSERT ignore into group_permission (group_id, permission_id) VALUES (3,1);
