@@ -53,6 +53,9 @@ public class Restaurant implements DomainModel {
     @Column
     private boolean active = true;
 
+    @Column
+    private boolean open = true;
+
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
     private OffsetDateTime registrationDate;
