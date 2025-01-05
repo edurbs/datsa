@@ -7,7 +7,7 @@
 ###----------------------
 GET {{host}}/{{r}}
 ###
-GET {{host}}/{{r}}/1
+GET {{host}}/{{r}}/100
 ###
 DELETE {{host}}/{{r}}/1/active
 ###
@@ -27,7 +27,7 @@ POST {{host}}/{{r}}
     "complement": null,
     "neighborhood": "Centro",
     "city": {
-      "id": 100
+      "id": 1
     }
   }
 }
@@ -48,12 +48,12 @@ PUT {{host}}/{{r}}/7
     "complement": null,
     "neighborhood": "Centro",
     "city": {
-      "id": 100
+      "id": 2
     }
   }
 }
 ###
-GET {{host}}/{{r}}/1
+GET {{host}}/{{r}}/100
 ###
 PUT {{host}}/{{r}}/1/opening/
 ###
