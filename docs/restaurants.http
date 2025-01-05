@@ -52,4 +52,7 @@ PUT {{host}}/{{r}}/7
     }
   }
 }
-
+###
+GET {{host}}/{{r}}/1
+###
+PUT {{host}}/{{r}}/1/opening/
