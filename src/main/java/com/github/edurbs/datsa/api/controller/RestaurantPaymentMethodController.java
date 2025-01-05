@@ -42,7 +42,7 @@ public class RestaurantPaymentMethodController {
     @PutMapping("/{paymentMethodId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void associate(@PathVariable Long restaurantId, @PathVariable Long paymentMethodId){
-        restaurantRegistryService.associatePaumentMethod(restaurantId, paymentMethodId);
+        restaurantRegistryService.associatePaymentMethod(restaurantId, paymentMethodId);
     }
 
 

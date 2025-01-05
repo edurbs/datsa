@@ -99,7 +99,7 @@ public class RestaurantRegistryService {
     }
 
     @Transactional
-    public void associatePaumentMethod(Long restaurantId, Long paymentMethodId){
+    public void associatePaymentMethod(Long restaurantId, Long paymentMethodId){
         var restaurant = getById(restaurantId);
         var paymentMethod = paymentMethodRegistryService.getById(paymentMethodId);
         restaurant.addPaymentMethod(paymentMethod);
