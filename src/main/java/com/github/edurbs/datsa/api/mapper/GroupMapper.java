@@ -1,5 +1,6 @@
 package com.github.edurbs.datsa.api.mapper;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -32,7 +33,7 @@ public class GroupMapper implements IMapper<Group, GroupInput, GroupOutput>{
     }
 
     @Override
-    public List<GroupOutput> toOutputList(List<Group> domainModels) {
+    public List<GroupOutput> toOutputList(Collection<Group> domainModels) {
         return domainModels.stream()
             .map(this::toOutput)
             .toList();

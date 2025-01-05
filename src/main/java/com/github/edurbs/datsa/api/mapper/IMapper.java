@@ -1,8 +1,7 @@
 package com.github.edurbs.datsa.api.mapper;
 
-import java.util.List;
+import java.util.Collection;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.github.edurbs.datsa.api.dto.input.InputModel;
@@ -16,5 +15,5 @@ public interface IMapper <D extends DomainModel, I extends InputModel, O extends
     public D toDomain(I inputModel);
     public void copyToDomain(I inputModel, D domainModel);
     public O toOutput(D domainModel);
-    public List<O> toOutputList(List<D> domainModels);
+    public Collection<O> toOutputList(Collection<D> domainModels);
 }

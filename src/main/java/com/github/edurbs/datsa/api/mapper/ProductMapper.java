@@ -1,8 +1,7 @@
 package com.github.edurbs.datsa.api.mapper;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -34,16 +33,10 @@ public class ProductMapper implements IMapper<Product, ProductInput, ProductOutp
     }
 
     @Override
-    public List<ProductOutput> toOutputList(List<Product> domainModels) {
+    public List<ProductOutput> toOutputList(Collection<Product> domainModels) {
         return domainModels.stream()
             .map(this::toOutput)
             .toList();
-    }
-
-    public Set<ProductOutput> toOutputSet(Set<Product> domainModels){
-        return domainModels.stream()
-            .map(this::toOutput)
-            .collect(Collectors.toSet());
     }
 
 }

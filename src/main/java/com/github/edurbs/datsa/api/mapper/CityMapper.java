@@ -1,5 +1,6 @@
 package com.github.edurbs.datsa.api.mapper;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -32,7 +33,7 @@ public class CityMapper implements IMapper<City, CityInput, CityOutput> {
         return cityOutput;
     }
 
-    public List<CityOutput> toOutputList(List<City> cities) {
+    public List<CityOutput> toOutputList(Collection<City> cities) {
         return cities.stream()
                 .map(this::toOutput)
                 .toList();

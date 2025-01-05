@@ -1,6 +1,7 @@
 package com.github.edurbs.datsa.api.controller;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -9,9 +10,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +23,6 @@ import com.github.edurbs.datsa.domain.service.ProductRegistryService;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PutMapping;
 
 
 
@@ -39,7 +39,8 @@ public class RestaurantProductController {
 
     @GetMapping
     public Set<ProductOutput> getAll(@PathVariable Long restaurantId) {
-        return productMapper.toOutputSet(restaurantRegistryService.getAllProducts(restaurantId));
+        var list = productMapper.toOutputList(restaurantRegistryService.getAllProducts(restaurantId));
+        return list.stream().collect(Collectors.toSet());
     }
 
     @GetMapping("/{productId}")

@@ -1,5 +1,6 @@
 package com.github.edurbs.datsa.api.mapper;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -37,7 +38,7 @@ public class UserMapper implements IMapper<User, UserInput, UserOutput> {
     }
 
     @Override
-    public List<UserOutput> toOutputList(List<User> domainModels) {
+    public List<UserOutput> toOutputList(Collection<User> domainModels) {
         return domainModels.stream()
                 .map(this::toOutput)
                 .toList();

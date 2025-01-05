@@ -3,6 +3,7 @@
 @host = http://{{hostname}}:{{port}}
 @contentType = content-type: application/json
 @r = groups
+@p = permissions
 
 ###----------------------
 GET {{host}}/{{r}}
@@ -26,4 +27,9 @@ PUT {{host}}/{{r}}/4
   }
 ###
 DELETE {{host}}/{{r}}/4
+### permissions
+GET {{host}}/{{r}}/4/{{p}}
 ###
+PUT {{host}}/{{r}}/2/{{p}}/2
+###
+DELETE {{host}}/{{r}}/2/{{p}}/2

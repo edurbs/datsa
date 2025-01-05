@@ -1,9 +1,9 @@
 package com.github.edurbs.datsa.domain.service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,13 +11,18 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.edurbs.datsa.domain.exception.GroupNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.model.Group;
+import com.github.edurbs.datsa.domain.model.Permission;
 import com.github.edurbs.datsa.domain.repository.GroupRepository;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class GroupRegistryService {
 
-    @Autowired
     private GroupRepository repository;
+
+    private PermissionRegistryService permissionRegistryService;
 
     public List<Group> getAll(){
         return repository.findAll();
@@ -51,4 +56,24 @@ public class GroupRegistryService {
     private boolean notExists(Long id){
         return !repository.existsById(id);
     }
+
+    public Collection<Permission> getAllPermissions(Long groupId) {
+        var group = getById(groupId);
+        return group.getPermissions();
+    }
+
+    @Transactional
+    public void associatePermission(Long groupdId, Long permissionId) {
+        var group = getById(groupdId);
+        var permission = permissionRegistryService.getOne(permissionId);
+        group.addPermission(permission);
+    }
+
+    @Transactional
+    public void dissociatePermission(Long groupId, Long permissionId){
+        var group = getById(groupId);
+        var permission = permissionRegistryService.getOne(permissionId);
+        group.removePermission(permission);
+    }
+
 }
