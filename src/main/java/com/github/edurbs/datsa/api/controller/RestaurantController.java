@@ -109,5 +109,15 @@ public class RestaurantController {
         }
     }
 
+    @PutMapping("/{restaurantId}/opening")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void open(@PathVariable Long restaurantId) {
+        try{
+            restaurantRegistryService.open(restaurantId);
+        }catch (RestaurantNotFoundException e){
+            throw new ModelNotFoundException(e.getMessage());
+        }
+    }
+
 
 }

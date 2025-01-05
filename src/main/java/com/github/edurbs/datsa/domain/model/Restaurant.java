@@ -100,4 +100,8 @@ public class Restaurant implements DomainModel {
             .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
+    public void open() {
+        open=true;
+    }
+
 }

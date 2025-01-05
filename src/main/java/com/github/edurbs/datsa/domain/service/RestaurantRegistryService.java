@@ -3,6 +3,8 @@ package com.github.edurbs.datsa.domain.service;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.bind.ValidationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -120,6 +122,15 @@ public class RestaurantRegistryService {
 
     private boolean notExists(Long id) {
         return !exists(id);
+    }
+
+    @Transactional
+    public void open(Long restaurantId) {
+        var restaurant = getById(restaurantId);
+        if(restaurant.isOpen()){
+            throw new ModelValidationException("Restaurant id %d is already opened.".formatted(restaurantId));
+        }
+        restaurant.open();
     }
 
 
