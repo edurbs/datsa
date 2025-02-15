@@ -3,35 +3,36 @@ package com.github.edurbs.datsa.domain.service;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.bind.ValidationException;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
-import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.exception.RestaurantNotFoundException;
 import com.github.edurbs.datsa.domain.model.Product;
 import com.github.edurbs.datsa.domain.model.Restaurant;
+import com.github.edurbs.datsa.domain.model.User;
 import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level=AccessLevel.PRIVATE)
 public class RestaurantRegistryService {
 
-    @Autowired
-    private RestaurantRepository restaurantRepository;
+    RestaurantRepository restaurantRepository;
 
-    @Autowired
-    private KitchenRegistryService kitchenRegistryService;
+    KitchenRegistryService kitchenRegistryService;
 
-    @Autowired
-    private CityRegistryService cityRegistryService;
+    CityRegistryService cityRegistryService;
 
-    @Autowired
-    private PaymentMethodRegistryService paymentMethodRegistryService;
+    PaymentMethodRegistryService paymentMethodRegistryService;
+
+    UserRegistryService userRegistryService;
 
     @Transactional
     public Restaurant save(Restaurant restaurant) {
@@ -140,6 +141,20 @@ public class RestaurantRegistryService {
             throw new ModelValidationException("Restaurant id %s is already closed.".formatted(restaurantId));
         }
         restaurant.close();
+    }
+
+    @Transactional
+    public void associateUser(Long restauranteId, Long userId){
+        var restaurant = getById(restauranteId);
+        User user = userRegistryService.getById(userId);
+        restaurant.addUser(user);
+    }
+
+    @Transactional
+    public void disassociateUser(Long restaurantId, Long userId){
+        var restaurant = getById(restaurantId);
+        User user = userRegistryService.getById(userId);
+        restaurant.removeUser(user);
     }
 
 

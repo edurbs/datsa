@@ -2,7 +2,6 @@ package com.github.edurbs.datsa.api.controller;
 
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,15 +15,16 @@ import com.github.edurbs.datsa.api.dto.output.PaymentMethodOutput;
 import com.github.edurbs.datsa.api.mapper.PaymentMethodMapper;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/restaurants/{restaurantId}/payment-methods")
+@RequiredArgsConstructor
 public class RestaurantPaymentMethodController {
 
-    @Autowired
-    private RestaurantRegistryService restaurantRegistryService;
+    private final RestaurantRegistryService restaurantRegistryService;
 
-    @Autowired
-    private PaymentMethodMapper paymentMethodMapper;
+    private final PaymentMethodMapper paymentMethodMapper;
 
     @GetMapping
     public Set<PaymentMethodOutput> listAll(@PathVariable Long restaurantId) {

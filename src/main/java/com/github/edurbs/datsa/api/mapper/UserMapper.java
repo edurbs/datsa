@@ -2,9 +2,10 @@ package com.github.edurbs.datsa.api.mapper;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.github.edurbs.datsa.api.dto.input.UserInput;
@@ -12,11 +13,13 @@ import com.github.edurbs.datsa.api.dto.input.UserUpdateInput;
 import com.github.edurbs.datsa.api.dto.output.UserOutput;
 import com.github.edurbs.datsa.domain.model.User;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class UserMapper implements IMapper<User, UserInput, UserOutput> {
 
-    @Autowired
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
     @Override
     public User toDomain(UserInput inputModel) {
@@ -42,6 +45,12 @@ public class UserMapper implements IMapper<User, UserInput, UserOutput> {
         return domainModels.stream()
                 .map(this::toOutput)
                 .toList();
+    }
+
+    public Set<UserOutput> toOutputSet(Collection<User> domainModels){
+        return domainModels.stream()
+            .map(this::toOutput)
+            .collect(Collectors.toSet());
     }
 
 }

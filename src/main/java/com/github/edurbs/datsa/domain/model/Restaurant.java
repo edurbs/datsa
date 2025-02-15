@@ -3,7 +3,6 @@ package com.github.edurbs.datsa.domain.model;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -73,6 +72,13 @@ public class Restaurant implements DomainModel {
     @OneToMany(mappedBy = "restaurant")
     private Set<Product> products = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(name="restaurant_user",
+        joinColumns = @JoinColumn(name="restaurant_id"),
+        inverseJoinColumns = @JoinColumn(name="user_id")
+    )
+    private Set<User> users = new HashSet<>();
+
     public void activate() {
         setActive(true);
     }
@@ -110,6 +116,14 @@ public class Restaurant implements DomainModel {
 
     public boolean isClosed() {
         return !isOpen();
+    }
+
+    public boolean addUser(User user){
+        return getUsers().add(user);
+    }
+
+    public boolean removeUser(User user){
+        return getUsers().remove(user);
     }
 
 
