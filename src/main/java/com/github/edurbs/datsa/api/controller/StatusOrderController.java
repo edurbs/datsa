@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.edurbs.datsa.domain.service.StatusOrderService;
 
+
 @RestController
 @RequestMapping(value="/orders/{orderId}")
 public class StatusOrderController {
@@ -22,4 +23,17 @@ public class StatusOrderController {
     public void confirm(@PathVariable Long orderId){
         statusOrderService.confirm(orderId);
     }
+
+    @PutMapping("/cancel")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cancel(@PathVariable Long orderId) {
+        statusOrderService.cancel(orderId);
+    }
+
+    @PutMapping("/delivery")
+    public void delivery(@PathVariable Long orderId) {
+        statusOrderService.delivery(orderId);
+    }
+
+
 }
