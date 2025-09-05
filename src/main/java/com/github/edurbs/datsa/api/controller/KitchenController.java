@@ -33,7 +33,7 @@ public class KitchenController {
 
     @GetMapping()
     public List<KitchenOutput> listAll() {
-        return kitchenMapper.toOutputList(kitchenRegistryService.getAll());
+        return kitchenMapper.toOutputList(kitchenRegistryService.getAll()).stream().toList();
     }
 
     @GetMapping("/{kitchenId}")

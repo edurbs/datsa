@@ -11,6 +11,8 @@ delete from restaurant;
 delete from restaurant_payment_method;
 delete from user;
 delete from user_group;
+delete from `order`;
+delete from order_item;
 set foreign_key_checks = 1;
 alter table city auto_increment = 1;
 alter table kitchen auto_increment = 1;
@@ -382,3 +384,24 @@ INSERT ignore into restaurant_user (restaurant_id, user_id) values (2,2);
 INSERT ignore into restaurant_user (restaurant_id, user_id) values (3,1);
 INSERT ignore into restaurant_user (restaurant_id, user_id) values (3,2);
 INSERT ignore into restaurant_user (restaurant_id, user_id) values (3,3);
+insert into `order` (id, restaurant_id, customer_user_id, payment_method_id, address_city_id, address_zip_code,
+    address_street, address_number, address_complement, address_neighborhood,
+    status, creation_date, subtotal, shipping_fee, total_amount)
+values (1, 1, 1, 1, 1, '38400-000', 'Rua Floriano Peixoto', '500', 'Apto 801', 'Brasil',
+'CREATED', utc_timestamp, 298.90, 10, 308.90);
+
+insert into order_item (id, order_id, product_id, quantity, unit_price, total_price, note)
+values (1, 1, 1, 1, 78.9, 78.9, null);
+
+insert into order_item (id, order_id, product_id, quantity, unit_price, total_price, note)
+values (2, 1, 2, 2, 110, 220, 'Menos picante, por favor');
+
+
+insert into `order` (id, restaurant_id, customer_user_id, payment_method_id, address_city_id, address_zip_code,
+        address_street, address_number, address_complement, address_neighborhood,
+        status, creation_date, subtotal, shipping_fee, total_amount)
+values (2, 4, 1, 2, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+'CREATED', utc_timestamp, 79, 0, 79);
+
+insert into order_item (id, order_id, product_id, quantity, unit_price, total_price, note)
+values (3, 2, 6, 1, 79, 79, 'Ao ponto');

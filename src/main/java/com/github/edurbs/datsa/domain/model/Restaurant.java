@@ -99,6 +99,14 @@ public class Restaurant implements DomainModel {
         return getPaymentMethods().add(paymentMethod);
     }
 
+    public boolean acceptPaymentMethod(PaymentMethod paymentMethod){
+        return getPaymentMethods().contains(paymentMethod);
+    }
+
+    public boolean notAcceptPaymentMethod(PaymentMethod paymentMethod){
+        return !acceptPaymentMethod(paymentMethod);
+    }
+
     public Product getProduct(Long id){
         return getProducts().stream()
             .filter(product -> product.getId().equals(id))

@@ -1,0 +1,10 @@
+@hostname = localhost
+@port = 8080
+@host = http://{{hostname}}:{{port}}
+@contentType = content-type: application/json
+@r = orders
+
+###----------------------
+GET {{host}}/{{r}}/3
+###
+GET {{host}}/{{r}}/

@@ -7,12 +7,15 @@ import java.util.List;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -21,6 +24,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
+@Table(name="`order`")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Order implements DomainModel {
@@ -32,15 +36,16 @@ public class Order implements DomainModel {
 
     private BigDecimal subtotal;
     private BigDecimal shippingFee;
+    private BigDecimal totalAmount;
 
     @CreationTimestamp
-    private OffsetDateTime createdAt;
+    private OffsetDateTime creationDate;
 
-    private OffsetDateTime confirmedAt;
+    private OffsetDateTime confirmationDate;
 
-    private OffsetDateTime canceledAt;
+    private OffsetDateTime cancellationDate;
 
-    private OffsetDateTime deliveredAt;
+    private OffsetDateTime deliveryDate;
 
     @UpdateTimestamp
     private OffsetDateTime updatedAt;
@@ -48,7 +53,8 @@ public class Order implements DomainModel {
     @Embedded
     private Address address;
 
-    private OrderStatus status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status = OrderStatus.CREATED;
 
     @ManyToOne
     @JoinColumn(nullable = false)
@@ -59,10 +65,25 @@ public class Order implements DomainModel {
     private Restaurant restaurant;
 
     @ManyToOne
-    @JoinColumn(name = "user_customer_id",nullable = false)
+    @JoinColumn(name = "customer_user_id",nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "order")
     private List<OrderItem> items = new ArrayList<>();
+
+    public void calcTotalAmount(){
+        this.subtotal = getItems().stream()
+                .map(item -> item.getTotalPrice())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        this.totalAmount = this.subtotal.add(this.shippingFee);
+    }
+
+    public void setShippingFee(){
+        setShippingFee(getRestaurant().getShippingFee());
+    }
+
+    public void addOrderToItems(){
+        getItems().forEach(item->item.setOrder(this));
+    }
 
 }

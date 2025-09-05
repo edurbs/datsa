@@ -1,0 +1,1 @@
+ALTER TABLE datsa.`order` ADD updated_at DATETIME NULL;
