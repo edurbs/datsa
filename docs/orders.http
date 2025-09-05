@@ -41,3 +41,5 @@ POST {{host}}/{{r}}/
         }
     ]
 }
+###
+PUT {{host}}/{{r}}/1/confirm
