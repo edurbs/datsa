@@ -46,4 +46,4 @@ PUT {{host}}/{{r}}/1/confirm
 ###
 PUT {{host}}/{{r}}/1/delivery
 ###
-PUT {{host}}/{{r}}/2/cancel
+PUT {{host}}/{{r}}/1/cancel

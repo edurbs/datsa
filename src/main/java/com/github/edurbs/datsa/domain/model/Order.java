@@ -22,6 +22,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.github.edurbs.datsa.domain.exception.ModelValidationException;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -87,6 +89,28 @@ public class Order implements DomainModel {
 
     public void addOrderToItems(){
         getItems().forEach(item->item.setOrder(this));
+    }
+
+    public void confirm(){
+        setStatus(OrderStatus.CONFIRMED);
+        setConfirmationDate(OffsetDateTime.now());
+    }
+
+    public void delivery(){
+        setStatus(OrderStatus.DELIVERED);
+        setConfirmationDate(OffsetDateTime.now());
+    }
+
+    public void cancel(){
+        setStatus(OrderStatus.CANCELLED);
+        setConfirmationDate(OffsetDateTime.now());
+    }
+
+    private void setStatus(OrderStatus newStatus){
+        if(getStatus().cantChangeTo(newStatus)){
+             throw new ModelValidationException("Status of the order %d can't be changed from %s to %s".formatted(getId(), getStatus().getDescription(), newStatus.getDescription()));
+        }
+        this.status = newStatus;
     }
 
 }
