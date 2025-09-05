@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.edurbs.datsa.api.dto.output.OrderOutput;
+import com.github.edurbs.datsa.api.dto.output.OrderSummaryOutput;
 import com.github.edurbs.datsa.api.mapper.OrderMapper;
+import com.github.edurbs.datsa.api.mapper.OrderSummaryMapper;
 import com.github.edurbs.datsa.domain.service.OrderRegistryService;
 
 
@@ -22,6 +24,9 @@ public class OrderController {
     OrderRegistryService orderRegistryService;
 
     @Autowired
+    OrderSummaryMapper orderSummaryMapper;
+
+    @Autowired
     OrderMapper orderMapper;
 
     @GetMapping("/{id}")
@@ -30,8 +35,8 @@ public class OrderController {
     }
 
     @GetMapping()
-    public Collection<OrderOutput> listAll() {
-        return orderMapper.toOutputList(orderRegistryService.getAll());
+    public Collection<OrderSummaryOutput> listAll() {
+        return orderSummaryMapper.toOutputList(orderRegistryService.getAll());
     }
 
 }
