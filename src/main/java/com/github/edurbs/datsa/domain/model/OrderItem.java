@@ -38,4 +38,16 @@ public class OrderItem implements DomainModel {
     @JoinColumn(nullable = false)
     private Order order;
 
+    public void calcTotalAmount(){
+        BigDecimal thisUnitPrice = this.getUnitPrice();
+        Integer thisQuantity = this.getQuantity();
+        if(thisUnitPrice==null){
+            thisUnitPrice = BigDecimal.ZERO;
+        }
+        if(thisQuantity==null){
+            thisQuantity=0;
+        }
+        this.setTotalPrice(thisUnitPrice.multiply(new BigDecimal(thisQuantity)));
+    }
+
 }

@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -69,10 +70,11 @@ public class Order implements DomainModel {
     @JoinColumn(name = "customer_user_id",nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items = new ArrayList<>();
 
     public void calcTotalAmount(){
+        getItems().forEach(OrderItem::calcTotalAmount);
         this.subtotal = getItems().stream()
                 .map(item -> item.getTotalPrice())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

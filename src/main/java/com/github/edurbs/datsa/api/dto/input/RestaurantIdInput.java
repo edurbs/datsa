@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PaymentMethodIdInput implements InputModel{
+public class RestaurantIdInput implements InputModel {
 
     @NotNull
     private Long id;

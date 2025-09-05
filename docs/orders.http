@@ -8,3 +8,36 @@
 GET {{host}}/{{r}}/1
 ###
 GET {{host}}/{{r}}/
+###
+POST {{host}}/{{r}}/
+{{contentType}}
+
+{
+  "restaurant": {
+    "id": 1
+  },
+  "paymentMethod": {
+    "id": 2
+  },
+  "address": {
+    "zipCode": "38400-999",
+    "street": "Rua João Pinheiro",
+    "number": "1000",
+    "complement": null,
+    "neighborhood": "Centro",
+    "city": {
+      "id": 1
+    }
+  },
+  "items": [
+        {
+            "productId": 1,
+            "quantity": 3,
+            "note": "Sem pimenta"
+        },
+        {
+            "productId": 2,
+            "quantity": 1
+        }
+    ]
+}
