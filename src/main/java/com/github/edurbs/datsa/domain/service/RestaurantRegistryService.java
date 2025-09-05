@@ -83,6 +83,11 @@ public class RestaurantRegistryService {
     }
 
     @Transactional
+    public void activations(List<Long> ids){
+        ids.forEach(this::activate);
+    }
+
+    @Transactional
     public void inactivate(Long id) {
         var restaurant = getById(id);
         if(restaurant.isInactive()) {
@@ -90,6 +95,12 @@ public class RestaurantRegistryService {
         }
         restaurant.inactivate();
     }
+
+    @Transactional
+    public void inactivations(List<Long> restaurantIds) {
+        restaurantIds.forEach(this::inactivate);
+    }
+
 
     @Transactional
     public void disassociatePaymentMethod(Long restaurantId, Long paymentMethodId){
@@ -156,7 +167,6 @@ public class RestaurantRegistryService {
         User user = userRegistryService.getById(userId);
         restaurant.removeUser(user);
     }
-
 
 
 }

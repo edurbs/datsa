@@ -22,7 +22,6 @@ import com.github.edurbs.datsa.api.dto.input.RestaurantInput;
 import com.github.edurbs.datsa.api.dto.output.RestaurantOutput;
 import com.github.edurbs.datsa.api.mapper.RestaurantMapper;
 import com.github.edurbs.datsa.domain.exception.CityNotFoundException;
-import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.exception.RestaurantNotFoundException;
 import com.github.edurbs.datsa.domain.exception.StateNotFoundException;
@@ -86,10 +85,30 @@ public class RestaurantController {
         restaurantRegistryService.activate(restaurantId);
     }
 
+    @PutMapping("/activations")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void activations(@RequestBody List<Long> restaurantIds){
+        try {
+            restaurantRegistryService.activations(restaurantIds);
+        } catch (RestaurantNotFoundException e) {
+            throw new ModelValidationException(e.getMessage());
+        }
+    }
+
     @DeleteMapping("/{restaurantId}/active")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inactivate(@PathVariable Long restaurantId) {
         restaurantRegistryService.inactivate(restaurantId);
+    }
+
+    @DeleteMapping("/inactivations")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inactivations(@RequestBody List<Long> restaurantIds){
+        try {
+            restaurantRegistryService.inactivations(restaurantIds);
+        } catch (RestaurantNotFoundException e) {
+            throw new ModelValidationException(e.getMessage());
+        }
     }
 
     @PutMapping("/{restaurantId}/opening")
