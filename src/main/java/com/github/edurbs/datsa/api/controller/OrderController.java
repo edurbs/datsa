@@ -40,9 +40,9 @@ public class OrderController {
     @Autowired
     OrderMapper orderMapper;
 
-    @GetMapping("/{id}")
-    public OrderOutput getById(@PathVariable Long id) {
-        return orderMapper.toOutput(orderRegistryService.getById(id));
+    @GetMapping("/{uuid}")
+    public OrderOutput getById(@PathVariable String uuid) {
+        return orderMapper.toOutput(orderRegistryService.getById(uuid));
     }
 
     @GetMapping()

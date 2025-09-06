@@ -38,9 +38,9 @@ public class OrderRegistryService {
     @Autowired
     private PaymentMethodRegistryService paymentMethodRegistryService;
 
-    public Order getById(Long id) {
-        return orderRepository.findById(id)
-                .orElseThrow(()-> new ModelNotFoundException("Order id %s does not exists".formatted(id)));
+    public Order getById(String uuid) {
+        return orderRepository.findByUuid(uuid)
+                .orElseThrow(()-> new ModelNotFoundException("Order %s does not exists".formatted(uuid)));
     }
 
     public Collection<Order> getAll() {

@@ -386,10 +386,10 @@ INSERT ignore into restaurant_user (restaurant_id, user_id) values (2,2);
 INSERT ignore into restaurant_user (restaurant_id, user_id) values (3,1);
 INSERT ignore into restaurant_user (restaurant_id, user_id) values (3,2);
 INSERT ignore into restaurant_user (restaurant_id, user_id) values (3,3);
-insert into `order` (id, restaurant_id, customer_user_id, payment_method_id, address_city_id, address_zip_code,
+insert into `order` (id, uuid, restaurant_id, customer_user_id, payment_method_id, address_city_id, address_zip_code,
     address_street, address_number, address_complement, address_neighborhood,
     status, creation_date, subtotal, shipping_fee, total_amount)
-values (1, 1, 1, 1, 1, '38400-000', 'Rua Floriano Peixoto', '500', 'Apto 801', 'Brasil',
+values (1, '6609f1f9-443f-4735-bedd-b24bd06811fb', 1, 1, 1, 1, '38400-000', 'Rua Floriano Peixoto', '500', 'Apto 801', 'Brasil',
 'CREATED', utc_timestamp, 298.90, 10, 308.90);
 
 insert into order_item (id, order_id, product_id, quantity, unit_price, total_price, note)
@@ -399,10 +399,10 @@ insert into order_item (id, order_id, product_id, quantity, unit_price, total_pr
 values (2, 1, 2, 2, 110, 220, 'Menos picante, por favor');
 
 
-insert into `order` (id, restaurant_id, customer_user_id, payment_method_id, address_city_id, address_zip_code,
+insert into `order` (id, uuid, restaurant_id, customer_user_id, payment_method_id, address_city_id, address_zip_code,
         address_street, address_number, address_complement, address_neighborhood,
         status, creation_date, subtotal, shipping_fee, total_amount)
-values (2, 4, 1, 2, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+values (2, '3e2f2a9a-4c2f-4385-b581-324432ecaa36', 4, 1, 2, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
 'CREATED', utc_timestamp, 79, 0, 79);
 
 insert into order_item (id, order_id, product_id, quantity, unit_price, total_price, note)

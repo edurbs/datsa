@@ -5,7 +5,7 @@
 @r = orders
 
 ###----------------------
-GET {{host}}/{{r}}/1
+GET {{host}}/{{r}}/6609f1f9-443f-4735-bedd-b24bd06811fb
 ###
 GET {{host}}/{{r}}/
 ###
@@ -42,8 +42,8 @@ POST {{host}}/{{r}}/
     ]
 }
 ###
-PUT {{host}}/{{r}}/1/confirm
+PUT {{host}}/{{r}}/6609f1f9-443f-4735-bedd-b24bd06811fb/confirm
 ###
-PUT {{host}}/{{r}}/1/delivery
+PUT {{host}}/{{r}}/6609f1f9-443f-4735-bedd-b24bd06811fb/delivery
 ###
-PUT {{host}}/{{r}}/1/cancel
+PUT {{host}}/{{r}}/6609f1f9-443f-4735-bedd-b24bd06811fb/cancel

@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class OrderSummaryOutput implements OutputModel{
 
-    private Long id;
+    private String uuid;
     private BigDecimal subtotal;
     private BigDecimal shippingFee;
     private BigDecimal totalAmount;

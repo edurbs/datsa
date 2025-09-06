@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
@@ -17,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,6 +39,8 @@ public class Order implements DomainModel {
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String uuid;
 
     private BigDecimal subtotal;
     private BigDecimal shippingFee;
@@ -108,9 +112,14 @@ public class Order implements DomainModel {
 
     private void setStatus(OrderStatus newStatus){
         if(getStatus().cantChangeTo(newStatus)){
-             throw new ModelValidationException("Status of the order %d can't be changed from %s to %s".formatted(getId(), getStatus().getDescription(), newStatus.getDescription()));
+             throw new ModelValidationException("Status of the order %d can't be changed from %s to %s".formatted(getUuid(), getStatus().getDescription(), newStatus.getDescription()));
         }
         this.status = newStatus;
+    }
+
+    @PrePersist
+    private void generateUuid(){
+        setUuid(UUID.randomUUID().toString());
     }
 
 }

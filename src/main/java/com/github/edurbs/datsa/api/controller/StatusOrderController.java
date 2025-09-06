@@ -12,7 +12,7 @@ import com.github.edurbs.datsa.domain.service.StatusOrderService;
 
 
 @RestController
-@RequestMapping(value="/orders/{orderId}")
+@RequestMapping(value="/orders/{uuid}")
 public class StatusOrderController {
 
     @Autowired
@@ -20,19 +20,19 @@ public class StatusOrderController {
 
     @PutMapping("/confirm")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void confirm(@PathVariable Long orderId){
-        statusOrderService.confirm(orderId);
+    public void confirm(@PathVariable String uuid){
+        statusOrderService.confirm(uuid);
     }
 
     @PutMapping("/cancel")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancel(@PathVariable Long orderId) {
-        statusOrderService.cancel(orderId);
+    public void cancel(@PathVariable String uuid) {
+        statusOrderService.cancel(uuid);
     }
 
     @PutMapping("/delivery")
-    public void delivery(@PathVariable Long orderId) {
-        statusOrderService.delivery(orderId);
+    public void delivery(@PathVariable String uuid) {
+        statusOrderService.delivery(uuid);
     }
 
 

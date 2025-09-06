@@ -14,20 +14,20 @@ public class StatusOrderService {
     OrderRegistryService orderRegistryService;
 
     @Transactional
-    public void confirm(Long orderId){
-        Order order = orderRegistryService.getById(orderId);
+    public void confirm(String uuid){
+        Order order = orderRegistryService.getById(uuid);
         order.confirm();
     }
 
     @Transactional
-    public void delivery(Long orderId){
-        Order order = orderRegistryService.getById(orderId);
+    public void delivery(String uuid){
+        Order order = orderRegistryService.getById(uuid);
         order.delivery();
     }
 
     @Transactional
-    public void cancel(Long orderId){
-        Order order = orderRegistryService.getById(orderId);
+    public void cancel(String uuid){
+        Order order = orderRegistryService.getById(uuid);
         order.cancel();
     }
 
