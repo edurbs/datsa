@@ -10,7 +10,9 @@ GET {{host}}/{{o}}?userId=1
 GET {{host}}/{{o}}?userId=1&restaurantId=1
 ###
 GET {{host}}/{{o}}?userId=1&restaurantId=1&beginCreationDate=2025-09-05T00:00:00Z&endCreationDate=2025-09-07T23:59:59Z
-###----------------------
+###
+GET {{host}}/{{o}}?userId=1&restaurantId=1&beginCreationDate=2025-09-05T00:00:00Z&endCreationDate=2025-09-07T23:59:59Z
+###
 GET {{host}}/{{o}}/6609f1f9-443f-4735-bedd-b24bd06811fb
 ###
 GET {{host}}/{{o}}/

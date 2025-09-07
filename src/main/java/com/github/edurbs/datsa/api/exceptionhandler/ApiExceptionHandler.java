@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,13 +43,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected @NonNull ResponseEntity<Object> handleMethodArgumentNotValid(
-            @NonNull MethodArgumentNotValidException ex,
+            @NonNull MethodArgumentNotValidException exception,
             @NonNull HttpHeaders headers,
             @NonNull HttpStatus status,
             @NonNull WebRequest request) {
+        Problem problem = handleValidationInternal(status, exception.getBindingResult());
+        return handleExceptionInternal(exception, problem, headers, status, request);
+    }
+
+    private Problem handleValidationInternal(HttpStatus status, BindingResult bindingResult) {
         ProblemType problemType = ProblemType.VALIDATION_ERROR;
         String detail = "Validation error";
-        List<Problem.Field> fields = ex.getBindingResult().getFieldErrors().stream()
+        List<Problem.Field> fields = bindingResult.getFieldErrors().stream()
                 .map(error -> {
                     String message = messageSource.getMessage(error, LocaleContextHolder.getLocale());
                     return Problem.Field.builder()
@@ -56,11 +63,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                         .build();
                     })
                 .toList();
-        Problem problem = createProblemBuilder(status, problemType, detail)
+        return createProblemBuilder(status, problemType, detail)
                 .userMessage(detail)
                 .fields(fields)
                 .build();
-        return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
     @ExceptionHandler(Exception.class)
@@ -232,5 +238,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return references.stream()
                 .map(Reference::getFieldName)
                 .collect(Collectors.joining("."));
+    }
+
+    @Override
+    protected @NonNull ResponseEntity<Object> handleBindException(@NonNull BindException exception, @NonNull HttpHeaders headers, @NonNull HttpStatus status,
+            @NonNull WebRequest request) {
+        Problem problem = handleValidationInternal(status, exception.getBindingResult());
+        return handleExceptionInternal(exception, problem, headers, status, request);
+
     }
 }
