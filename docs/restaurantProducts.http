@@ -1,14 +1,14 @@
 @hostname = localhost
 @port = 8080
 @contentType = content-type: application/json
-@r = restaurants
 @host = http://{{hostname}}:{{port}}/{{r}}
+@r = restaurants
 @mp = products
 
 ###----------------------
 GET {{host}}/1/{{mp}}
 ###
-GET {{host}}/1/{{mp}}/10
+GET {{host}}/2/{{mp}}/1
 ###
 POST {{host}}/1/{{mp}}
 {{contentType}}

@@ -153,7 +153,7 @@ values (
         3,
         utc_timestamp,
         utc_timestamp,
-        1
+        0
     );
 insert ignore into restaurant (
         id,
@@ -216,7 +216,7 @@ values (
         'Camarão tailandês',
         '16 camarões grandes ao molho picante',
         110,
-        1,
+        0,
         1
     );
 insert ignore into product (

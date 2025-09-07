@@ -39,7 +39,8 @@ public class RestaurantProductController {
 
     @GetMapping
     public Set<ProductOutput> getAll(@PathVariable Long restaurantId) {
-        var list = productMapper.toOutputList(restaurantRegistryService.getAllProducts(restaurantId));
+        //var list = productMapper.toOutputList(restaurantRegistryService.getAllProducts(restaurantId));
+        var list = productMapper.toOutputList(restaurantRegistryService.getAllActiveProducts(restaurantId));
         return list.stream().collect(Collectors.toSet());
     }
 

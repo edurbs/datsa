@@ -2,6 +2,7 @@ package com.github.edurbs.datsa.domain.service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import com.github.edurbs.datsa.domain.exception.RestaurantNotFoundException;
 import com.github.edurbs.datsa.domain.model.Product;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 import com.github.edurbs.datsa.domain.model.User;
+import com.github.edurbs.datsa.domain.repository.ProductRepository;
 import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
 
 import lombok.AccessLevel;
@@ -23,6 +25,8 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level=AccessLevel.PRIVATE)
 public class RestaurantRegistryService {
+
+    ProductRepository productRepository;
 
     RestaurantRepository restaurantRepository;
 
@@ -121,6 +125,12 @@ public class RestaurantRegistryService {
     public Set<Product> getAllProducts(Long restaurantId){
         var restaurant = getById(restaurantId);
         return restaurant.getProducts();
+    }
+
+    public Set<Product> getAllActiveProducts(Long restaurantId){
+        return productRepository.findByActiveTrueAndRestaurantId(restaurantId)
+            .stream()
+            .collect(Collectors.toSet());
     }
 
     public Product getProduct(Long restaurantId, Long productId){
