@@ -1,7 +1,7 @@
 package com.github.edurbs.datsa.api.mapper;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +33,8 @@ public class OrderSummaryMapper implements IMapper<Order, OrderInput, OrderSumma
     }
 
     @Override
-    public Collection<OrderSummaryOutput> toOutputList(Collection<Order> domainModels) {
-        return domainModels.stream().map(this::toOutput).collect(Collectors.toSet());
+    public List<OrderSummaryOutput> toOutputList(Collection<Order> domainModels) {
+        return domainModels.stream().map(this::toOutput).toList();
     }
 
 }

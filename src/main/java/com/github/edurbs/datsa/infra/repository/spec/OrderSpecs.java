@@ -12,8 +12,10 @@ import com.github.edurbs.datsa.infra.repository.filter.OrderFilter;
 public class OrderSpecs {
     public static Specification<Order> withFilter(OrderFilter filter){
         return (root, query, builder) -> {
-            root.fetch("restaurant"); // to fix N+1 problem
-            root.fetch("user");
+            if(Order.class.equals(query.getResultType())){ // to fix exception when sql count
+                root.fetch("restaurant"); // to fix N+1 problem
+                root.fetch("user");
+            }
 
             var predicates = new ArrayList<Predicate>();
             if(filter.getUserId()!=null){

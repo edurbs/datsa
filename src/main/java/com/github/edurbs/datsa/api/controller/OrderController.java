@@ -1,10 +1,13 @@
 package com.github.edurbs.datsa.api.controller;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,8 +50,10 @@ public class OrderController {
     }
 
     @GetMapping()
-    public Collection<OrderSummaryOutput> search(OrderFilter orderFilter) {
-        return orderSummaryMapper.toOutputList(orderRegistryService.getAll(orderFilter));
+    public Page<OrderSummaryOutput> search(OrderFilter orderFilter, Pageable pageable) {
+        Page<Order> orderPage = orderRegistryService.getAll(orderFilter, pageable);
+        List<OrderSummaryOutput> orderSummaryList = orderSummaryMapper.toOutputList(orderPage.getContent());
+        return new PageImpl<>(orderSummaryList, pageable, orderPage.getTotalElements());
     }
 
     @PostMapping()
