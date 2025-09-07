@@ -20,7 +20,7 @@ import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.model.Kitchen;
 import com.github.edurbs.datsa.domain.model.Restaurant;
-import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
+import com.github.edurbs.datsa.infra.repository.RestaurantRepository;
 
 @SpringBootTest
 class RestaurantRegistryServiceTest {

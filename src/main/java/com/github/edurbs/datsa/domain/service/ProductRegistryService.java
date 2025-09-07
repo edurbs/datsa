@@ -2,14 +2,13 @@ package com.github.edurbs.datsa.domain.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ProductNotFoundException;
 import com.github.edurbs.datsa.domain.model.Product;
-import com.github.edurbs.datsa.domain.repository.ProductRepository;
+import com.github.edurbs.datsa.infra.repository.ProductRepository;
 
 @Service
 public class ProductRegistryService {

@@ -23,6 +23,7 @@ import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.model.Order;
 import com.github.edurbs.datsa.domain.model.User;
 import com.github.edurbs.datsa.domain.service.OrderRegistryService;
+import com.github.edurbs.datsa.infra.repository.filter.OrderFilter;
 
 
 
@@ -46,8 +47,8 @@ public class OrderController {
     }
 
     @GetMapping()
-    public Collection<OrderSummaryOutput> listAll() {
-        return orderSummaryMapper.toOutputList(orderRegistryService.getAll());
+    public Collection<OrderSummaryOutput> search(OrderFilter orderFilter) {
+        return orderSummaryMapper.toOutputList(orderRegistryService.getAll(orderFilter));
     }
 
     @PostMapping()

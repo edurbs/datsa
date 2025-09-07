@@ -14,8 +14,8 @@ import com.github.edurbs.datsa.domain.exception.RestaurantNotFoundException;
 import com.github.edurbs.datsa.domain.model.Product;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 import com.github.edurbs.datsa.domain.model.User;
-import com.github.edurbs.datsa.domain.repository.ProductRepository;
-import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
+import com.github.edurbs.datsa.infra.repository.ProductRepository;
+import com.github.edurbs.datsa.infra.repository.RestaurantRepository;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

@@ -12,7 +12,7 @@ import com.github.edurbs.datsa.domain.exception.GroupNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.model.Group;
 import com.github.edurbs.datsa.domain.model.Permission;
-import com.github.edurbs.datsa.domain.repository.GroupRepository;
+import com.github.edurbs.datsa.infra.repository.GroupRepository;
 
 import lombok.AllArgsConstructor;
 

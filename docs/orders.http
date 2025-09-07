@@ -2,14 +2,20 @@
 @port = 8080
 @host = http://{{hostname}}:{{port}}
 @contentType = content-type: application/json
-@r = orders
+@o = orders
 
+###
+GET {{host}}/{{o}}?userId=1
+###
+GET {{host}}/{{o}}?userId=1&restaurantId=1
+###
+GET {{host}}/{{o}}?userId=1&restaurantId=1&beginCreationDate=2025-09-05T00:00:00Z&endCreationDate=2025-09-07T23:59:59Z
 ###----------------------
-GET {{host}}/{{r}}/6609f1f9-443f-4735-bedd-b24bd06811fb
+GET {{host}}/{{o}}/6609f1f9-443f-4735-bedd-b24bd06811fb
 ###
-GET {{host}}/{{r}}/
+GET {{host}}/{{o}}/
 ###
-POST {{host}}/{{r}}/
+POST {{host}}/{{o}}/
 {{contentType}}
 
 {
@@ -42,8 +48,8 @@ POST {{host}}/{{r}}/
     ]
 }
 ###
-PUT {{host}}/{{r}}/6609f1f9-443f-4735-bedd-b24bd06811fb/confirm
+PUT {{host}}/{{o}}/6609f1f9-443f-4735-bedd-b24bd06811fb/confirm
 ###
-PUT {{host}}/{{r}}/6609f1f9-443f-4735-bedd-b24bd06811fb/delivery
+PUT {{host}}/{{o}}/6609f1f9-443f-4735-bedd-b24bd06811fb/delivery
 ###
-PUT {{host}}/{{r}}/6609f1f9-443f-4735-bedd-b24bd06811fb/cancel
+PUT {{host}}/{{o}}/6609f1f9-443f-4735-bedd-b24bd06811fb/cancel

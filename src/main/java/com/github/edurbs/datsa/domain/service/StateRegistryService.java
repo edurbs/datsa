@@ -1,7 +1,6 @@
 package com.github.edurbs.datsa.domain.service;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -11,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.StateNotFoundException;
 import com.github.edurbs.datsa.domain.model.State;
-import com.github.edurbs.datsa.domain.repository.StateRepository;
+import com.github.edurbs.datsa.infra.repository.StateRepository;
 
 @Service
 public class StateRegistryService {

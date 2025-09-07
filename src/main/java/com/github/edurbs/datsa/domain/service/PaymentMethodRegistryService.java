@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.model.PaymentMethod;
-import com.github.edurbs.datsa.domain.repository.PaymentMethodRepository;
+import com.github.edurbs.datsa.infra.repository.PaymentMethodRepository;
 
 @Service
 public class PaymentMethodRegistryService {

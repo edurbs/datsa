@@ -19,7 +19,7 @@ import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.model.City;
 import com.github.edurbs.datsa.domain.model.State;
-import com.github.edurbs.datsa.domain.repository.CityRepository;
+import com.github.edurbs.datsa.infra.repository.CityRepository;
 
 @SpringBootTest
 class CityRegistryServiceTest {

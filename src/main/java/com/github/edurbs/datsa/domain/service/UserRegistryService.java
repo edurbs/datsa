@@ -15,7 +15,7 @@ import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.exception.UserNotFoundException;
 import com.github.edurbs.datsa.domain.model.Group;
 import com.github.edurbs.datsa.domain.model.User;
-import com.github.edurbs.datsa.domain.repository.UserRepository;
+import com.github.edurbs.datsa.infra.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
 

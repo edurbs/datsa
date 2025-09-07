@@ -15,7 +15,9 @@ import com.github.edurbs.datsa.domain.model.PaymentMethod;
 import com.github.edurbs.datsa.domain.model.Product;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 import com.github.edurbs.datsa.domain.model.User;
-import com.github.edurbs.datsa.domain.repository.OrderRepository;
+import com.github.edurbs.datsa.infra.repository.OrderRepository;
+import com.github.edurbs.datsa.infra.repository.filter.OrderFilter;
+import com.github.edurbs.datsa.infra.repository.spec.OrderSpecs;
 
 @Service
 public class OrderRegistryService {
@@ -43,8 +45,8 @@ public class OrderRegistryService {
                 .orElseThrow(()-> new ModelNotFoundException("Order %s does not exists".formatted(uuid)));
     }
 
-    public Collection<Order> getAll() {
-        return orderRepository.findAll();
+    public Collection<Order> getAll(OrderFilter orderFilter) {
+        return orderRepository.findAll(OrderSpecs.withFilter(orderFilter));
     }
 
     @Transactional

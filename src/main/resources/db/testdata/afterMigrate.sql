@@ -407,3 +407,33 @@ values (2, '3e2f2a9a-4c2f-4385-b581-324432ecaa36', 4, 1, 2, 1, '38400-111', 'Rua
 
 insert into order_item (id, order_id, product_id, quantity, unit_price, total_price, note)
 values (3, 2, 6, 1, 79, 79, 'Ao ponto');
+
+insert into `order` (id, uuid, restaurant_id, customer_user_id, payment_method_id, address_city_id, address_zip_code,
+    address_street, address_number, address_complement, address_neighborhood,
+    status, creation_date, subtotal, shipping_fee, total_amount)
+values (3, 'a1b2c3d4-e5f6-7890-abcd-1234567890ab', 2, 2, 3, 2, '38400-222', 'Rua das Flores', '150', null, 'Jardim',
+'CONFIRMED', utc_timestamp, 87.20, 9.50, 96.70);
+
+insert into order_item (id, order_id, product_id, quantity, unit_price, total_price, note)
+values (4, 3, 3, 1, 87.20, 87.20, 'Sem pimenta');
+
+insert into `order` (id, uuid, restaurant_id, customer_user_id, payment_method_id, address_city_id, address_zip_code,
+    address_street, address_number, address_complement, address_neighborhood,
+    status, creation_date, subtotal, shipping_fee, total_amount)
+values (4, 'b2c3d4e5-f6a1-8901-bcda-2345678901bc', 3, 3, 2, 3, '38400-333', 'Av. Brasil', '200', 'Bloco B', 'Centro',
+'DELIVERED', utc_timestamp, 64.00, 15.00, 79.00);
+
+insert into order_item (id, order_id, product_id, quantity, unit_price, total_price, note)
+values (5, 4, 4, 2, 21.00, 42.00, null);
+
+insert into order_item (id, order_id, product_id, quantity, unit_price, total_price, note)
+values (6, 4, 5, 1, 43.00, 43.00, 'Pouco sal');
+
+insert into `order` (id, uuid, restaurant_id, customer_user_id, payment_method_id, address_city_id, address_zip_code,
+    address_street, address_number, address_complement, address_neighborhood,
+    status, creation_date, subtotal, shipping_fee, total_amount)
+values (5, 'c3d4e5f6-a1b2-9012-cdab-3456789012cd', 6, 2, 1, 5, '38400-444', 'Rua do Sol', '50', null, 'Praia',
+'CANCELLED', utc_timestamp, 16.00, 6.00, 22.00);
+
+insert into order_item (id, order_id, product_id, quantity, unit_price, total_price, note)
+values (7, 5, 9, 2, 8.00, 16.00, 'Bem passado');
