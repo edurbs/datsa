@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,10 +39,15 @@ public class RestaurantProductController {
     private ProductMapper productMapper;
 
     @GetMapping
-    public Set<ProductOutput> getAll(@PathVariable Long restaurantId) {
-        //var list = productMapper.toOutputList(restaurantRegistryService.getAllProducts(restaurantId));
-        var list = productMapper.toOutputList(restaurantRegistryService.getAllActiveProducts(restaurantId));
-        return list.stream().collect(Collectors.toSet());
+    public Set<ProductOutput> getAll(@PathVariable Long restaurantId, @RequestParam(required = false) Boolean inactiveIncluded) {
+        if(Boolean.TRUE.equals(inactiveIncluded)){
+            return productMapper.toOutputList(restaurantRegistryService.getAllProducts(restaurantId))
+                .stream()
+                .collect(Collectors.toSet());
+        }
+        return productMapper.toOutputList(restaurantRegistryService.getAllActiveProducts(restaurantId))
+            .stream()
+            .collect(Collectors.toSet());
     }
 
     @GetMapping("/{productId}")

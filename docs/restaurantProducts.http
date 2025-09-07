@@ -7,6 +7,8 @@
 
 ###----------------------
 GET {{host}}/1/{{mp}}
+###----------------------
+GET {{host}}/1/{{mp}}?inactiveIncluded=true
 ###
 GET {{host}}/2/{{mp}}/1
 ###
