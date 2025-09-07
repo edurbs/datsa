@@ -1,9 +1,9 @@
 package com.github.edurbs.datsa.domain.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +23,8 @@ public class KitchenRegistryService {
         return kitchenRepository.save(kitchen);
     }
 
-    public List<Kitchen> getAll() {
-        return kitchenRepository.findAll();
+    public Page<Kitchen> getAll(Pageable pageable) {
+        return kitchenRepository.findAll(pageable);
     }
 
     public Kitchen getById(Long id) {

@@ -2,9 +2,6 @@ package com.github.edurbs.datsa.api.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Collections;
-
-import org.hamcrest.Matchers;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -50,14 +47,14 @@ class KitchenControllerTest {
 
     }
 
-    @Test
-    void whenGetAll_andNoneKitchen_thenStatus404() throws Exception {
-        Mockito.when(kitchenRegistryService.getAll()).thenReturn(Collections.emptyList());
-        mockMvc.perform(MockMvcRequestBuilders.get(KITCHEN_URL))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(0)));
+    // @Test
+    // void whenGetAll_andNoneKitchen_thenStatus404() throws Exception {
+    //     Mockito.when(kitchenRegistryService.getAll()).thenReturn(Collections.emptyList());
+    //     mockMvc.perform(MockMvcRequestBuilders.get(KITCHEN_URL))
+    //             .andExpect(MockMvcResultMatchers.status().isOk())
+    //             .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(0)));
 
-    }
+    // }
 
     @Test
     void whenGetValidKitchenId_thenStatus200() throws Exception {

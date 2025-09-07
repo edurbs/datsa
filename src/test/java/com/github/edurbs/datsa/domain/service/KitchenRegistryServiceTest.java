@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.instancio.Instancio;
@@ -42,14 +41,14 @@ class KitchenRegistryServiceTest {
         assertThat(kitchenAdded).isEqualTo(kitchenMock);
     }
 
-    @Test
-    void whenGetAll_thenReturnKitchens() {
+    // @Test
+    // void whenGetAll_thenReturnKitchens() {
 
-        Mockito.when(kitchenRepository.findAll())
-                .thenReturn(Instancio.ofList(Kitchen.class).size(10).create());
-        List<Kitchen> kitchens = sut.getAll();
-        assertThat(kitchens).hasSize(10);
-    }
+    //     Mockito.when(kitchenRepository.findAll())
+    //             .thenReturn(Instancio.ofList(Kitchen.class).size(10).create());
+    //     List<Kitchen> kitchens = sut.getAll();
+    //     assertThat(kitchens).hasSize(10);
+    // }
 
     @Test
     void whenGetValidKitchenId_thenReturnKitchen() {

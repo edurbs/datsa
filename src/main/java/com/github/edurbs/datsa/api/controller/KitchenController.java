@@ -5,6 +5,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.edurbs.datsa.api.dto.input.KitchenInput;
 import com.github.edurbs.datsa.api.dto.output.KitchenOutput;
 import com.github.edurbs.datsa.api.mapper.KitchenMapper;
+import com.github.edurbs.datsa.domain.model.Kitchen;
 import com.github.edurbs.datsa.domain.service.KitchenRegistryService;
 
 @RestController
@@ -32,8 +36,10 @@ public class KitchenController {
     private KitchenMapper kitchenMapper;
 
     @GetMapping()
-    public List<KitchenOutput> listAll() {
-        return kitchenMapper.toOutputList(kitchenRegistryService.getAll()).stream().toList();
+    public Page<KitchenOutput> listAll(Pageable pageable) {
+        Page<Kitchen> pageKitchen = kitchenRegistryService.getAll(pageable);
+        List<KitchenOutput> kitchenInputList = kitchenMapper.toOutputList(pageKitchen.getContent()).stream().toList();
+        return new PageImpl<>(kitchenInputList, pageable, pageKitchen.getTotalElements());
     }
 
     @GetMapping("/{kitchenId}")
