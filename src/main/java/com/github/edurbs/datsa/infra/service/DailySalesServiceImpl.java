@@ -22,12 +22,24 @@ public class DailySalesServiceImpl implements DailySalesService {
     @PersistenceContext
     private EntityManager manager;
 
+    private static final String CREATION_DATE = "creationDate";
+
     @Override
-    public List<DailySales> getDailySales(DailySalesFilter filter) {
+    public List<DailySales> getDailySales(DailySalesFilter filter, String timeOffset) {
         var builder = manager.getCriteriaBuilder();
         var query = builder.createQuery(DailySales.class);
         var root = query.from(Order.class);
-        var functionDateForCreationDate = builder.function("date", Date.class, root.get("creationDate"));
+        var functionConvertTzCreationDate = builder.function(
+            "convert_tz",
+            Date.class,
+            root.get(CREATION_DATE),
+            builder.literal("+00:00"),
+            builder.literal(timeOffset)
+        );
+        var functionDateForCreationDate = builder.function(
+                "date",
+                Date.class,
+                functionConvertTzCreationDate);
         var selection = builder.construct(DailySales.class,
             functionDateForCreationDate,
             builder.count(root.get("id")),
@@ -44,14 +56,14 @@ public class DailySalesServiceImpl implements DailySalesService {
         if(filter.getBeginCreationDate()!=null){
             predicates.add(
                 builder.greaterThanOrEqualTo(
-                    root.get("creationDate"),
+                    root.get(CREATION_DATE),
                     filter.getBeginCreationDate())
             );
         }
         if(filter.getEndCreationDate()!=null){
             predicates.add(
                 builder.lessThanOrEqualTo(
-                    root.get("creationDate"),
+                    root.get(CREATION_DATE),
                     filter.getEndCreationDate())
             );
         }

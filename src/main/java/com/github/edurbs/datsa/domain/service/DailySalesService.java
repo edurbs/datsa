@@ -7,5 +7,5 @@ import com.github.edurbs.datsa.domain.filter.DailySalesFilter;
 
 public interface DailySalesService {
 
-        List<DailySales> getDailySales(DailySalesFilter filter);
+        List<DailySales> getDailySales(DailySalesFilter filter, String timeOffset);
 }

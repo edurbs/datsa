@@ -5,4 +5,4 @@
 @s = statistics
 
 ###----------------------
-GET {{host}}/{{s}}/daily-sales?beginCreationDate=asda
+GET {{host}}/{{s}}/daily-sales
