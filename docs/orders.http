@@ -5,9 +5,11 @@
 @o = orders
 
 ###
-GET {{host}}/{{o}}?userId=1
+GET {{host}}/{{o}}
 ###
-GET {{host}}/{{o}}?userId=1&restaurantId=1
+GET {{host}}/{{o}}?sort=userName
+###
+GET {{host}}/{{o}}?userId=1&restaurantId=1&sort=userName
 ###
 GET {{host}}/{{o}}?userId=1&restaurantId=1&beginCreationDate=2025-09-05T00:00:00Z&endCreationDate=2025-09-07T23:59:59Z
 ###

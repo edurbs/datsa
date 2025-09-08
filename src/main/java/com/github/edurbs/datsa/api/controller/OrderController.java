@@ -1,6 +1,7 @@
 package com.github.edurbs.datsa.api.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -22,11 +23,12 @@ import com.github.edurbs.datsa.api.dto.output.OrderOutput;
 import com.github.edurbs.datsa.api.dto.output.OrderSummaryOutput;
 import com.github.edurbs.datsa.api.mapper.OrderMapper;
 import com.github.edurbs.datsa.api.mapper.OrderSummaryMapper;
+import com.github.edurbs.datsa.core.data.PageableTranslator;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
+import com.github.edurbs.datsa.domain.filter.OrderFilter;
 import com.github.edurbs.datsa.domain.model.Order;
 import com.github.edurbs.datsa.domain.model.User;
 import com.github.edurbs.datsa.domain.service.OrderRegistryService;
-import com.github.edurbs.datsa.infra.repository.filter.OrderFilter;
 
 
 
@@ -51,6 +53,7 @@ public class OrderController {
 
     @GetMapping()
     public Page<OrderSummaryOutput> search(OrderFilter orderFilter, Pageable pageable) {
+        pageable = translatePageable(pageable);
         Page<Order> orderPage = orderRegistryService.getAll(orderFilter, pageable);
         List<OrderSummaryOutput> orderSummaryList = orderSummaryMapper.toOutputList(orderPage.getContent());
         return new PageImpl<>(orderSummaryList, pageable, orderPage.getTotalElements());
@@ -69,6 +72,12 @@ public class OrderController {
         } catch (Exception e) {
             throw new ModelValidationException(e.getMessage());
         }
+    }
+
+    private Pageable translatePageable(Pageable pageable){
+        var map = Map.of(
+            "nameUser", "userName");
+        return PageableTranslator.translate(pageable, map);
     }
 
 

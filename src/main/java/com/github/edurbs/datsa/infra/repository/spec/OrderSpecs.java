@@ -6,8 +6,8 @@ import javax.persistence.criteria.Predicate;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import com.github.edurbs.datsa.domain.filter.OrderFilter;
 import com.github.edurbs.datsa.domain.model.Order;
-import com.github.edurbs.datsa.infra.repository.filter.OrderFilter;
 
 public class OrderSpecs {
     public static Specification<Order> withFilter(OrderFilter filter){

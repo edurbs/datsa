@@ -1,4 +1,4 @@
-package com.github.edurbs.datsa.infra.repository.filter;
+package com.github.edurbs.datsa.domain.filter;
 
 import java.time.OffsetDateTime;
 
@@ -13,8 +13,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
-public class OrderFilter {
-    Long userId;
+public class DailySalesFilter {
     Long restaurantId;
 
     @DateTimeFormat(iso = ISO.DATE_TIME)

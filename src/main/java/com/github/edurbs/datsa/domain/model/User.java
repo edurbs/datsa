@@ -16,41 +16,44 @@ import javax.persistence.ManyToMany;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User implements DomainModel {
 
     @Id
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @Column(nullable = false)
-    private String name;
+    String name;
 
     @Column(nullable = false)
-    private String email;
+    String email;
 
     @Column(nullable = false)
-    private String password;
+    String password;
 
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
-    private OffsetDateTime registrationDate;
+    OffsetDateTime registrationDate;
 
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
-    private OffsetDateTime lastUpdateDate;
+    OffsetDateTime lastUpdateDate;
 
     @ManyToMany
     @JoinTable(name = "user_group",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private Set<Group> groups = new HashSet<>();
+    Set<Group> groups = new HashSet<>();
 
     public boolean passwordEqualsTo(String password){
         return this.password.equals(password);

@@ -1,0 +1,8 @@
+@hostname = localhost
+@port = 8080
+@host = http://{{hostname}}:{{port}}
+@contentType = content-type: application/json
+@s = statistics
+
+###----------------------
+GET {{host}}/{{s}}/daily-sales?beginCreationDate=asda

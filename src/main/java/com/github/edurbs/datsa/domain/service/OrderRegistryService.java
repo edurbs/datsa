@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
+import com.github.edurbs.datsa.domain.filter.OrderFilter;
 import com.github.edurbs.datsa.domain.model.City;
 import com.github.edurbs.datsa.domain.model.Order;
 import com.github.edurbs.datsa.domain.model.PaymentMethod;
@@ -16,7 +17,6 @@ import com.github.edurbs.datsa.domain.model.Product;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 import com.github.edurbs.datsa.domain.model.User;
 import com.github.edurbs.datsa.infra.repository.OrderRepository;
-import com.github.edurbs.datsa.infra.repository.filter.OrderFilter;
 import com.github.edurbs.datsa.infra.repository.spec.OrderSpecs;
 
 @Service

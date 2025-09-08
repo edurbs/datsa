@@ -3,20 +3,23 @@ package com.github.edurbs.datsa.api.dto.output;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderSummaryOutput implements OutputModel{
 
-    private String uuid;
-    private BigDecimal subtotal;
-    private BigDecimal shippingFee;
-    private BigDecimal totalAmount;
-    private RestaurantSummaryOutput restaurant;
-    private UserOutput user;
-    private String status;
-    private OffsetDateTime creationDate;
+    String uuid;
+    BigDecimal subtotal;
+    BigDecimal shippingFee;
+    BigDecimal totalAmount;
+    RestaurantSummaryOutput restaurant;
+    String userName;
+    String status;
+    OffsetDateTime creationDate;
 
 }
