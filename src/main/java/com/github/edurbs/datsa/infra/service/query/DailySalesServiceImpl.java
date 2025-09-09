@@ -1,4 +1,4 @@
-package com.github.edurbs.datsa.infra.service;
+package com.github.edurbs.datsa.infra.service.query;
 
 import java.util.ArrayList;
 import java.util.Date;

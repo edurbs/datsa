@@ -2,7 +2,7 @@
 @port = 8080
 @host = http://{{hostname}}:{{port}}
 @contentType = content-type: application/json
-@accept = Accept: application/json
+@accept = Accept: application/PDF,application/json
 @s = statistics
 
 ###----------------------
