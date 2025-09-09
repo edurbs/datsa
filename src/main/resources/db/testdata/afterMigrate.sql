@@ -13,6 +13,7 @@ delete from user;
 delete from user_group;
 delete from `order`;
 delete from order_item;
+delete from product_photo;
 set foreign_key_checks = 1;
 alter table city auto_increment = 1;
 alter table kitchen auto_increment = 1;
