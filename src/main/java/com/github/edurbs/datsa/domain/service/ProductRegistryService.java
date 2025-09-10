@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ProductNotFoundException;
 import com.github.edurbs.datsa.domain.model.Product;
-import com.github.edurbs.datsa.infra.repository.ProductRepository;
+import com.github.edurbs.datsa.domain.repository.ProductRepository;
 
 @Service
 public class ProductRegistryService {

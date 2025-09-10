@@ -1,4 +1,4 @@
-package com.github.edurbs.datsa.infra.repository.spec;
+package com.github.edurbs.datsa.domain.repository.spec;
 
 import java.util.ArrayList;
 

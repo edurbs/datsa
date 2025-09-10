@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.model.Kitchen;
-import com.github.edurbs.datsa.infra.repository.KitchenRepository;
+import com.github.edurbs.datsa.domain.repository.KitchenRepository;
 
 @Service
 public class KitchenRegistryService {

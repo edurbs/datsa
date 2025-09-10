@@ -16,7 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.model.State;
-import com.github.edurbs.datsa.infra.repository.StateRepository;
+import com.github.edurbs.datsa.domain.repository.StateRepository;
 
 @SpringBootTest
 class StateRegistryServiceTest {

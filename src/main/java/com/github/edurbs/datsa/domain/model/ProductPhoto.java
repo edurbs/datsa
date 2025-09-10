@@ -32,4 +32,9 @@ public class ProductPhoto implements DomainModel {
     String contentType;
     Long size;
 
+    public Long getRestaurantId(){
+        if(getProduct()==null) return null;
+        return getProduct().getRestaurant().getId();
+    }
+
 }

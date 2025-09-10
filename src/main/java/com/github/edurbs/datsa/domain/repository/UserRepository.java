@@ -1,4 +1,4 @@
-package com.github.edurbs.datsa.infra.repository;
+package com.github.edurbs.datsa.domain.repository;
 
 import java.util.Optional;
 

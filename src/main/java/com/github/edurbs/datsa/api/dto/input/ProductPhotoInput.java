@@ -17,7 +17,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductPhotoInput {
+public class ProductPhotoInput implements InputModel {
 
     @NotNull
     @FileSize(max = "10000KB")

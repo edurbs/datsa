@@ -5,6 +5,8 @@ import javax.persistence.EntityManager;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
+import com.github.edurbs.datsa.domain.repository.CustomJpaRepository;
+
 public class CustomJpaRepositoryImpl<T, I> extends SimpleJpaRepository<T, I> implements CustomJpaRepository<T, I> {
 
     private EntityManager entityManager;

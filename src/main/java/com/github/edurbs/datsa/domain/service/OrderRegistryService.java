@@ -16,8 +16,8 @@ import com.github.edurbs.datsa.domain.model.PaymentMethod;
 import com.github.edurbs.datsa.domain.model.Product;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 import com.github.edurbs.datsa.domain.model.User;
-import com.github.edurbs.datsa.infra.repository.OrderRepository;
-import com.github.edurbs.datsa.infra.repository.spec.OrderSpecs;
+import com.github.edurbs.datsa.domain.repository.OrderRepository;
+import com.github.edurbs.datsa.domain.repository.spec.OrderSpecs;
 
 @Service
 public class OrderRegistryService {
