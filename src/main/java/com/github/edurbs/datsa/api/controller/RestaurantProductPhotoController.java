@@ -1,5 +1,7 @@
 package com.github.edurbs.datsa.api.controller;
 
+import java.io.IOException;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,7 @@ public class RestaurantProductPhotoController {
     ProductPhotoMapper productPhotoMapper;
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ProductPhotoOutput updatePhoto(@PathVariable Long restaurantId, @PathVariable Long productId, @Valid ProductPhotoInput productPhotoInput) {
+    public ProductPhotoOutput updatePhoto(@PathVariable Long restaurantId, @PathVariable Long productId, @Valid ProductPhotoInput productPhotoInput) throws IOException {
         Product product = productRegistryService.getByRestaurant(restaurantId, productId);
         MultipartFile file = productPhotoInput.getFile();
         ProductPhoto photo = new ProductPhoto();
@@ -42,7 +44,7 @@ public class RestaurantProductPhotoController {
         photo.setContentType(file.getContentType());
         photo.setSize(file.getSize());
         photo.setFileName(file.getOriginalFilename());
-        ProductPhoto savedPhoto = productPhotoCatalogService.save(photo);
+        ProductPhoto savedPhoto = productPhotoCatalogService.save(photo, file.getInputStream());
         return productPhotoMapper.toOutput(savedPhoto);
     }
 
