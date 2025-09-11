@@ -52,4 +52,11 @@ public class ProductPhotoCatalogService {
     public InputStream getData(ProductPhoto photo) {
         return photoStorageService.get(photo.getFileName());
     }
+
+    @Transactional
+    public void delete(ProductPhoto photo){
+        productRepository.delete(photo);
+        productRepository.flush();
+        photoStorageService.delete(photo.getFileName());
+    }
 }

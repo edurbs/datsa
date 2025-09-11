@@ -10,6 +10,7 @@ import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.service.PhotoStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -60,6 +61,14 @@ public class RestaurantProductPhotoController {
         Product product = productRegistryService.getByRestaurant(restaurantId, productId);
         ProductPhoto photo = productPhotoCatalogService.get(product);
         return productPhotoMapper.toOutput(photo);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<ResponseStatus> delete(@PathVariable Long restaurantId, @PathVariable Long productId){
+        Product product = productRegistryService.getByRestaurant(restaurantId, productId);
+        ProductPhoto photo = productPhotoCatalogService.get(product);
+        productPhotoCatalogService.delete(photo);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
