@@ -33,19 +33,24 @@ public class ProductPhotoCatalogService {
             currentPhotoFileName = currentPhoto.get().getFileName();
             productRepository.delete(currentPhoto.get());
         };
-        var savesPhotoOnDb = productRepository.save(photo);
+        var savePhotoOnDb = productRepository.save(photo);
         productRepository.flush(); // avoid problems when saving photo data file
         NewPhoto newPhoto = NewPhoto.builder()
             .fileName(newFileName)
             .inputStream(photoData)
             .build();
         photoStorageService.replace(currentPhotoFileName, newPhoto);
-        return savesPhotoOnDb;
+        return savePhotoOnDb;
     }
 
     public ProductPhoto get(Product product) {
         Long productId = product.getId();
         return productRepository.findPhotoById(productId)
             .orElseThrow(()->new ProductPhotoNotFoundException(productId));
+    }
+
+    public InputStream getData(Product product) {
+        ProductPhoto photo = get(product);
+        return photoStorageService.get(photo.getFileName());
     }
 }

@@ -39,8 +39,8 @@ public class LocalPhotoStorageService implements PhotoStorageService {
     @Override
     public InputStream get(String fileName) {
             Path fileNamePath = getFilePath(fileName);
-        try (InputStream inputStream = Files.newInputStream(fileNamePath)) {
-            return inputStream;
+        try {
+            return Files.newInputStream(fileNamePath);
         } catch (IOException e) {
             throw new StorageException("Can't read the file", e);
         }
