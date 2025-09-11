@@ -49,8 +49,7 @@ public class ProductPhotoCatalogService {
             .orElseThrow(()->new ProductPhotoNotFoundException(productId));
     }
 
-    public InputStream getData(Product product) {
-        ProductPhoto photo = get(product);
+    public InputStream getData(ProductPhoto photo) {
         return photoStorageService.get(photo.getFileName());
     }
 }

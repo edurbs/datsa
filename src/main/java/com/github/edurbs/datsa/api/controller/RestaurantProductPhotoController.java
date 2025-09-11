@@ -2,14 +2,17 @@ package com.github.edurbs.datsa.api.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.validation.Valid;
 
+import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.service.PhotoStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,15 +63,27 @@ public class RestaurantProductPhotoController {
     }
 
     @GetMapping
-    public ResponseEntity<InputStreamResource> getPhotoData(@PathVariable Long restaurantId, @PathVariable Long productId){
+    public ResponseEntity<InputStreamResource> getPhotoData(@PathVariable Long restaurantId, @PathVariable Long productId, @RequestHeader(name="accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         try {
             Product product = productRegistryService.getByRestaurant(restaurantId, productId);
-            InputStream photoData = productPhotoCatalogService.getData(product);
+            ProductPhoto photo = productPhotoCatalogService.get(product);
+            MediaType photoMediaType = MediaType.parseMediaType(photo.getContentType());
+            List<MediaType> acceptedMediaTypes = MediaType.parseMediaTypes(acceptHeader);
+            checkCompatibility(photoMediaType, acceptedMediaTypes);
+            InputStream photoData = productPhotoCatalogService.getData(photo);
             return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_PNG)
+                .contentType(photoMediaType)
                 .body(new InputStreamResource(photoData));
-        } catch (Exception e) {
+        } catch (ModelNotFoundException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    private void checkCompatibility(MediaType photoMediaType, List<MediaType> acceptedMediaTypes) throws HttpMediaTypeNotAcceptableException {
+        boolean compatible = acceptedMediaTypes.stream()
+            .anyMatch(mediaType -> mediaType.isCompatibleWith(photoMediaType));
+        if(!compatible){
+            throw new HttpMediaTypeNotAcceptableException(acceptedMediaTypes);
         }
     }
 
