@@ -1,7 +1,6 @@
 package com.github.edurbs.datsa.infra.service.storage;
 
 public class StorageException extends RuntimeException {
-
     public StorageException(String message) {
         super(message);
     }
@@ -9,5 +8,4 @@ public class StorageException extends RuntimeException {
     public StorageException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }

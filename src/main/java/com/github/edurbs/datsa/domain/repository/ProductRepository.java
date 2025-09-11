@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.github.edurbs.datsa.domain.model.Product;
@@ -19,5 +20,5 @@ public interface ProductRepository extends CustomJpaRepository<Product, Long>, P
     List<Product> findByActiveTrueAndRestaurantId(Long restaurantId);
 
     @Query("from ProductPhoto where id = :productId")
-    Optional<ProductPhoto> findPhotoById(Long productId);
+    Optional<ProductPhoto> findPhotoById(@Param("productId") Long productId);
 }

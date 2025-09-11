@@ -1,26 +1,37 @@
 package com.github.edurbs.datsa.domain.service;
 
-import java.io.InputStream;
-import java.util.UUID;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
-public interface PhotoStorageService {
-    void save(NewPhoto  newPhoto);
+import java.io.InputStream;
+import java.util.UUID;
 
-    default String generateFileName(String originalName){
+public interface PhotoStorageService {
+
+    void save(NewPhoto newPhoto);
+
+    void delete(String fileName);
+
+    InputStream get(String fileName);
+
+    default String generateFileName(String originalName) {
         return UUID.randomUUID() + "_" + originalName;
+    }
+
+    default void replace(String currentPhotoFileName, NewPhoto newPhoto) {
+        save(newPhoto);
+        if (currentPhotoFileName != null) {
+            delete(currentPhotoFileName);
+        }
     }
 
     @Getter
     @Builder
-    @FieldDefaults(level=AccessLevel.PRIVATE, makeFinal=true)
+    @FieldDefaults(level = AccessLevel.PRIVATE)
     class NewPhoto {
         String fileName;
         InputStream inputStream;
-
     }
 }

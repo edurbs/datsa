@@ -17,7 +17,5 @@ public class DatsaApiApplication {
         SpringApplication.run(DatsaApiApplication.class, args);
 
     }
-    
-    // none
 
 }

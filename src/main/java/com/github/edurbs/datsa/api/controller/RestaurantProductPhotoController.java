@@ -6,10 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.github.edurbs.datsa.api.dto.input.ProductPhotoInput;
@@ -46,6 +43,13 @@ public class RestaurantProductPhotoController {
         photo.setFileName(file.getOriginalFilename());
         ProductPhoto savedPhoto = productPhotoCatalogService.save(photo, file.getInputStream());
         return productPhotoMapper.toOutput(savedPhoto);
+    }
+
+    @GetMapping
+    public ProductPhotoOutput getPhoto(@PathVariable Long restaurantId, @PathVariable Long productId){
+        Product product = productRegistryService.getByRestaurant(restaurantId, productId);
+        ProductPhoto photo = productPhotoCatalogService.get(product);
+        return productPhotoMapper.toOutput(photo);
     }
 
 }
