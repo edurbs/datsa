@@ -1,6 +1,8 @@
 package com.github.edurbs.datsa.infra.service.storage;
 
+import com.github.edurbs.datsa.core.storage.StorageProperties;
 import com.github.edurbs.datsa.domain.service.PhotoStorageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -10,11 +12,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-@Service
 public class LocalPhotoStorageService implements PhotoStorageService {
 
-    @Value("${datsa.storage.local.photo-folder}")
-    private Path photoFolder;
+    @Autowired
+    private StorageProperties properties;
 
     @Override
     public void save(NewPhoto newPhoto) {
@@ -47,7 +48,8 @@ public class LocalPhotoStorageService implements PhotoStorageService {
     }
 
     private Path getFilePath(String fileName) {
-        return photoFolder.resolve(Path.of(fileName));
+        return properties.getLocal().getPhotoFolder()
+            .resolve(Path.of(fileName));
 
     }
 
