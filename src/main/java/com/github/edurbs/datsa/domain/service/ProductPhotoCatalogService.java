@@ -37,6 +37,7 @@ public class ProductPhotoCatalogService {
         productRepository.flush(); // avoid problems when saving photo data file
         NewPhoto newPhoto = NewPhoto.builder()
             .fileName(newFileName)
+            .contentType(photo.getContentType())
             .inputStream(photoData)
             .build();
         photoStorageService.replace(currentPhotoFileName, newPhoto);
