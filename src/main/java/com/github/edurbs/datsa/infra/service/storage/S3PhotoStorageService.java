@@ -2,6 +2,7 @@ package com.github.edurbs.datsa.infra.service.storage;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.github.edurbs.datsa.core.storage.StorageProperties;
@@ -45,7 +46,11 @@ public class S3PhotoStorageService implements PhotoStorageService {
 
     @Override
     public void delete(String fileName) {
-
+        DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(
+            storageProperties.getS3().getBucket(),
+            getFilePath(fileName)
+        );
+        amazonS3.deleteObject(deleteObjectRequest);
     }
 
     @Override
