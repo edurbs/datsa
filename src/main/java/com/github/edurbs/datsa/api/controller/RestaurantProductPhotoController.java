@@ -1,7 +1,6 @@
 package com.github.edurbs.datsa.api.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -10,6 +9,7 @@ import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.service.PhotoStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +24,7 @@ import com.github.edurbs.datsa.domain.model.Product;
 import com.github.edurbs.datsa.domain.model.ProductPhoto;
 import com.github.edurbs.datsa.domain.service.ProductPhotoCatalogService;
 import com.github.edurbs.datsa.domain.service.ProductRegistryService;
+import com.github.edurbs.datsa.domain.service.PhotoStorageService.FetchedPhoto;
 
 
 @RestController
@@ -72,17 +73,24 @@ public class RestaurantProductPhotoController {
     }
 
     @GetMapping
-    public ResponseEntity<InputStreamResource> getPhotoData(@PathVariable Long restaurantId, @PathVariable Long productId, @RequestHeader(name="accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
+    public ResponseEntity<?> getPhotoData(@PathVariable Long restaurantId, @PathVariable Long productId, @RequestHeader(name="accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         try {
             Product product = productRegistryService.getByRestaurant(restaurantId, productId);
             ProductPhoto photo = productPhotoCatalogService.get(product);
             MediaType photoMediaType = MediaType.parseMediaType(photo.getContentType());
             List<MediaType> acceptedMediaTypes = MediaType.parseMediaTypes(acceptHeader);
             checkCompatibility(photoMediaType, acceptedMediaTypes);
-            InputStream photoData = productPhotoCatalogService.getData(photo);
-            return ResponseEntity.ok()
-                .contentType(photoMediaType)
-                .body(new InputStreamResource(photoData));
+            FetchedPhoto fetchedPhoto = productPhotoCatalogService.getPhoto(photo);
+            if(fetchedPhoto.hasUrl()){
+                return ResponseEntity
+                    .status(HttpStatus.FOUND)
+                    .header(HttpHeaders.LOCATION, fetchedPhoto.getUrl())
+                    .build();
+            }else{
+                return ResponseEntity.ok()
+                    .contentType(photoMediaType)
+                    .body(new InputStreamResource(fetchedPhoto.getInputStream()));
+            }
         } catch (ModelNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

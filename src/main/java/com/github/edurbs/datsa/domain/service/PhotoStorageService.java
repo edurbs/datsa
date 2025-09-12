@@ -14,7 +14,8 @@ public interface PhotoStorageService {
 
     void delete(String fileName);
 
-    InputStream get(String fileName);
+    FetchedPhoto get(String fileName);
+
 
     default String generateFileName(String originalName) {
         return UUID.randomUUID() + "_" + originalName;
@@ -34,5 +35,18 @@ public interface PhotoStorageService {
         String fileName;
         InputStream inputStream;
         String contentType;
+    }
+
+    @Getter
+    @Builder
+    class FetchedPhoto {
+        private InputStream inputStream;
+        private String url;
+        public boolean hasUrl(){
+            return url != null;
+        }
+        public boolean hasInputStream(){
+            return inputStream != null;
+        }
     }
 }

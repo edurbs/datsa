@@ -1,6 +1,5 @@
 package com.github.edurbs.datsa.infra.service.storage;
 
-import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -10,7 +9,7 @@ import com.github.edurbs.datsa.domain.service.PhotoStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
+import java.net.URL;
 
 @Service
 public class S3PhotoStorageService implements PhotoStorageService {
@@ -50,7 +49,11 @@ public class S3PhotoStorageService implements PhotoStorageService {
     }
 
     @Override
-    public InputStream get(String fileName) {
-        return null;
+    public FetchedPhoto get(String fileName) {
+        String filePath = getFilePath(fileName);
+        URL url = amazonS3.getUrl(storageProperties.getS3().getBucket(), filePath);
+        return  FetchedPhoto.builder()
+            .url(url.toString())
+            .build();
     }
 }

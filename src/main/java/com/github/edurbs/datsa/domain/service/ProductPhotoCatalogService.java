@@ -50,7 +50,7 @@ public class ProductPhotoCatalogService {
             .orElseThrow(()->new ProductPhotoNotFoundException(productId));
     }
 
-    public InputStream getData(ProductPhoto photo) {
+    public PhotoStorageService.FetchedPhoto getPhoto(ProductPhoto photo) {
         return photoStorageService.get(photo.getFileName());
     }
 
