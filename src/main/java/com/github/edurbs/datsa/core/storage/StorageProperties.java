@@ -1,6 +1,5 @@
 package com.github.edurbs.datsa.core.storage;
 
-import com.amazonaws.regions.Regions;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,7 +34,7 @@ public class StorageProperties {
         String idAccessKey;
         String secretKey;
         String bucket;
-        Regions region;
+        String region;
         String photosProductFolder;
 
     }

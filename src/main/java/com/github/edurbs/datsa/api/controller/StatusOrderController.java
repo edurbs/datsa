@@ -1,18 +1,12 @@
 package com.github.edurbs.datsa.api.controller;
 
+import com.github.edurbs.datsa.domain.service.StatusOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.github.edurbs.datsa.domain.service.StatusOrderService;
-
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value="/orders/{uuid}")
+@RequestMapping(value = "/orders/{uuid}")
 public class StatusOrderController {
 
     @Autowired
@@ -20,7 +14,7 @@ public class StatusOrderController {
 
     @PutMapping("/confirm")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void confirm(@PathVariable String uuid){
+    public void confirm(@PathVariable String uuid) {
         statusOrderService.confirm(uuid);
     }
 
@@ -34,6 +28,5 @@ public class StatusOrderController {
     public void delivery(@PathVariable String uuid) {
         statusOrderService.delivery(uuid);
     }
-
 
 }

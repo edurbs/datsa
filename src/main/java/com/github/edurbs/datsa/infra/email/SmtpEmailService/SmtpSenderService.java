@@ -22,7 +22,6 @@ public class SmtpSenderService implements EmailSenderService {
     @Override
     public void send(Message message) {
         try {
-            System.out.println(emailProperties.getPassword());
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
             helper.setSubject(message.getSubject());
