@@ -21,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -33,6 +34,7 @@ import lombok.EqualsAndHashCode;
 @Table(name="`order`")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class Order implements DomainModel {
 
     @Id
@@ -74,6 +76,7 @@ public class Order implements DomainModel {
 
     @ManyToOne
     @JoinColumn(name = "customer_user_id",nullable = false)
+    @ToString.Include
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)

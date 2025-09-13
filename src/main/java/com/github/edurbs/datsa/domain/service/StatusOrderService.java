@@ -20,10 +20,12 @@ public class StatusOrderService {
     public void confirm(String uuid){
         Order order = orderRegistryService.getById(uuid);
         order.confirm();
+
         var message = EmailSenderService.Message.builder()
                 .subject(order.getRestaurant().getName() + " - Order confirmed")
-                .body("Order %s <b>confirmed!</b>".formatted(order.getId()))
+                .body("orderConfirmed.html")
                 .recipient(order.getUser().getEmail())
+                .model("order", order)
                 .build();
         emailSenderService.send(message);
     }
