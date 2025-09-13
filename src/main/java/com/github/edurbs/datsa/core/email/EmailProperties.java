@@ -12,9 +12,11 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties("datsa.mail.")
+@ConfigurationProperties("datsa.mail")
 public class EmailProperties {
 
     @NotNull
     private String sender;
+
+    private String password;
 }

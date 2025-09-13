@@ -11,7 +11,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 @Service
-public class EmailSenderServiceImpl implements EmailSenderService {
+public class SmtpSenderService implements EmailSenderService {
 
     @Autowired
     private EmailProperties emailProperties;
@@ -22,11 +22,12 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     @Override
     public void send(Message message) {
         try {
+            System.out.println(emailProperties.getPassword());
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
             helper.setSubject(message.getSubject());
             helper.setText(message.getBody(), true);
-            helper.setTo(message.getToList().toArray(new String[0]));
+            helper.setTo(message.getRecipients().toArray(new String[0]));
             helper.setFrom(emailProperties.getSender());
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {

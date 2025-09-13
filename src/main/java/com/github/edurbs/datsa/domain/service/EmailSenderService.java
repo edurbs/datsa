@@ -2,6 +2,8 @@ package com.github.edurbs.datsa.domain.service;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.Singular;
 
 import java.util.Set;
 
@@ -11,8 +13,14 @@ public interface EmailSenderService {
     @Getter
     @Builder
     class Message{
-        private Set<String> toList;
+
+        @Singular
+        private Set<String> recipients;
+
+        @NonNull
         private String subject;
+
+        @NonNull
         private String body;
     }
 }

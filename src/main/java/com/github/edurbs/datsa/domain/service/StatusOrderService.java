@@ -11,12 +11,21 @@ import com.github.edurbs.datsa.domain.model.Order;
 public class StatusOrderService {
 
     @Autowired
+    EmailSenderService emailSenderService;
+
+    @Autowired
     OrderRegistryService orderRegistryService;
 
     @Transactional
     public void confirm(String uuid){
         Order order = orderRegistryService.getById(uuid);
         order.confirm();
+        var message = EmailSenderService.Message.builder()
+                .subject(order.getRestaurant().getName() + " - Order confirmed")
+                .body("Order %s <b>confirmed!</b>".formatted(order.getId()))
+                .recipient(order.getUser().getEmail())
+                .build();
+        emailSenderService.send(message);
     }
 
     @Transactional

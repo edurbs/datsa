@@ -20,6 +20,7 @@ GET {{host}}/{{o}}/6609f1f9-443f-4735-bedd-b24bd06811fb
 GET {{host}}/{{o}}/
 ###
 POST {{host}}/{{o}}/
+
 {{contentType}}
 
 {
@@ -52,7 +53,7 @@ POST {{host}}/{{o}}/
     ]
 }
 ###
-PUT {{host}}/{{o}}/6609f1f9-443f-4735-bedd-b24bd06811fb/confirm
+PUT http://localhost:8080/orders/6609f1f9-443f-4735-bedd-b24bd06811fb/confirm
 ###
 PUT {{host}}/{{o}}/6609f1f9-443f-4735-bedd-b24bd06811fb/delivery
 ###
