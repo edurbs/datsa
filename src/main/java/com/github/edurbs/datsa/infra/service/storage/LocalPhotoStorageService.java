@@ -1,16 +1,14 @@
 package com.github.edurbs.datsa.infra.service.storage;
 
-import com.github.edurbs.datsa.core.storage.StorageProperties;
-import com.github.edurbs.datsa.domain.service.PhotoStorageService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.FileCopyUtils;
+
+import com.github.edurbs.datsa.core.storage.StorageProperties;
+import com.github.edurbs.datsa.domain.service.PhotoStorageService;
 
 public class LocalPhotoStorageService implements PhotoStorageService {
 
