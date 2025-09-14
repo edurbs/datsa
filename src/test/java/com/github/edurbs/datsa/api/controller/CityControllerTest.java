@@ -6,7 +6,6 @@ import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -34,9 +33,6 @@ class CityControllerTest {
 
     @MockBean
     private CityMapper cityMapper;
-
-    // @Autowired
-    // private ModelMapper modelMapper;
 
     @Test
     void whenGetInvalidUrl_thenStatus404() throws Exception {
