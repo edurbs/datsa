@@ -1,4 +1,4 @@
-package com.github.edurbs.datsa.infra.email.SmtpEmailService;
+package com.github.edurbs.datsa.infra.email;
 
 public class EmailException extends RuntimeException {
     public EmailException(String message) {

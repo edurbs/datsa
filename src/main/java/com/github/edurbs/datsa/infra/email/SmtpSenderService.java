@@ -1,25 +1,23 @@
-package com.github.edurbs.datsa.infra.email.SmtpEmailService;
-
-import com.github.edurbs.datsa.core.email.EmailProperties;
-import com.github.edurbs.datsa.domain.service.EmailSenderService;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+package com.github.edurbs.datsa.infra.email;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.validation.constraints.Email;
-import java.io.IOException;
 
-@Service
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+
+import com.github.edurbs.datsa.core.email.EmailProperties;
+import com.github.edurbs.datsa.domain.service.EmailSenderService;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+
 public class SmtpSenderService implements EmailSenderService {
 
     @Autowired
-    private EmailProperties emailProperties;
+    protected EmailProperties emailProperties;
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -43,12 +41,12 @@ public class SmtpSenderService implements EmailSenderService {
         }
     }
 
-    private String processTemplate(Message message){
+    protected String processTemplate(Message message){
         try {
             Template template = freemarkerConfig.getTemplate(message.getBody());
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, message.getModels());
         } catch (Exception e) {
-            throw new EmailException("Can't write email template", e);
+            throw new EmailException("Can't write email template: "+e.getMessage(), e);
         }
 
     }
