@@ -34,6 +34,9 @@ import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -80,6 +83,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         ProblemType problemType = ProblemType.SYSTEM_ERROR;
         String detail = GENERIC_USER_ERROR_MESSAGE;
+        log.error("Context message", ex);
         Problem problem = createProblemBuilder(status, problemType, detail).build();
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }
@@ -217,14 +221,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                     .timestamp(null)
                     .title(status.getReasonPhrase())
                     .status(status.value())
-                    .userMessage(GENERIC_USER_ERROR_MESSAGE)
+                    .userMessage(GENERIC_USER_ERROR_MESSAGE+ " "+ex.getMessage())
                     .build();
         } else if (body instanceof String string) {
             body = Problem.builder()
                     .timestamp(null)
                     .title(string)
                     .status(status.value())
-                    .userMessage(GENERIC_USER_ERROR_MESSAGE)
+                    .userMessage(GENERIC_USER_ERROR_MESSAGE+ " "+ex.getMessage())
                     .build();
         }
         return super.handleExceptionInternal(ex, body, headers, status, request);

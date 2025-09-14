@@ -9,7 +9,7 @@ import com.github.edurbs.datsa.domain.model.Order;
 import com.github.edurbs.datsa.domain.service.EmailSenderService;
 
 @Component
-public class NotificationUserOrderConfirmedListener {
+public class UserNotificationOrderConfirmedListener {
 
     @Autowired
     EmailSenderService emailSenderService;

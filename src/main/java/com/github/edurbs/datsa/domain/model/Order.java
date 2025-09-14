@@ -25,6 +25,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
+import com.github.edurbs.datsa.domain.event.OrderCancelledEvent;
 import com.github.edurbs.datsa.domain.event.OrderConfirmedEvent;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 
@@ -114,11 +115,12 @@ public class Order extends AbstractAggregateRoot<Order> implements DomainModel {
     public void cancel(){
         setStatus(OrderStatus.CANCELLED);
         setConfirmationDate(OffsetDateTime.now());
+        registerEvent(new OrderCancelledEvent(this));
     }
 
     private void setStatus(OrderStatus newStatus){
         if(getStatus().cantChangeTo(newStatus)){
-             throw new ModelValidationException("Status of the order %d can't be changed from %s to %s".formatted(getUuid(), getStatus().getDescription(), newStatus.getDescription()));
+             throw new ModelValidationException("Status of the order %s can't be changed from %s to %s".formatted(getUuid(), getStatus().getDescription(), newStatus.getDescription()));
         }
         this.status = newStatus;
     }

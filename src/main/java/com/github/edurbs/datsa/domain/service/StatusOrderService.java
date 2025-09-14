@@ -34,6 +34,7 @@ public class StatusOrderService {
     public void cancel(String uuid){
         Order order = orderRegistryService.getById(uuid);
         order.cancel();
+        orderRepository.save(order);
     }
 
 }
