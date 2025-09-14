@@ -21,21 +21,23 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
+import com.github.edurbs.datsa.domain.event.OrderConfirmedEvent;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Table(name="`order`")
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @ToString(onlyExplicitlyIncluded = true)
-public class Order implements DomainModel {
+public class Order extends AbstractAggregateRoot<Order> implements DomainModel {
 
     @Id
     @EqualsAndHashCode.Include
@@ -101,6 +103,7 @@ public class Order implements DomainModel {
     public void confirm(){
         setStatus(OrderStatus.CONFIRMED);
         setConfirmationDate(OffsetDateTime.now());
+        registerEvent(new OrderConfirmedEvent(this));
     }
 
     public void delivery(){

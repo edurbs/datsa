@@ -6,28 +6,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.edurbs.datsa.domain.model.Order;
+import com.github.edurbs.datsa.domain.repository.OrderRepository;
 
 @Service
 public class StatusOrderService {
 
     @Autowired
-    EmailSenderService emailSenderService;
+    private OrderRegistryService orderRegistryService;
 
     @Autowired
-    OrderRegistryService orderRegistryService;
+    private OrderRepository orderRepository;
 
     @Transactional
     public void confirm(String uuid){
         Order order = orderRegistryService.getById(uuid);
         order.confirm();
-
-        var message = EmailSenderService.Message.builder()
-                .subject(order.getRestaurant().getName() + " - Order confirmed")
-                .body("orderConfirmed.html")
-                .recipient(order.getUser().getEmail())
-                .model("order", order)
-                .build();
-        emailSenderService.send(message);
+        orderRepository.save(order); // must save to event (orderConfirmedEvent) be sent
     }
 
     @Transactional
