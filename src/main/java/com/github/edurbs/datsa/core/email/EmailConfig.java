@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.github.edurbs.datsa.core.email.EmailProperties.Implementation;
 import com.github.edurbs.datsa.domain.service.EmailSenderService;
 import com.github.edurbs.datsa.infra.email.FakeEmailService;
+import com.github.edurbs.datsa.infra.email.SandBoxEmailService;
 import com.github.edurbs.datsa.infra.email.SmtpSenderService;
 
 @Configuration
@@ -17,9 +17,15 @@ public class EmailConfig {
 
     @Bean
     public EmailSenderService emailSenderService(){
-        if(emailProperties.getImpl().equals(Implementation.FAKE)){
-            return new FakeEmailService();
+        switch (emailProperties.getImpl()) {
+            case FAKE:
+                return new FakeEmailService();
+            case SMTP:
+                return new SmtpSenderService();
+            case SANDBOX:
+                return new SandBoxEmailService();
+            default:
+                return null;
         }
-        return new SmtpSenderService();
     }
 }

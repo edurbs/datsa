@@ -9,6 +9,7 @@ delete from permission;
 delete from product;
 delete from restaurant;
 delete from restaurant_payment_method;
+delete from restaurant_user;
 delete from user;
 delete from user_group;
 delete from `order`;

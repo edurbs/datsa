@@ -28,17 +28,22 @@ public class SmtpSenderService implements EmailSenderService {
     @Override
     public void send(Message message) {
         try {
-            String body = processTemplate(message);
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
-            helper.setFrom(emailProperties.getSender());
-            helper.setTo(message.getRecipients().toArray(new String[0]));
-            helper.setSubject(message.getSubject());
-            helper.setText(body, true);
+            MimeMessage mimeMessage = createMimeMessage(message);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            throw new EmailException("Can't send email", e);
+            throw new EmailException("Can't send email: "+e.getMessage(), e);
         }
+    }
+
+    protected MimeMessage createMimeMessage(Message message) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        String body = processTemplate(message);
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+        helper.setFrom(emailProperties.getSender());
+        helper.setTo(message.getRecipients().toArray(new String[0]));
+        helper.setSubject(message.getSubject());
+        helper.setText(body, true);
+        return mimeMessage;
     }
 
     protected String processTemplate(Message message){
