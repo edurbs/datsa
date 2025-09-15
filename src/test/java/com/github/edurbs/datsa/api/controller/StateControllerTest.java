@@ -2,28 +2,25 @@ package com.github.edurbs.datsa.api.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.edurbs.datsa.api.dto.input.StateInput;
 import com.github.edurbs.datsa.api.dto.output.StateOutput;
 import com.github.edurbs.datsa.api.mapper.StateMapper;
@@ -40,142 +37,121 @@ class StateControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @MockBean
     private StateRegistryService stateRegistryService;
 
     @MockBean
     private StateMapper stateMapper;
 
+    private ControllerTestUtils<StateOutput> myUtils = new ControllerTestUtils<>(StateOutput.class);
+
     private State state;
     private StateOutput stateOutput;
     private StateInput stateInput;
 
     @BeforeEach
-    void setup(){
-        state = Instancio.create(State.class);
-
+    void setup() {
+        stateInput = Instancio.create(StateInput.class);
+        state = new State();
+        state.setId(Instancio.create(Long.class));
+        state.setName(stateInput.getName());
         stateOutput = new StateOutput();
         stateOutput.setId(state.getId());
         stateOutput.setName(state.getName());
-
-        stateInput = new StateInput();
-        stateInput.setName(state.getName());
     }
 
     @Test
-    void newTest() throws Exception {
-
-        when(stateRegistryService.getById(state.getId()))
-            .thenReturn(state);
-        when(stateMapper.toOutput(any(State.class)))
-            .thenReturn(stateOutput);
-        mockMvc.perform(get(STATE_URL+"/"+state.getId()))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(state.getId()))
-            .andExpect(jsonPath("$.name").value(state.getName()));
-
+    void whenGetValid_thenStatusOkAndEqualsObject() throws Exception {
+        when(stateMapper.toOutput(any()))
+                .thenReturn(stateOutput);
+        StateOutput result = myUtils.fromResult(mockMvc.perform(get(getUrlId()))
+                .andExpect(status().isOk())
+                .andReturn());
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(stateOutput);
     }
 
     @Test
     void whenGetInvalidUrl_thenStatus404() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/invalid"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+        mockMvc.perform(get("/invalid"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     void whenGetAll_thenStatus200() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(STATE_URL))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    void whenGetValidStateId_thenStatus200() throws Exception {
-        Mockito.when(stateRegistryService.getById(1L)).thenReturn(Instancio.create(State.class));
-
-        mockMvc.perform(MockMvcRequestBuilders.get(STATE_URL + "/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(get(STATE_URL))
+                .andExpect(status().isOk());
     }
 
     @Test
     void whenGetInvalidStateId_thenStatus404() throws Exception {
-        Mockito.when(stateRegistryService.getById(999L)).thenThrow(new ModelNotFoundException());
+        when(stateRegistryService.getById(state.getId()))
+                .thenThrow(new ModelNotFoundException());
+        mockMvc.perform(get(getUrlId()))
+                .andExpect(status().isNotFound());
 
-        mockMvc.perform(MockMvcRequestBuilders.get(STATE_URL + "/999"));
     }
 
     @Test
     void whenPostValidState_thenReturnsCreatedAndCorrectBody() throws Exception {
-        String json = objectMapper.writeValueAsString(stateInput);
-
-        when(stateMapper.toDomain(any(StateInput.class)))
-            .thenReturn(state);
-        when(stateRegistryService.save(any(State.class)))
-            .thenReturn(state);
-        when(stateMapper.toOutput(state))
-            .thenReturn(stateOutput);
-        MvcResult result = mockMvc.perform(post(STATE_URL)
-                .content(json)
-                .contentType(APPLICATION_JSON)
-            ).andExpect(MockMvcResultMatchers.status().isCreated())
-            .andReturn();
-        verify(stateRegistryService, times(1)).save(any(State.class));
-        String resultJson = result.getResponse().getContentAsString();
-        StateOutput stateOutputResult = objectMapper.readValue(resultJson, StateOutput.class);
+        String json = myUtils.toJson(stateInput);
+        when(stateMapper.toOutput(any()))
+                .thenReturn(stateOutput);
+        StateOutput stateOutputResult = myUtils.fromResult(
+                mockMvc.perform(post(STATE_URL)
+                        .content(json)
+                        .contentType(APPLICATION_JSON))
+                        .andExpect(status().isCreated())
+                        .andReturn());
+        verify(stateRegistryService, times(1)).save(any());
         assertThat(stateOutputResult)
-            .usingRecursiveComparison()
-            .isEqualTo(stateOutput);
+                .usingRecursiveComparison()
+                .isEqualTo(stateOutput);
     }
 
     @Test
     void whenAlterValidState_thenStatus200() throws Exception {
-        var stateOriginal = new State();
-        stateOriginal.setId(1L);
-        stateOriginal.setName("some name");
-
-        var stateUpdated = new State();
-        stateUpdated.setName("new name");
-
-        StateOutput stateOutput = new StateOutput();
-        stateOutput.setId(stateUpdated.getId());
-        stateOutput.setName(stateUpdated.getName());
-
-        Mockito.when(stateRegistryService.getById(stateOriginal.getId())).thenReturn(stateOriginal);
-        Mockito.when(stateRegistryService.save(Mockito.any(State.class))).thenReturn(stateUpdated);
-
-        mockMvc.perform(MockMvcRequestBuilders.put(STATE_URL + "/" + stateOriginal.getId())
-                .content("""
-                        {
-                            "name":"%s"
-                        }
-                        """.formatted(stateUpdated.getName())).contentType("application/json"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        stateOutput.setName("new name");
+        when(stateMapper.toOutput(any()))
+                .thenReturn(stateOutput);
+        StateOutput stateOutputResult = myUtils.fromResult(mockMvc.perform(MockMvcRequestBuilders.put(getUrlId())
+                .content(myUtils.toJson(stateInput))
+                .contentType("application/json"))
+                .andExpect(status().isOk())
+                .andReturn());
+        assertThat(stateOutputResult)
+                .usingRecursiveComparison()
+                .isEqualTo(stateOutput);
 
     }
 
     @Test
     void whenDeleteValidState_thenStatus204() throws Exception {
-        Mockito.doNothing().when(stateRegistryService).remove(1L);
-        mockMvc.perform(MockMvcRequestBuilders.delete(STATE_URL + "/1"))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+        mockMvc.perform(delete(getUrlId()))
+                .andExpect(status().isNoContent());
     }
 
     @Test
     void whenDeleteInvalidState_thenStatus404() throws Exception {
-        Mockito.doThrow(new ModelNotFoundException()).when(stateRegistryService).remove(1L);
-        mockMvc.perform(MockMvcRequestBuilders.delete(STATE_URL + "/1"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+        doThrow(new ModelNotFoundException())
+                .when(stateRegistryService)
+                .remove(state.getId());
+        mockMvc.perform(delete(getUrlId()))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     void whenDeleteModelInUse_thenStatus409() throws Exception {
-        Mockito.doThrow(new ModelInUseException()).when(stateRegistryService).remove(1L);
-        mockMvc.perform(MockMvcRequestBuilders.delete(STATE_URL + "/1"))
-                .andExpect(MockMvcResultMatchers.status().isConflict());
+        doThrow(new ModelInUseException())
+                .when(stateRegistryService)
+                .remove(state.getId());
+        mockMvc.perform(delete(getUrlId()))
+                .andExpect(status().isConflict());
+    }
+
+    private String getUrlId() {
+        return STATE_URL + "/" + state.getId();
     }
 
 }
-
-
