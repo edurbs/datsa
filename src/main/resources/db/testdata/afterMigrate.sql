@@ -47,12 +47,12 @@ insert ignore into city (id, name, state_id)
 values (4, 'Campinas', 2);
 insert ignore into city (id, name, state_id)
 values (5, 'Fortaleza', 3);
-insert ignore into payment_method (id, description)
-values (1, 'Cartão de crédito');
-insert ignore into payment_method (id, description)
-values (2, 'Cartão de débito');
-insert ignore into payment_method (id, description)
-values (3, 'Dinheiro');
+insert ignore into payment_method (id, description, updated_at)
+values (1, 'Cartão de crédito', utc_timestamp);
+insert ignore into payment_method (id, description, updated_at)
+values (2, 'Cartão de débito', utc_timestamp);
+insert ignore into payment_method (id, description, updated_at)
+values (3, 'Dinheiro', utc_timestamp);
 insert ignore into permission (id, name, description)
 values (
         1,

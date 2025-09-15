@@ -1,5 +1,6 @@
 package com.github.edurbs.datsa.domain.service;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,10 @@ public class PaymentMethodRegistryService {
 
     private boolean notExists(Long id){
         return !paymentMethodRepository.existsById(id);
+    }
+
+    public OffsetDateTime getMaxUpdateAt(){
+        return paymentMethodRepository.getLastUpdate();
     }
 
 }

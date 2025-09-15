@@ -1,5 +1,6 @@
 package com.github.edurbs.datsa.api.controller;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import com.github.edurbs.datsa.api.dto.input.PaymentMethodInput;
 import com.github.edurbs.datsa.api.dto.output.PaymentMethodOutput;
@@ -28,6 +31,8 @@ import com.github.edurbs.datsa.domain.service.PaymentMethodRegistryService;
 @RequestMapping("/paymentmethods")
 public class PaymentMethodController {
 
+    private static final String ETAG_NOT_MODIFIED = "0";
+
     @Autowired
     private PaymentMethodRegistryService registryService;
 
@@ -35,15 +40,38 @@ public class PaymentMethodController {
     private PaymentMethodMapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<PaymentMethodOutput>> listAll() {
+    public ResponseEntity<List<PaymentMethodOutput>> listAll(ServletWebRequest request) {
+        String eTag = getETag(request);
+        if(ETAG_NOT_MODIFIED.equals(eTag)){
+            return null;
+        }
         List<PaymentMethodOutput> list = mapper.toOutputList(registryService.getAll());
         return ResponseEntity.ok()
             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+            .eTag(eTag) // add the tag
             .body(list);
     }
 
+    private String getETag(ServletWebRequest request){
+        ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+        OffsetDateTime lastUpdate = registryService.getMaxUpdateAt();
+        String eTag = ETAG_NOT_MODIFIED; // if no date (null), then 0
+        if(lastUpdate!=null){
+            eTag = String.valueOf(lastUpdate.toEpochSecond());
+        }
+        if(request.checkNotModified(eTag)){ // if no modification
+            eTag = ETAG_NOT_MODIFIED; // use the local cache
+        }
+        return eTag;
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<PaymentMethodOutput> getById(@PathVariable Long id) {
+    public ResponseEntity<PaymentMethodOutput> getById(@PathVariable Long id, ServletWebRequest request) {
+        String eTag = getETag(request);
+        if(ETAG_NOT_MODIFIED.equals(eTag)){
+            return null;
+        }
+
         PaymentMethodOutput paymentMethodOutput = mapper.toOutput(registryService.getById(id));
         return ResponseEntity.ok()
             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
