@@ -1,11 +1,14 @@
 package com.github.edurbs.datsa.api.controller;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,10 +24,6 @@ import com.github.edurbs.datsa.api.dto.output.PaymentMethodOutput;
 import com.github.edurbs.datsa.api.mapper.PaymentMethodMapper;
 import com.github.edurbs.datsa.domain.service.PaymentMethodRegistryService;
 
-
-
-
-
 @RestController
 @RequestMapping("/paymentmethods")
 public class PaymentMethodController {
@@ -36,13 +35,19 @@ public class PaymentMethodController {
     private PaymentMethodMapper mapper;
 
     @GetMapping
-    public List<PaymentMethodOutput> listAll() {
-        return mapper.toOutputList(registryService.getAll());
+    public ResponseEntity<List<PaymentMethodOutput>> listAll() {
+        List<PaymentMethodOutput> list = mapper.toOutputList(registryService.getAll());
+        return ResponseEntity.ok()
+            .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+            .body(list);
     }
 
     @GetMapping("/{id}")
-    public PaymentMethodOutput getById(@PathVariable Long id) {
-        return mapper.toOutput(registryService.getById(id));
+    public ResponseEntity<PaymentMethodOutput> getById(@PathVariable Long id) {
+        PaymentMethodOutput paymentMethodOutput = mapper.toOutput(registryService.getById(id));
+        return ResponseEntity.ok()
+            .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+            .body(paymentMethodOutput);
     }
 
     @PostMapping
