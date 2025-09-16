@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.edurbs.datsa.api.ResourceUriHelper;
 import com.github.edurbs.datsa.api.dto.input.CityInput;
 import com.github.edurbs.datsa.api.dto.output.CityOutput;
 import com.github.edurbs.datsa.api.mapper.CityMapper;
@@ -55,7 +56,9 @@ public class CityController {
         try {
             var city = cityMapper.toDomain(cityInput);
             var cityAdded = cityRegistryService.save(city);
-            return cityMapper.toOutput(cityAdded);
+            CityOutput cityOutput = cityMapper.toOutput(cityAdded);
+            ResourceUriHelper.addUriInResponseHeader(cityOutput.getId());
+            return cityOutput;
         } catch (StateNotFoundException e) {
             throw new ModelValidationException(e.getMessage());
         }
