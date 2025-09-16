@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +45,23 @@ public class CityController {
     @GetMapping("/{cityId}")
     public CityOutput getById(@PathVariable Long cityId) {
         try {
-            return cityMapper.toOutput(cityRegistryService.getById(cityId));
+            CityOutput cityOutput = cityMapper.toOutput(cityRegistryService.getById(cityId));
+            cityOutput.add(
+                WebMvcLinkBuilder.linkTo(
+                    WebMvcLinkBuilder.methodOn(CityController.class).getById(cityId)
+                ).withSelfRel()
+            );
+            cityOutput.add(
+                WebMvcLinkBuilder.linkTo(
+                    WebMvcLinkBuilder.methodOn(CityController.class).listAll()
+                ).withRel("cities")
+            );
+
+            cityOutput.getState().add(
+                WebMvcLinkBuilder.linkTo(
+                    WebMvcLinkBuilder.methodOn(StateController.class).getById(cityOutput.getState().getId())
+                ).withSelfRel());
+            return cityOutput;
         } catch (CityNotFoundException e) {
             throw new ModelNotFoundException(e.getMessage());
         }
