@@ -1,12 +1,9 @@
 package com.github.edurbs.datsa.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,18 +37,13 @@ public class CityController {
 
     @GetMapping
     public CollectionModel<CityOutput> listAll() {
-        List<CityOutput> cities = cityMapper.toOutputList(cityRegistryService.getAll());
-        cities.forEach(this::addHateOas);
-        CollectionModel<CityOutput> citiesCollectionModel = CollectionModel.of(cities);
-        citiesCollectionModel.add(WebMvcLinkBuilder.linkTo(CityController.class).withSelfRel());
-        return citiesCollectionModel;
+        return cityMapper.toCollectionModel(cityRegistryService.getAll());
     }
 
     @GetMapping("/{cityId}")
     public CityOutput getById(@PathVariable Long cityId) {
         try {
-            CityOutput cityOutput = cityMapper.toOutput(cityRegistryService.getById(cityId));
-            return addHateOas(cityOutput);
+            return cityMapper.toModel(cityRegistryService.getById(cityId));
         } catch (CityNotFoundException e) {
             throw new ModelNotFoundException(e.getMessage());
         }
@@ -63,7 +55,7 @@ public class CityController {
         try {
             var city = cityMapper.toDomain(cityInput);
             var cityAdded = cityRegistryService.save(city);
-            CityOutput cityOutput = cityMapper.toOutput(cityAdded);
+            CityOutput cityOutput = cityMapper.toModel(cityAdded);
             ResourceUriHelper.addUriInResponseHeader(cityOutput.getId());
             return cityOutput;
         } catch (StateNotFoundException e) {
@@ -77,7 +69,7 @@ public class CityController {
             var city = cityRegistryService.getById(cityId);
             cityMapper.copyToDomain(cityInput, city);
             var alteredCity = cityRegistryService.save(city);
-            return cityMapper.toOutput(alteredCity);
+            return cityMapper.toModel(alteredCity);
         } catch (CityNotFoundException e) {
             throw new ModelNotFoundException(e.getMessage());
         } catch (StateNotFoundException e){
@@ -91,22 +83,4 @@ public class CityController {
         cityRegistryService.remove(cityId);
     }
 
-    private CityOutput addHateOas(CityOutput cityOutput) {
-        cityOutput.add(
-            WebMvcLinkBuilder.linkTo(
-                WebMvcLinkBuilder.methodOn(CityController.class).getById(cityOutput.getId())
-            ).withSelfRel()
-        );
-        cityOutput.add(
-            WebMvcLinkBuilder.linkTo(
-                WebMvcLinkBuilder.methodOn(CityController.class).listAll()
-            ).withRel("cities")
-        );
-
-        cityOutput.getState().add(
-            WebMvcLinkBuilder.linkTo(
-                WebMvcLinkBuilder.methodOn(StateController.class).getById(cityOutput.getState().getId())
-            ).withSelfRel());
-        return cityOutput;
-    }
 }
