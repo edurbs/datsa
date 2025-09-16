@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,30 +39,19 @@ public class CityController {
     private CityMapper cityMapper;
 
     @GetMapping
-    public List<CityOutput> listAll() {
-        return cityMapper.toOutputList(cityRegistryService.getAll());
+    public CollectionModel<CityOutput> listAll() {
+        List<CityOutput> cities = cityMapper.toOutputList(cityRegistryService.getAll());
+        cities.forEach(this::addHateOas);
+        CollectionModel<CityOutput> citiesCollectionModel = CollectionModel.of(cities);
+        citiesCollectionModel.add(WebMvcLinkBuilder.linkTo(CityController.class).withSelfRel());
+        return citiesCollectionModel;
     }
 
     @GetMapping("/{cityId}")
     public CityOutput getById(@PathVariable Long cityId) {
         try {
             CityOutput cityOutput = cityMapper.toOutput(cityRegistryService.getById(cityId));
-            cityOutput.add(
-                WebMvcLinkBuilder.linkTo(
-                    WebMvcLinkBuilder.methodOn(CityController.class).getById(cityId)
-                ).withSelfRel()
-            );
-            cityOutput.add(
-                WebMvcLinkBuilder.linkTo(
-                    WebMvcLinkBuilder.methodOn(CityController.class).listAll()
-                ).withRel("cities")
-            );
-
-            cityOutput.getState().add(
-                WebMvcLinkBuilder.linkTo(
-                    WebMvcLinkBuilder.methodOn(StateController.class).getById(cityOutput.getState().getId())
-                ).withSelfRel());
-            return cityOutput;
+            return addHateOas(cityOutput);
         } catch (CityNotFoundException e) {
             throw new ModelNotFoundException(e.getMessage());
         }
@@ -99,5 +89,24 @@ public class CityController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long cityId) {
         cityRegistryService.remove(cityId);
+    }
+
+    private CityOutput addHateOas(CityOutput cityOutput) {
+        cityOutput.add(
+            WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(CityController.class).getById(cityOutput.getId())
+            ).withSelfRel()
+        );
+        cityOutput.add(
+            WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(CityController.class).listAll()
+            ).withRel("cities")
+        );
+
+        cityOutput.getState().add(
+            WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(StateController.class).getById(cityOutput.getState().getId())
+            ).withSelfRel());
+        return cityOutput;
     }
 }
