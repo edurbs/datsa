@@ -1,27 +1,35 @@
 package com.github.edurbs.datsa.api.mapper;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import com.github.edurbs.datsa.api.controller.UserController;
 import com.github.edurbs.datsa.api.dto.input.UserInput;
 import com.github.edurbs.datsa.api.dto.input.UserUpdateInput;
 import com.github.edurbs.datsa.api.dto.output.UserOutput;
 import com.github.edurbs.datsa.domain.model.User;
 
-import lombok.RequiredArgsConstructor;
-
 @Component
-@RequiredArgsConstructor
-public class UserMapper implements IMapper<User, UserInput, UserOutput> {
+public class UserMapper extends RepresentationModelAssemblerSupport<User, UserOutput> {
 
-    private final ModelMapper mapper;
+    @Autowired
+    private ModelMapper mapper;
 
-    @Override
+
+    public UserMapper() {
+        super(UserController.class, UserOutput.class);
+    }
+
+
     public User toDomain(UserInput inputModel) {
         return mapper.map(inputModel, User.class);
     }
@@ -30,26 +38,26 @@ public class UserMapper implements IMapper<User, UserInput, UserOutput> {
         mapper.map(userUpdateInput, domainModel);
     }
 
-    @Override
+
     public void copyToDomain(UserInput inputModel, User domainModel) {
         mapper.map(inputModel, domainModel);
     }
 
     @Override
-    public UserOutput toOutput(User domainModel) {
+    public @NonNull UserOutput toModel(@NonNull User domainModel) {
         return mapper.map(domainModel, UserOutput.class);
     }
 
     @Override
-    public List<UserOutput> toOutputList(Collection<User> domainModels) {
-        return domainModels.stream()
-                .map(this::toOutput)
-                .toList();
+    public @NonNull CollectionModel<UserOutput> toCollectionModel(@NonNull Iterable<? extends User> entities) {
+        return super.toCollectionModel(entities)
+            // add the link to the this in the bottom
+            .add(WebMvcLinkBuilder.linkTo(getControllerClass()).withSelfRel());
     }
 
     public Set<UserOutput> toOutputSet(Collection<User> domainModels){
         return domainModels.stream()
-            .map(this::toOutput)
+            .map(this::toModel)
             .collect(Collectors.toSet());
     }
 

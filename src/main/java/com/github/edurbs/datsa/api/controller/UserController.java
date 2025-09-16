@@ -1,15 +1,18 @@
 package com.github.edurbs.datsa.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.edurbs.datsa.api.dto.input.UserInput;
@@ -18,15 +21,6 @@ import com.github.edurbs.datsa.api.dto.input.UserUpdateInput;
 import com.github.edurbs.datsa.api.dto.output.UserOutput;
 import com.github.edurbs.datsa.api.mapper.UserMapper;
 import com.github.edurbs.datsa.domain.service.UserRegistryService;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PostMapping;
-
-
-
-
 
 @RestController
 @RequestMapping("/users")
@@ -39,15 +33,15 @@ public class UserController {
     private UserRegistryService service;
 
     @GetMapping
-    public List<UserOutput> getAll() {
+    public CollectionModel<UserOutput> getAll() {
         var users = service.getAll();
-        return mapper.toOutputList(users);
+        return mapper.toCollectionModel(users);
     }
 
     @GetMapping("/{id}")
     public UserOutput getOne(@PathVariable Long id) {
         var user = service.getById(id);
-        return mapper.toOutput(user);
+        return mapper.toModel(user);
     }
 
     @PostMapping
@@ -55,7 +49,7 @@ public class UserController {
     public UserOutput add(@RequestBody @Valid UserInput userInput) {
         var domainUser = mapper.toDomain(userInput);
         var userSaved = service.save(domainUser);
-        return mapper.toOutput(userSaved);
+        return mapper.toModel(userSaved);
     }
 
     @PutMapping("/{id}")
@@ -63,7 +57,7 @@ public class UserController {
         var domainUser = service.getById(id);
         mapper.copyToDomain(userUpdateInput, domainUser);
         var alteredUser = service.save(domainUser);
-        return mapper.toOutput(alteredUser);
+        return mapper.toModel(alteredUser);
     }
 
     @DeleteMapping("/{id}")
@@ -75,7 +69,7 @@ public class UserController {
     @PutMapping("/{id}/password")
     public UserOutput alterPassword(@PathVariable Long id, @RequestBody @Valid UserPasswordInput userPasswordInput) {
         var domainUser = service.changePassword(id, userPasswordInput.getOldPassword(), userPasswordInput.getNewPassword());
-        return mapper.toOutput(domainUser);
+        return mapper.toModel(domainUser);
     }
 
 
