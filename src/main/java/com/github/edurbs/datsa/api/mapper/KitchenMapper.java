@@ -33,7 +33,7 @@ public class KitchenMapper extends RepresentationModelAssemblerSupport<Kitchen, 
         modelMapper.map(kitchen, kitchenOutput);
         kitchenOutput.add(
             linkTo(KitchenController.class)
-            .withRel("kichens"));
+            .withRel("kitchens"));
         return kitchenOutput;
     }
 
