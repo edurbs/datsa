@@ -39,7 +39,15 @@ public class OrderMapper extends RepresentationModelAssemblerSupport<Order, Orde
         modelMapper.map(domainModel, orderOutput);
 
         orderOutput.add(linksAdder.toOrders());
-
+        if(domainModel.canBeConfirmed()){
+            orderOutput.add(linksAdder.toOrderConfirm(orderOutput.getUuid(), "confirm"));
+        }
+        if(domainModel.canBeCancelled()){
+            orderOutput.add(linksAdder.toOrderCancel(orderOutput.getUuid(), "cancel"));
+        }
+        if(domainModel.canBeDelivered()){
+            orderOutput.add(linksAdder.toOrderDelivery(orderOutput.getUuid(), "delivery"));
+        }
         orderOutput.getRestaurant().add(linksAdder.toRestaurant(orderOutput.getRestaurant().getId()));
         orderOutput.getUser().add(linksAdder.toUser(orderOutput.getUser().getId()));
         orderOutput.getPaymentMethod().add(linksAdder.toPaymentMethod(orderOutput.getPaymentMethod().getId()));

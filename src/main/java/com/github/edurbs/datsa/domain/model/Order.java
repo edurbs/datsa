@@ -107,6 +107,16 @@ public class Order extends AbstractAggregateRoot<Order> implements DomainModel {
         registerEvent(new OrderConfirmedEvent(this));
     }
 
+    public boolean canBeConfirmed(){
+        return getStatus().canBeChangedTo(OrderStatus.CONFIRMED);
+    }
+    public boolean canBeDelivered(){
+        return getStatus().canBeChangedTo(OrderStatus.DELIVERED);
+    }
+    public boolean canBeCancelled(){
+        return getStatus().canBeChangedTo(OrderStatus.CANCELLED);
+    }
+
     public void delivery(){
         setStatus(OrderStatus.DELIVERED);
         setConfirmationDate(OffsetDateTime.now());

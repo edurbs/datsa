@@ -19,6 +19,7 @@ import com.github.edurbs.datsa.api.controller.RestaurantController;
 import com.github.edurbs.datsa.api.controller.RestaurantProductController;
 import com.github.edurbs.datsa.api.controller.RestaurantUserController;
 import com.github.edurbs.datsa.api.controller.StateController;
+import com.github.edurbs.datsa.api.controller.StatusOrderController;
 import com.github.edurbs.datsa.api.controller.UserController;
 
 @Component
@@ -37,6 +38,16 @@ public class LinksAdder {
     public Link toOrders() {
         String orderUrl = linkTo(OrderController.class).toUri().toString();
         return Link.of(UriTemplate.of(orderUrl, pageVariables.concat(filterVariables)), "orders");
+    }
+
+    public Link toOrderConfirm(String orderUUID, String rel){
+        return linkTo(methodOn(StatusOrderController.class).confirm(orderUUID)).withRel(rel);
+    }
+    public Link toOrderCancel(String orderUUID, String rel){
+        return linkTo(methodOn(StatusOrderController.class).cancel(orderUUID)).withRel(rel);
+    }
+    public Link toOrderDelivery(String orderUUID, String rel){
+        return linkTo(methodOn(StatusOrderController.class).delivery(orderUUID)).withRel(rel);
     }
 
     public Link toRestaurant(Long restaurantId) {
