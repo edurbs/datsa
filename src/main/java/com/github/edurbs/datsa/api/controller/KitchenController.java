@@ -1,13 +1,12 @@
 package com.github.edurbs.datsa.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,16 +34,18 @@ public class KitchenController {
     @Autowired
     private KitchenMapper kitchenMapper;
 
+    @Autowired
+    private PagedResourcesAssembler<Kitchen> pagedResourcesAssembler;
+
     @GetMapping()
-    public Page<KitchenOutput> listAll(Pageable pageable) {
-        Page<Kitchen> pageKitchen = kitchenRegistryService.getAll(pageable);
-        List<KitchenOutput> kitchenInputList = kitchenMapper.toOutputList(pageKitchen.getContent()).stream().toList();
-        return new PageImpl<>(kitchenInputList, pageable, pageKitchen.getTotalElements());
+    public PagedModel<KitchenOutput> listAll(Pageable pageable) {
+        Page<Kitchen> kitchensPage = kitchenRegistryService.getAll(pageable);
+        return pagedResourcesAssembler.toModel(kitchensPage, kitchenMapper);
     }
 
     @GetMapping("/{kitchenId}")
     public KitchenOutput getById(@PathVariable Long kitchenId) {
-        return kitchenMapper.toOutput(kitchenRegistryService.getById(kitchenId));
+        return kitchenMapper.toModel(kitchenRegistryService.getById(kitchenId));
     }
 
     @PostMapping
@@ -52,7 +53,7 @@ public class KitchenController {
     public KitchenOutput add(@RequestBody @Valid KitchenInput kitchenInput) {
         var kitchen = kitchenMapper.toDomain(kitchenInput);
         var kitchenAdded = kitchenRegistryService.save(kitchen);
-        return kitchenMapper.toOutput(kitchenAdded);
+        return kitchenMapper.toModel(kitchenAdded);
     }
 
     @PutMapping("/{kitchenId}")
@@ -60,13 +61,13 @@ public class KitchenController {
         var kitchen = kitchenRegistryService.getById(kitchenId);
         kitchenMapper.copyToDomain(kitchenInput, kitchen);
         var alteredKitchen = kitchenRegistryService.save(kitchen);
-        return kitchenMapper.toOutput(alteredKitchen);
+        return kitchenMapper.toModel(alteredKitchen);
     }
 
     @DeleteMapping("/{kitchenId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long kitchenId) {
-            kitchenRegistryService.remove(kitchenId);
+        kitchenRegistryService.remove(kitchenId);
     }
 
 }
