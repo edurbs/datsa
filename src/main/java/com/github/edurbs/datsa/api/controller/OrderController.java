@@ -23,6 +23,7 @@ import com.github.edurbs.datsa.api.dto.output.OrderOutput;
 import com.github.edurbs.datsa.api.dto.output.OrderSummaryOutput;
 import com.github.edurbs.datsa.api.mapper.OrderMapper;
 import com.github.edurbs.datsa.api.mapper.OrderSummaryMapper;
+import com.github.edurbs.datsa.core.data.PageWrapper;
 import com.github.edurbs.datsa.core.data.PageableTranslator;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.filter.OrderFilter;
@@ -56,9 +57,10 @@ public class OrderController {
 
     @GetMapping()
     public PagedModel<OrderSummaryOutput> search(OrderFilter orderFilter, Pageable pageable) {
-        pageable = translatePageable(pageable);
-        Page<Order> orderPage = orderRegistryService.getAll(orderFilter, pageable);
-        return pagedResourcesAssembler.toModel(orderPage, orderSummaryMapper);
+        Pageable translatedPageable = translatePageable(pageable);
+        Page<Order> ordersPage = orderRegistryService.getAll(orderFilter, translatedPageable);
+        ordersPage = new PageWrapper<>(ordersPage, pageable); // fix link in hateoas when use order
+        return pagedResourcesAssembler.toModel(ordersPage, orderSummaryMapper);
     }
 
     @PostMapping()
