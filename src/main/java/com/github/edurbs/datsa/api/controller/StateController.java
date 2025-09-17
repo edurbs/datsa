@@ -1,10 +1,9 @@
 package com.github.edurbs.datsa.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,13 +31,13 @@ public class StateController {
     private StateMapper stateMapper;
 
     @GetMapping
-    public List<StateOutput> listAll() {
-        return stateMapper.toOutputList(stateRegistryService.getAll());
+    public CollectionModel<StateOutput> listAll() {
+        return stateMapper.toCollectionModel(stateRegistryService.getAll());
     }
 
     @GetMapping("/{stateId}")
     public StateOutput getById(@PathVariable Long stateId) {
-        return stateMapper.toOutput(stateRegistryService.getById(stateId));
+        return stateMapper.toModel(stateRegistryService.getById(stateId));
     }
 
     @PostMapping
@@ -46,7 +45,7 @@ public class StateController {
     public StateOutput add(@RequestBody @Valid StateInput stateInput) {
         var state = stateMapper.toDomain(stateInput);
         var stateAdded = stateRegistryService.save(state);
-        return stateMapper.toOutput(stateAdded);
+        return stateMapper.toModel(stateAdded);
     }
 
     @PutMapping("/{stateId}")
@@ -54,7 +53,7 @@ public class StateController {
         var state = stateRegistryService.getById(stateId);
         stateMapper.copyToDomain(stateInput, state);
         var alteredState = stateRegistryService.save(state);
-        return stateMapper.toOutput(alteredState);
+        return stateMapper.toModel(alteredState);
     }
 
     @DeleteMapping("/{stateId}")

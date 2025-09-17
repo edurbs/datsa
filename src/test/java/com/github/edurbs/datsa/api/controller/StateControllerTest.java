@@ -62,7 +62,7 @@ class StateControllerTest {
 
     @Test
     void whenGetValid_thenStatusOkAndEqualsObject() throws Exception {
-        when(stateMapper.toOutput(any()))
+        when(stateMapper.toModel(any()))
                 .thenReturn(stateOutput);
         StateOutput result = myUtils.fromResult(mockMvc.perform(get(getUrlId()))
                 .andExpect(status().isOk())
@@ -96,7 +96,7 @@ class StateControllerTest {
     @Test
     void whenPostValidState_thenReturnsCreatedAndCorrectBody() throws Exception {
         String json = myUtils.toJson(stateInput);
-        when(stateMapper.toOutput(any()))
+        when(stateMapper.toModel(any()))
                 .thenReturn(stateOutput);
         StateOutput stateOutputResult = myUtils.fromResult(
                 mockMvc.perform(post(STATE_URL)
@@ -113,7 +113,7 @@ class StateControllerTest {
     @Test
     void whenAlterValidState_thenStatus200() throws Exception {
         stateOutput.setName("new name");
-        when(stateMapper.toOutput(any()))
+        when(stateMapper.toModel(any()))
                 .thenReturn(stateOutput);
         StateOutput stateOutputResult = myUtils.fromResult(mockMvc.perform(MockMvcRequestBuilders.put(getUrlId())
                 .content(myUtils.toJson(stateInput))

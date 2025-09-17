@@ -45,6 +45,8 @@ public class CityMapper extends RepresentationModelAssemblerSupport<City, CityOu
         return cityOutput;
     }
 
+
+
     @Override
     public @NonNull CollectionModel<CityOutput> toCollectionModel(@NonNull Iterable<? extends City> entities) {
         return super.toCollectionModel(entities)
