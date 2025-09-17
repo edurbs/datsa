@@ -1,9 +1,5 @@
 package com.github.edurbs.datsa.api.mapper;
 
-import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -45,20 +41,18 @@ public class UserMapper extends RepresentationModelAssemblerSupport<User, UserOu
 
     @Override
     public @NonNull UserOutput toModel(@NonNull User domainModel) {
-        return mapper.map(domainModel, UserOutput.class);
+        UserOutput userOutput = createModelWithId(domainModel.getId(), domainModel);
+        mapper.map(domainModel,userOutput);
+        return userOutput;
     }
 
     @Override
     public @NonNull CollectionModel<UserOutput> toCollectionModel(@NonNull Iterable<? extends User> entities) {
         return super.toCollectionModel(entities)
             // add the link to the this in the bottom
-            .add(WebMvcLinkBuilder.linkTo(getControllerClass()).withSelfRel());
-    }
-
-    public Set<UserOutput> toOutputSet(Collection<User> domainModels){
-        return domainModels.stream()
-            .map(this::toModel)
-            .collect(Collectors.toSet());
+            .add(WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(UserController.class).getAll()
+            ).withRel("users"));
     }
 
 }

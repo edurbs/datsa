@@ -2,6 +2,8 @@ package com.github.edurbs.datsa.api.controller;
 
 import java.util.Set;
 
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.edurbs.datsa.api.dto.output.UserOutput;
 import com.github.edurbs.datsa.api.mapper.UserMapper;
 import com.github.edurbs.datsa.domain.model.Restaurant;
+import com.github.edurbs.datsa.domain.model.User;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,9 +32,14 @@ public class RestaurantUserController {
     private final UserMapper userMapper;
 
     @GetMapping
-    public Set<UserOutput> getAllUsers(@PathVariable Long restaurantId) {
+    public CollectionModel<UserOutput> getAllUsers(@PathVariable Long restaurantId) {
         Restaurant restaurant = restaurantRegistryService.getById(restaurantId);
-        return userMapper.toOutputSet(restaurant.getUsers());
+        Set<User> users = restaurant.getUsers();
+        return userMapper.toCollectionModel(users)
+            .removeLinks()
+            .add(WebMvcLinkBuilder.linkTo(
+                    WebMvcLinkBuilder.methodOn(RestaurantUserController.class).getAllUsers(restaurantId)
+                ).withSelfRel());
     }
 
     @DeleteMapping("/{userId}")
@@ -45,6 +53,6 @@ public class RestaurantUserController {
     public void associateUser(@PathVariable Long restaurantId, @PathVariable Long userId) {
         restaurantRegistryService.associateUser(restaurantId, userId);
     }
-    
+
 
 }

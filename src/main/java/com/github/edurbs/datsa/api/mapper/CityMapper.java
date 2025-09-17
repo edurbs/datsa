@@ -16,7 +16,6 @@ import com.github.edurbs.datsa.domain.model.City;
 import com.github.edurbs.datsa.domain.model.State;
 
 @Component
-// public class CityMapper implements IMapper<City, CityInput, CityOutput> {
 public class CityMapper extends RepresentationModelAssemblerSupport<City, CityOutput> {
 
     @Autowired
@@ -38,41 +37,21 @@ public class CityMapper extends RepresentationModelAssemblerSupport<City, CityOu
     @Override
     public @NonNull CityOutput toModel(@NonNull City city) {
         CityOutput cityOutput = createModelWithId(city.getId(), city);
-        //CityOutput cityOutput = modelMapper.map(city, CityOutput.class);
         modelMapper.map(city, cityOutput);
-        addHateOas(cityOutput);
+        cityOutput.getState().add(
+            WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(StateController.class).getById(cityOutput.getState().getId())
+            ).withSelfRel());
         return cityOutput;
     }
-
-    // public List<CityOutput> toOutputList(Collection<City> cities) {
-    //     return cities.stream()
-    //             .map(this::toOutput)
-    //             .toList();
-    // }
 
     @Override
     public @NonNull CollectionModel<CityOutput> toCollectionModel(@NonNull Iterable<? extends City> entities) {
         return super.toCollectionModel(entities)
             // add the link to the this in the bottom
-            .add(WebMvcLinkBuilder.linkTo(getControllerClass()).withSelfRel());
-    }
-
-    private void addHateOas(CityOutput cityOutput) {
-        // cityOutput.add(
-        //     WebMvcLinkBuilder.linkTo(
-        //         WebMvcLinkBuilder.methodOn(CityController.class).getById(cityOutput.getId())
-        //     ).withSelfRel()
-        // );
-        cityOutput.add(
-            WebMvcLinkBuilder.linkTo(
+            .add(WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(CityController.class).listAll()
-            ).withRel("cities")
-        );
-
-        cityOutput.getState().add(
-            WebMvcLinkBuilder.linkTo(
-                WebMvcLinkBuilder.methodOn(StateController.class).getById(cityOutput.getState().getId())
-            ).withSelfRel());
+            ).withRel("cities"));
     }
 
 }
