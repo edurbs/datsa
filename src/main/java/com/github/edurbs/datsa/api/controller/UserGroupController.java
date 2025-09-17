@@ -1,7 +1,6 @@
 package com.github.edurbs.datsa.api.controller;
 
-import java.util.Set;
-
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +27,8 @@ public class UserGroupController {
     private UserRegistryService userRegistryService;
 
     @GetMapping
-    public Set<GroupOutput> getAll(@PathVariable Long userId) {
-        return groupMapper.toOutputList(userRegistryService.getGroups(userId));
+    public CollectionModel<GroupOutput> getAll(@PathVariable Long userId) {
+        return groupMapper.toCollectionModel(userRegistryService.getGroups(userId));
     }
 
     @PutMapping("/{groupId}")

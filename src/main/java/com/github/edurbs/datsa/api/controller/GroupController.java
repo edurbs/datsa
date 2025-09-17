@@ -1,8 +1,7 @@
 package com.github.edurbs.datsa.api.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,16 +31,16 @@ public class GroupController {
     private GroupMapper mapper;
 
     @GetMapping
-    public List<GroupOutput> getAll() {
+    public CollectionModel<GroupOutput> getAll() {
         var groups = registryService.getAll();
-        return mapper.toOutputList(groups).stream().toList();
+        return mapper.toCollectionModel(groups);
     }
 
     @GetMapping("/{id}")
     public GroupOutput getOne(@PathVariable Long id) {
         try {
             var group = registryService.getById(id);
-            return mapper.toOutput(group);
+            return mapper.toModel(group);
         } catch (GroupNotFoundException e) {
             throw new ModelNotFoundException(e.getMessage());
         }
@@ -52,7 +51,7 @@ public class GroupController {
     public GroupOutput add(@RequestBody GroupInput groupInput) {
         var group = mapper.toDomain(groupInput);
         var groupAdded = registryService.save(group);
-        return mapper.toOutput(groupAdded);
+        return mapper.toModel(groupAdded);
     }
 
     @PutMapping("/{id}")
@@ -60,7 +59,7 @@ public class GroupController {
         var group = registryService.getById(id);
         mapper.copyToDomain(input, group);
         var groupAltered = registryService.save(group);
-        return mapper.toOutput(groupAltered);
+        return mapper.toModel(groupAltered);
     }
 
     @DeleteMapping("/{id}")

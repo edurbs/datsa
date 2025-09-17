@@ -2,8 +2,5 @@
 # More info: https://docs.testfully.io
 
 "$schema" = "https://testfully.io/schemas/folder.json"
-name = "Datsa"
-seq = 1758135078229000
-
-[variables]
-baseurl = "http://localhost:8080"
+name = "cities"
+seq = 2000

@@ -1,13 +1,12 @@
 package com.github.edurbs.datsa.api.mapper;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import com.github.edurbs.datsa.api.LinksAdder;
 import com.github.edurbs.datsa.api.controller.KitchenController;
 import com.github.edurbs.datsa.api.dto.input.KitchenInput;
 import com.github.edurbs.datsa.api.dto.output.KitchenOutput;
@@ -18,6 +17,9 @@ public class KitchenMapper extends RepresentationModelAssemblerSupport<Kitchen, 
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private LinksAdder linksAdder;
 
     public KitchenMapper(){
         super(KitchenController.class, KitchenOutput.class);
@@ -31,9 +33,7 @@ public class KitchenMapper extends RepresentationModelAssemblerSupport<Kitchen, 
     public @NonNull KitchenOutput toModel(@NonNull  Kitchen kitchen) {
         KitchenOutput kitchenOutput = createModelWithId(kitchen.getId(), kitchen);
         modelMapper.map(kitchen, kitchenOutput);
-        kitchenOutput.add(
-            linkTo(KitchenController.class)
-            .withRel("kitchens"));
+        kitchenOutput.add(linksAdder.toKitchens());
         return kitchenOutput;
     }
 

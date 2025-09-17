@@ -1,44 +1,54 @@
 package com.github.edurbs.datsa.api.mapper;
 
-import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import com.github.edurbs.datsa.api.LinksAdder;
+import com.github.edurbs.datsa.api.controller.GroupController;
 import com.github.edurbs.datsa.api.dto.input.GroupInput;
 import com.github.edurbs.datsa.api.dto.output.GroupOutput;
 import com.github.edurbs.datsa.domain.model.Group;
 
 @Component
-public class GroupMapper implements IMapper<Group, GroupInput, GroupOutput>{
+public class GroupMapper extends RepresentationModelAssemblerSupport<Group, GroupOutput>{
 
     @Autowired
     private ModelMapper modelMapper;
 
-    @Override
+    @Autowired
+    private LinksAdder linksAdder;
+
+    public GroupMapper(){
+        super(GroupController.class, GroupOutput.class);
+    }
+
     public Group toDomain(GroupInput inputModel) {
         return modelMapper.map(inputModel, Group.class);
     }
 
-    @Override
+
     public void copyToDomain(GroupInput inputModel, Group domainModel) {
         modelMapper.map(inputModel, domainModel);
     }
 
     @Override
-    public GroupOutput toOutput(Group domainModel) {
-        return modelMapper.map(domainModel, GroupOutput.class);
+    public @NonNull GroupOutput toModel(@NonNull Group domainModel) {
+        GroupOutput groupOutput = createModelWithId(domainModel.getId(), domainModel);
+        modelMapper.map(domainModel, groupOutput);
+        groupOutput.add(linksAdder.toGroups());
+        return groupOutput;
     }
 
     @Override
-    public Set<GroupOutput> toOutputList(Collection<Group> domainModels) {
-        return domainModels.stream()
-            .map(this::toOutput)
-            .collect(Collectors.toSet());
+    public CollectionModel<GroupOutput> toCollectionModel(
+            Iterable<? extends Group> entities) {
+        return super.toCollectionModel(entities).add(linksAdder.toGroups());
     }
+
 
 
 }

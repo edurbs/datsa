@@ -4,10 +4,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import com.github.edurbs.datsa.api.LinksAdder;
 import com.github.edurbs.datsa.api.controller.StateController;
 import com.github.edurbs.datsa.api.dto.input.StateInput;
 import com.github.edurbs.datsa.api.dto.output.StateOutput;
@@ -18,6 +18,9 @@ public class StateMapper extends RepresentationModelAssemblerSupport<State, Stat
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private LinksAdder linksAdder;
 
     public StateMapper() {
         super(StateController.class, StateOutput.class);
@@ -40,7 +43,6 @@ public class StateMapper extends RepresentationModelAssemblerSupport<State, Stat
     @Override
     public @NonNull CollectionModel<StateOutput> toCollectionModel(@NonNull Iterable<? extends State> entities) {
         return super.toCollectionModel(entities)
-                .add(WebMvcLinkBuilder.linkTo(
-                        WebMvcLinkBuilder.methodOn(StateController.class).listAll()).withRel("states"));
+                .add(linksAdder.toStates());
     }
 }

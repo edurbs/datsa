@@ -4,10 +4,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import com.github.edurbs.datsa.api.LinksAdder;
 import com.github.edurbs.datsa.api.controller.UserController;
 import com.github.edurbs.datsa.api.dto.input.UserInput;
 import com.github.edurbs.datsa.api.dto.input.UserUpdateInput;
@@ -20,6 +20,8 @@ public class UserMapper extends RepresentationModelAssemblerSupport<User, UserOu
     @Autowired
     private ModelMapper mapper;
 
+    @Autowired
+    private LinksAdder linksAdder;
 
     public UserMapper() {
         super(UserController.class, UserOutput.class);
@@ -50,9 +52,7 @@ public class UserMapper extends RepresentationModelAssemblerSupport<User, UserOu
     public @NonNull CollectionModel<UserOutput> toCollectionModel(@NonNull Iterable<? extends User> entities) {
         return super.toCollectionModel(entities)
             // add the link to the this in the bottom
-            .add(WebMvcLinkBuilder.linkTo(
-                WebMvcLinkBuilder.methodOn(UserController.class).getAll()
-            ).withRel("users"));
+            .add(linksAdder.toUsers());
     }
 
 }

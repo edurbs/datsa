@@ -3,7 +3,6 @@ package com.github.edurbs.datsa.api.controller;
 import java.util.Set;
 
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.edurbs.datsa.api.LinksAdder;
 import com.github.edurbs.datsa.api.dto.output.UserOutput;
 import com.github.edurbs.datsa.api.mapper.UserMapper;
 import com.github.edurbs.datsa.domain.model.Restaurant;
@@ -30,6 +30,7 @@ public class RestaurantUserController {
 
     private final RestaurantRegistryService restaurantRegistryService;
     private final UserMapper userMapper;
+    private final LinksAdder linksAdder;
 
     @GetMapping
     public CollectionModel<UserOutput> getAllUsers(@PathVariable Long restaurantId) {
@@ -37,9 +38,7 @@ public class RestaurantUserController {
         Set<User> users = restaurant.getUsers();
         return userMapper.toCollectionModel(users)
             .removeLinks()
-            .add(WebMvcLinkBuilder.linkTo(
-                    WebMvcLinkBuilder.methodOn(RestaurantUserController.class).getAllUsers(restaurantId)
-                ).withSelfRel());
+            .add(linksAdder.toRestaurantUser(restaurantId));
     }
 
     @DeleteMapping("/{userId}")
