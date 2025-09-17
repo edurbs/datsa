@@ -47,14 +47,20 @@ public class OrderMapper extends RepresentationModelAssemblerSupport<Order, Orde
         OrderOutput orderOutput = createModelWithId(domainModel.getUuid(), domainModel);
         modelMapper.map(domainModel, orderOutput);
 
-        //orderOutput.add(linkTo(OrderController.class).withRel("orders"));
         TemplateVariables pageVariables = new TemplateVariables(
             new TemplateVariable("page", VariableType.REQUEST_PARAM),
             new TemplateVariable("size", VariableType.REQUEST_PARAM),
             new TemplateVariable("sort", VariableType.REQUEST_PARAM)
         );
+        TemplateVariables filterVariables = new TemplateVariables(
+            new TemplateVariable("userId", VariableType.REQUEST_PARAM),
+            new TemplateVariable("restaurantId", VariableType.REQUEST_PARAM),
+            new TemplateVariable("beginCreationDate", VariableType.REQUEST_PARAM),
+            new TemplateVariable("endCreationDate", VariableType.REQUEST_PARAM)
+        );
+
         String orderUrl = linkTo(OrderController.class).toUri().toString();
-        orderOutput.add(Link.of(UriTemplate.of(orderUrl, pageVariables), "orders"));
+        orderOutput.add(Link.of(UriTemplate.of(orderUrl, pageVariables.concat(filterVariables)), "orders"));
 
         orderOutput.getRestaurant()
                 .add(linkTo(methodOn(RestaurantController.class).getById(orderOutput.getRestaurant().getId()))
