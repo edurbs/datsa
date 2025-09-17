@@ -1,14 +1,14 @@
 package com.github.edurbs.datsa.api.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,17 +46,19 @@ public class OrderController {
     @Autowired
     OrderMapper orderMapper;
 
+    @Autowired
+    private PagedResourcesAssembler<Order> pagedResourcesAssembler;
+
     @GetMapping("/{uuid}")
     public OrderOutput getById(@PathVariable String uuid) {
-        return orderMapper.toOutput(orderRegistryService.getById(uuid));
+        return orderMapper.toModel(orderRegistryService.getById(uuid));
     }
 
     @GetMapping()
-    public Page<OrderSummaryOutput> search(OrderFilter orderFilter, Pageable pageable) {
+    public PagedModel<OrderSummaryOutput> search(OrderFilter orderFilter, Pageable pageable) {
         pageable = translatePageable(pageable);
         Page<Order> orderPage = orderRegistryService.getAll(orderFilter, pageable);
-        List<OrderSummaryOutput> orderSummaryList = orderSummaryMapper.toOutputList(orderPage.getContent());
-        return new PageImpl<>(orderSummaryList, pageable, orderPage.getTotalElements());
+        return pagedResourcesAssembler.toModel(orderPage, orderSummaryMapper);
     }
 
     @PostMapping()
@@ -67,7 +69,7 @@ public class OrderController {
             orderMapper.copyToDomain(orderInput, newOrder);
             newOrder.setUser(new User());
             newOrder.getUser().setId(1L);
-            return orderMapper.toOutput(orderRegistryService.newOrder(newOrder));
+            return orderMapper.toModel(orderRegistryService.newOrder(newOrder));
 
         } catch (Exception e) {
             throw new ModelValidationException(e.getMessage());

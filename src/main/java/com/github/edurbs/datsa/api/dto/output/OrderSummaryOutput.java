@@ -3,15 +3,19 @@ package com.github.edurbs.datsa.api.dto.output;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+@Relation(collectionRelation = "orders")
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderSummaryOutput implements OutputModel{
+public class OrderSummaryOutput extends RepresentationModel<OrderSummaryOutput> implements OutputModel{
 
     String uuid;
     BigDecimal subtotal;
