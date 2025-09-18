@@ -18,7 +18,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -26,6 +25,7 @@ import com.github.edurbs.datsa.domain.exception.ProductNotFoundException;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Data
@@ -127,6 +127,22 @@ public class Restaurant implements DomainModel {
 
     public boolean isClosed() {
         return !isOpen();
+    }
+
+    public boolean canBeClosed(){
+        return isOpen();
+    }
+
+    public boolean canBeOpened(){
+        return isClosed() && isActive();
+    }
+
+    public boolean canBeActivated(){
+        return isInactive();
+    }
+
+    public boolean canBeInactivated(){
+        return isActive();
     }
 
     public boolean addUser(User user){

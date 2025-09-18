@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import com.github.edurbs.datsa.api.LinksAdder;
 import com.github.edurbs.datsa.api.controller.RestaurantController;
 import com.github.edurbs.datsa.api.dto.input.RestaurantInput;
+import com.github.edurbs.datsa.api.dto.output.CitySummaryOutput;
+import com.github.edurbs.datsa.api.dto.output.KitchenOutput;
 import com.github.edurbs.datsa.api.dto.output.RestaurantOutput;
 import com.github.edurbs.datsa.domain.model.City;
 import com.github.edurbs.datsa.domain.model.Kitchen;
@@ -42,13 +44,28 @@ public class RestaurantMapper extends RepresentationModelAssemblerSupport<Restau
 
     @Override
     public @NonNull RestaurantOutput toModel(@NonNull Restaurant entity) {
-        RestaurantOutput model = createModelWithId(entity.getId(), entity);
+        Long restaurantId = entity.getId();
+        RestaurantOutput model = createModelWithId(restaurantId, entity);
         modelMapper.map(entity, model);
-        model.getKitchen().add(linksAdder.toKitchen(model.getKitchen().getId()));
-        model.getAddress().getCity().add(linksAdder.toCity(model.getAddress().getCity().getId()));
+        KitchenOutput kitchen = model.getKitchen();
+        kitchen.add(linksAdder.toKitchen(kitchen.getId()));
+        CitySummaryOutput city = model.getAddress().getCity();
+        city.add(linksAdder.toCity(city.getId()));
         model.add(linksAdder.toRestaurants());
-        model.add(linksAdder.toRestaurantPaymentMethods(entity.getId()));
-        model.add(linksAdder.toRestaurantUsers(entity.getId()));
+        if(entity.canBeOpened()){
+            model.add(linksAdder.toRestaurantOpen(restaurantId));
+        }
+        if(entity.canBeClosed()){
+            model.add(linksAdder.toRestaurantClose(restaurantId));
+        }
+        if(entity.canBeActivated()){
+            model.add(linksAdder.toRestaurantActivate(restaurantId));
+        }
+        if(entity.canBeInactivated()){
+            model.add(linksAdder.toRestaurantInactivate(restaurantId));
+        }
+        model.add(linksAdder.toRestaurantPaymentMethods(restaurantId));
+        model.add(linksAdder.toRestaurantUsers(restaurantId));
         return model;
     }
 

@@ -35,7 +35,7 @@ public class RestaurantSummaryMapper extends RepresentationModelAssemblerSupport
     }
 
     @Override
-    public CollectionModel<RestaurantSummaryOutput> toCollectionModel(Iterable<? extends Restaurant> entities) {
+    public @NonNull CollectionModel<RestaurantSummaryOutput> toCollectionModel(@NonNull Iterable<? extends Restaurant> entities) {
         return super.toCollectionModel(entities).add(linksAdder.toRestaurants());
     }
 

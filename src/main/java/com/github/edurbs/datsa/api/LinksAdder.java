@@ -53,12 +53,25 @@ public class LinksAdder {
         return linkTo(methodOn(StatusOrderController.class).delivery(orderUUID)).withRel(rel);
     }
 
+    public Link toRestaurantOpen(Long restaurantId){
+        return linkTo(methodOn(RestaurantController.class).open(restaurantId)).withRel("open");
+    }
+    public Link toRestaurantClose(Long restaurantId){
+        return linkTo(methodOn(RestaurantController.class).close(restaurantId)).withRel("close");
+    }
+    public Link toRestaurantActivate(Long restaurantId){
+        return linkTo(methodOn(RestaurantController.class).activate(restaurantId)).withRel("activate");
+    }
+    public Link toRestaurantInactivate(Long restaurantId){
+        return linkTo(methodOn(RestaurantController.class).inactivate(restaurantId)).withRel("inactivate");
+    }
+
     public Link toRestaurant(Long restaurantId) {
         return linkTo(methodOn(RestaurantController.class).getById(restaurantId)).withSelfRel();
     }
 
     public Link toRestaurants() {
-        return linkTo(RestaurantController.class).withSelfRel();
+        return linkTo(RestaurantController.class).withRel("restaurants");
     }
 
     public Link toRestaurantProduct(Long restaurantId, Long productId, String rel) {
@@ -66,11 +79,11 @@ public class LinksAdder {
     }
 
     public Link toRestaurantPaymentMethods(Long restaurantId){
-        return linkTo(methodOn(RestaurantPaymentMethodController.class).listAll(restaurantId)).withSelfRel();
+        return linkTo(methodOn(RestaurantPaymentMethodController.class).listAll(restaurantId)).withRel("payment-methods");
     }
 
     public Link toRestaurantUsers(Long restaurantId){
-        return linkTo(methodOn(RestaurantUserController.class).getAllUsers(restaurantId)).withSelfRel();
+        return linkTo(methodOn(RestaurantUserController.class).getAllUsers(restaurantId)).withRel("users");
     }
 
     public Link toUser(Long userId) {

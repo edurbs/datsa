@@ -95,48 +95,54 @@ public class RestaurantController {
         restaurantRegistryService.remove(restaurantId);
     }
 
-    @PutMapping("/{restaurantId}/active")
+    @PutMapping("/{restaurantId}/activate")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void activate(@PathVariable Long restaurantId) {
+    public ResponseEntity<Void> activate(@PathVariable Long restaurantId) {
         restaurantRegistryService.activate(restaurantId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/activations")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void activations(@RequestBody List<Long> restaurantIds){
+    public ResponseEntity<Void> activations(@RequestBody List<Long> restaurantIds){
         try {
             restaurantRegistryService.activations(restaurantIds);
         } catch (RestaurantNotFoundException e) {
             throw new ModelValidationException(e.getMessage());
         }
+        return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{restaurantId}/active")
+    @DeleteMapping("/{restaurantId}/inactivate")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void inactivate(@PathVariable Long restaurantId) {
+    public ResponseEntity<Void> inactivate(@PathVariable Long restaurantId) {
         restaurantRegistryService.inactivate(restaurantId);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/inactivations")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void inactivations(@RequestBody List<Long> restaurantIds){
+    public ResponseEntity<Void> inactivations(@RequestBody List<Long> restaurantIds){
         try {
             restaurantRegistryService.inactivations(restaurantIds);
         } catch (RestaurantNotFoundException e) {
             throw new ModelValidationException(e.getMessage());
         }
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{restaurantId}/opening")
+    @PutMapping("/{restaurantId}/open")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void open(@PathVariable Long restaurantId) {
+    public ResponseEntity<Void> open(@PathVariable Long restaurantId) {
         restaurantRegistryService.open(restaurantId);
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{restaurantId}/closing")
+    @PutMapping("/{restaurantId}/close")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void close(@PathVariable Long restaurantId) {
+    public ResponseEntity<Void> close(@PathVariable Long restaurantId) {
         restaurantRegistryService.close(restaurantId);
+        return ResponseEntity.noContent().build();
     }
 
 }
