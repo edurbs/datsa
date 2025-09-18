@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,8 +20,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.edurbs.datsa.api.dto.input.RestaurantInput;
+import com.github.edurbs.datsa.api.dto.output.RestaurantNameOutput;
 import com.github.edurbs.datsa.api.dto.output.RestaurantOutput;
+import com.github.edurbs.datsa.api.dto.output.RestaurantSummaryOutput;
 import com.github.edurbs.datsa.api.mapper.RestaurantMapper;
+import com.github.edurbs.datsa.api.mapper.RestaurantNameMapper;
+import com.github.edurbs.datsa.api.mapper.RestaurantSummaryMapper;
 import com.github.edurbs.datsa.domain.exception.CityNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.exception.RestaurantNotFoundException;
@@ -37,14 +42,25 @@ public class RestaurantController {
     @Autowired
     private RestaurantMapper restaurantMapper;
 
+    @Autowired
+    private RestaurantSummaryMapper restaurantSummaryMapper;
+
+    @Autowired
+    private RestaurantNameMapper restaurantNameMapper;
+
     @GetMapping
-    public List<RestaurantOutput> listAll() {
-        return restaurantMapper.toOutputList(restaurantRegistryService.getAll());
+    public CollectionModel<RestaurantSummaryOutput> listAll() {
+        return restaurantSummaryMapper.toCollectionModel(restaurantRegistryService.getAll());
+    }
+
+    @GetMapping(params = "projection=only-name")
+    public CollectionModel<RestaurantNameOutput> listAllOnlyName() {
+        return restaurantNameMapper.toCollectionModel(restaurantRegistryService.getAll());
     }
 
     @GetMapping("/{restaurantId}")
     public RestaurantOutput getById(@PathVariable Long restaurantId) {
-        return restaurantMapper.toOutput(restaurantRegistryService.getById(restaurantId));
+        return restaurantMapper.toModel(restaurantRegistryService.getById(restaurantId));
     }
 
     @PostMapping
@@ -53,7 +69,7 @@ public class RestaurantController {
             var restaurant = restaurantMapper.toDomain(restaurantInput);
             var restaurantAdded = restaurantRegistryService.save(restaurant);
             var uri = URI.create("/restaurants/" + restaurantAdded.getId());
-            var restaurantOutput = restaurantMapper.toOutput(restaurantAdded);
+            var restaurantOutput = restaurantMapper.toModel(restaurantAdded);
             return ResponseEntity.created(uri).body(restaurantOutput);
         } catch (CityNotFoundException | StateNotFoundException e) {
             throw new ModelValidationException(e.getMessage());
@@ -67,7 +83,7 @@ public class RestaurantController {
             var restaurant = restaurantRegistryService.getById(restaurantId);
             restaurantMapper.copyToDomain(restaurantInput, restaurant);
             var restaurantAltered = restaurantRegistryService.save(restaurant);
-            return restaurantMapper.toOutput(restaurantAltered);
+            return restaurantMapper.toModel(restaurantAltered);
         } catch (CityNotFoundException | StateNotFoundException e) {
             throw new ModelValidationException(e.getMessage());
         }

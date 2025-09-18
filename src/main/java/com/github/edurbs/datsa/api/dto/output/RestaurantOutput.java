@@ -2,12 +2,16 @@ package com.github.edurbs.datsa.api.dto.output;
 
 import java.math.BigDecimal;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import lombok.Getter;
 import lombok.Setter;
 
+@Relation(collectionRelation = "restaurants")
 @Setter
 @Getter
-public class RestaurantOutput implements OutputModel {
+public class RestaurantOutput extends RepresentationModel<RestaurantOutput> implements OutputModel {
 
     private Long id;
     private String name;

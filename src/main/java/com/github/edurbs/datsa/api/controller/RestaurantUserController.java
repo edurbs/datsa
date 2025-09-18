@@ -38,7 +38,7 @@ public class RestaurantUserController {
         Set<User> users = restaurant.getUsers();
         return userMapper.toCollectionModel(users)
             .removeLinks()
-            .add(linksAdder.toRestaurantUser(restaurantId));
+            .add(linksAdder.toRestaurantUsers(restaurantId));
     }
 
     @DeleteMapping("/{userId}")

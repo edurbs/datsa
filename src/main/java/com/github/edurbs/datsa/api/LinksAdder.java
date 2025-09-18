@@ -16,6 +16,7 @@ import com.github.edurbs.datsa.api.controller.KitchenController;
 import com.github.edurbs.datsa.api.controller.OrderController;
 import com.github.edurbs.datsa.api.controller.PaymentMethodController;
 import com.github.edurbs.datsa.api.controller.RestaurantController;
+import com.github.edurbs.datsa.api.controller.RestaurantPaymentMethodController;
 import com.github.edurbs.datsa.api.controller.RestaurantProductController;
 import com.github.edurbs.datsa.api.controller.RestaurantUserController;
 import com.github.edurbs.datsa.api.controller.StateController;
@@ -40,13 +41,15 @@ public class LinksAdder {
         return Link.of(UriTemplate.of(orderUrl, pageVariables.concat(filterVariables)), "orders");
     }
 
-    public Link toOrderConfirm(String orderUUID, String rel){
+    public Link toOrderConfirm(String orderUUID, String rel) {
         return linkTo(methodOn(StatusOrderController.class).confirm(orderUUID)).withRel(rel);
     }
-    public Link toOrderCancel(String orderUUID, String rel){
+
+    public Link toOrderCancel(String orderUUID, String rel) {
         return linkTo(methodOn(StatusOrderController.class).cancel(orderUUID)).withRel(rel);
     }
-    public Link toOrderDelivery(String orderUUID, String rel){
+
+    public Link toOrderDelivery(String orderUUID, String rel) {
         return linkTo(methodOn(StatusOrderController.class).delivery(orderUUID)).withRel(rel);
     }
 
@@ -54,11 +57,19 @@ public class LinksAdder {
         return linkTo(methodOn(RestaurantController.class).getById(restaurantId)).withSelfRel();
     }
 
+    public Link toRestaurants() {
+        return linkTo(RestaurantController.class).withSelfRel();
+    }
+
     public Link toRestaurantProduct(Long restaurantId, Long productId, String rel) {
         return linkTo(methodOn(RestaurantProductController.class).getOne(restaurantId, productId)).withRel(rel);
     }
 
-    public Link toRestaurantUser(Long restaurantId) {
+    public Link toRestaurantPaymentMethods(Long restaurantId){
+        return linkTo(methodOn(RestaurantPaymentMethodController.class).listAll(restaurantId)).withSelfRel();
+    }
+
+    public Link toRestaurantUsers(Long restaurantId){
         return linkTo(methodOn(RestaurantUserController.class).getAllUsers(restaurantId)).withSelfRel();
     }
 
@@ -70,7 +81,7 @@ public class LinksAdder {
         return linkTo(methodOn(UserController.class).getAll()).withRel("users");
     }
 
-    public Link toGroups(){
+    public Link toGroups() {
         return linkTo(methodOn(GroupController.class).getAll()).withRel("groups");
     }
 
@@ -94,10 +105,15 @@ public class LinksAdder {
         return linkTo(methodOn(StateController.class).listAll()).withRel("states");
     }
 
-    public Link toKitchens(){
-        return
-            linkTo(KitchenController.class)
-            .withRel("kitchens");
+    public Link toKitchen(Long kitchenId) {
+        return linkTo(methodOn(KitchenController.class).getById(kitchenId)).withSelfRel();
     }
+
+    public Link toKitchens() {
+        return linkTo(KitchenController.class
+            ).withRel("kitchens");
+    }
+
+
 
 }
