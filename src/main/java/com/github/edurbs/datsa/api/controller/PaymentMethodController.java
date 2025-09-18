@@ -1,12 +1,12 @@
 package com.github.edurbs.datsa.api.controller;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
+import com.github.edurbs.datsa.api.LinksAdder;
 import com.github.edurbs.datsa.api.dto.input.PaymentMethodInput;
 import com.github.edurbs.datsa.api.dto.output.PaymentMethodOutput;
 import com.github.edurbs.datsa.api.mapper.PaymentMethodMapper;
 import com.github.edurbs.datsa.domain.service.PaymentMethodRegistryService;
 
 @RestController
-@RequestMapping("/paymentmethods")
+@RequestMapping("/payment-methods")
 public class PaymentMethodController {
 
     private static final String ETAG_NOT_MODIFIED = "0";
@@ -39,13 +40,16 @@ public class PaymentMethodController {
     @Autowired
     private PaymentMethodMapper mapper;
 
+    @Autowired
+    private LinksAdder linksAdder;
+
     @GetMapping
-    public ResponseEntity<List<PaymentMethodOutput>> listAll(ServletWebRequest request) {
+    public ResponseEntity<CollectionModel<PaymentMethodOutput>> listAll(ServletWebRequest request) {
         String eTag = getETag(request);
         if(ETAG_NOT_MODIFIED.equals(eTag)){
             return null;
         }
-        List<PaymentMethodOutput> list = mapper.toOutputList(registryService.getAll());
+        CollectionModel<PaymentMethodOutput> list = mapper.toCollectionModel(registryService.getAll()).add(linksAdder.toPaymentMethods());
         return ResponseEntity.ok()
             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
             .eTag(eTag) // add the tag
@@ -72,7 +76,7 @@ public class PaymentMethodController {
             return null;
         }
 
-        PaymentMethodOutput paymentMethodOutput = mapper.toOutput(registryService.getById(id));
+        PaymentMethodOutput paymentMethodOutput = mapper.toModel(registryService.getById(id));
         return ResponseEntity.ok()
             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
             .body(paymentMethodOutput);
@@ -83,7 +87,7 @@ public class PaymentMethodController {
     public PaymentMethodOutput add(@RequestBody @Valid PaymentMethodInput input) {
         var domain = mapper.toDomain(input);
         var domainAdded = registryService.save(domain);
-        return mapper.toOutput(domainAdded);
+        return mapper.toModel(domainAdded);
     }
 
     @PutMapping("/{id}")
@@ -91,7 +95,7 @@ public class PaymentMethodController {
         var domain = registryService.getById(id);
         mapper.copyToDomain(input, domain);
         var alteredDomain = registryService.save(domain);
-        return mapper.toOutput(alteredDomain);
+        return mapper.toModel(alteredDomain);
     }
 
     @DeleteMapping("/{id}")

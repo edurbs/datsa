@@ -71,7 +71,9 @@ public class LinksAdder {
     }
 
     public Link toRestaurants() {
-        return linkTo(RestaurantController.class).withRel("restaurants");
+                String restaurantUrl = linkTo(RestaurantController.class).toUri().toString();
+        TemplateVariables variables = new TemplateVariables( new TemplateVariable("projection", VariableType.REQUEST_PARAM));
+        return Link.of(UriTemplate.of(restaurantUrl, variables), "restaurants");
     }
 
     public Link toRestaurantProduct(Long restaurantId, Long productId, String rel) {
@@ -79,7 +81,7 @@ public class LinksAdder {
     }
 
     public Link toRestaurantPaymentMethods(Long restaurantId){
-        return linkTo(methodOn(RestaurantPaymentMethodController.class).listAll(restaurantId)).withRel("payment-methods");
+        return linkTo(methodOn(RestaurantPaymentMethodController.class).listAll(restaurantId)).withSelfRel();
     }
 
     public Link toRestaurantUsers(Long restaurantId){
@@ -100,6 +102,14 @@ public class LinksAdder {
 
     public Link toPaymentMethod(Long paymentMethodId) {
         return linkTo(methodOn(PaymentMethodController.class).getById(paymentMethodId, null)).withSelfRel();
+    }
+
+    public Link toPaymentMethods(){
+        return linkTo(PaymentMethodController.class).withSelfRel();
+    }
+
+    public Link toPaymentMethods(String rel){
+        return linkTo(PaymentMethodController.class).withRel(rel);
     }
 
     public Link toCity(Long cityId) {

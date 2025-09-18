@@ -1,22 +1,29 @@
 package com.github.edurbs.datsa.api.mapper;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import com.github.edurbs.datsa.api.LinksAdder;
+import com.github.edurbs.datsa.api.controller.PaymentMethodController;
 import com.github.edurbs.datsa.api.dto.input.PaymentMethodInput;
 import com.github.edurbs.datsa.api.dto.output.PaymentMethodOutput;
 import com.github.edurbs.datsa.domain.model.PaymentMethod;
 
 @Component
-public class PaymentMethodMapper {
+public class PaymentMethodMapper extends RepresentationModelAssemblerSupport<PaymentMethod, PaymentMethodOutput> {
 
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private LinksAdder linksAdder;
+
+    public PaymentMethodMapper(){
+        super(PaymentMethodController.class, PaymentMethodOutput.class);
+    }
 
     public PaymentMethod toDomain(PaymentMethodInput input){
         return modelMapper.map(input, PaymentMethod.class);
@@ -26,20 +33,13 @@ public class PaymentMethodMapper {
         modelMapper.map(input, domain);
     }
 
-    public PaymentMethodOutput toOutput(PaymentMethod domain){
-        return modelMapper.map(domain, PaymentMethodOutput.class);
+    @Override
+    public @NonNull PaymentMethodOutput toModel(@NonNull PaymentMethod entity){
+        PaymentMethodOutput output = createModelWithId(entity.getId(), entity);
+        modelMapper.map(entity, output);
+        //output.add(linksAdder.toPaymentMethods());
+        return output;
     }
 
-    public List<PaymentMethodOutput> toOutputList(List<PaymentMethod> domains){
-        return domains.stream()
-                .map(this::toOutput)
-                .toList();
-    }
-
-    public Set<PaymentMethodOutput> toOutputSet(Set<PaymentMethod> domains){
-        return domains.stream()
-                .map(this::toOutput)
-                .collect(Collectors.toSet());
-    }
 
 }
