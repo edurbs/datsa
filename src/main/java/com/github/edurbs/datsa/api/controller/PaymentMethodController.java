@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
-import com.github.edurbs.datsa.api.LinksAdder;
 import com.github.edurbs.datsa.api.dto.input.PaymentMethodInput;
 import com.github.edurbs.datsa.api.dto.output.PaymentMethodOutput;
 import com.github.edurbs.datsa.api.mapper.PaymentMethodMapper;
@@ -40,16 +39,13 @@ public class PaymentMethodController {
     @Autowired
     private PaymentMethodMapper mapper;
 
-    @Autowired
-    private LinksAdder linksAdder;
-
     @GetMapping
     public ResponseEntity<CollectionModel<PaymentMethodOutput>> listAll(ServletWebRequest request) {
         String eTag = getETag(request);
         if(ETAG_NOT_MODIFIED.equals(eTag)){
             return null;
         }
-        CollectionModel<PaymentMethodOutput> list = mapper.toCollectionModel(registryService.getAll()).add(linksAdder.toPaymentMethods());
+        CollectionModel<PaymentMethodOutput> list = mapper.toCollectionModel(registryService.getAll());
         return ResponseEntity.ok()
             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
             .eTag(eTag) // add the tag

@@ -84,6 +84,14 @@ public class LinksAdder {
         return linkTo(methodOn(RestaurantPaymentMethodController.class).listAll(restaurantId)).withRel("payment-methods");
     }
 
+    public Link disassociatePaymentMethod(Long restaurantId, Long paymentMethodId, String rel) {
+        return linkTo(methodOn(RestaurantPaymentMethodController.class).disassociate(restaurantId, paymentMethodId)).withRel(rel);
+    }
+
+    public Link associatePaymentMethod(Long restaurantId, String rel) {
+        return linkTo(methodOn(RestaurantPaymentMethodController.class).associate(restaurantId, null)).withRel(rel);
+    }
+
     public Link toRestaurantUsers(Long restaurantId){
         return linkTo(methodOn(RestaurantUserController.class).getAllUsers(restaurantId)).withRel("users");
     }
@@ -136,6 +144,8 @@ public class LinksAdder {
         return linkTo(KitchenController.class
             ).withRel("kitchens");
     }
+
+
 
 
 

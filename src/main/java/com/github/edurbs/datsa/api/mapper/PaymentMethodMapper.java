@@ -2,6 +2,7 @@ package com.github.edurbs.datsa.api.mapper;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -40,6 +41,13 @@ public class PaymentMethodMapper extends RepresentationModelAssemblerSupport<Pay
         output.add(linksAdder.toPaymentMethods("payment-methods"));
         return output;
     }
+
+    @Override
+    public @NonNull CollectionModel<PaymentMethodOutput> toCollectionModel(@NonNull Iterable<? extends PaymentMethod> entities) {
+        return super.toCollectionModel(entities).add(linksAdder.toPaymentMethods());
+    }
+
+
 
 
 }

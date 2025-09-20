@@ -6,5 +6,6 @@ name = "new payment methods"
 seq = 1758328614082000
 method = "post"
 json = """
-  "description": "Cartão de crédito"
+{ "description": "Cartão de crédito" }
 """
+url = "http://localhost:8080/payment-methods"

@@ -2,7 +2,7 @@
 # More info: https://docs.testfully.io
 
 "$schema" = "https://testfully.io/schemas/request.json"
-name = "payment-methods"
-seq = 1758158760450000
+name = "get one restaurant"
+seq = 1758153476388000
 method = "get"
-url = "http://localhost:8080/restaurants/1/payment-methods"
+url = "{{baseurl}}/restaurants/1"
