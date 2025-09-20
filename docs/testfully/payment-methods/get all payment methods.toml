@@ -2,7 +2,7 @@
 # More info: https://docs.testfully.io
 
 "$schema" = "https://testfully.io/schemas/request.json"
-name = "get all Duplicated"
-seq = 1758227139858000
+name = "get all payment methods"
+seq = 1758227139857000
 method = "get"
 url = "http://localhost:8080/payment-methods"

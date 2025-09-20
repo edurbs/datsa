@@ -33,6 +33,7 @@ public class RestaurantPaymentMethodController {
         var restaurant = restaurantRegistryService.getById(restaurantId);
 
         return paymentMethodMapper.toCollectionModel(restaurant.getPaymentMethods()).add(linksAdder.toRestaurantPaymentMethods(restaurantId));
+
     }
 
     @DeleteMapping("/{paymentMethodId}")

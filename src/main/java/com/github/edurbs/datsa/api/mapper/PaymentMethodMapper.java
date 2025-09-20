@@ -37,7 +37,7 @@ public class PaymentMethodMapper extends RepresentationModelAssemblerSupport<Pay
     public @NonNull PaymentMethodOutput toModel(@NonNull PaymentMethod entity){
         PaymentMethodOutput output = createModelWithId(entity.getId(), entity);
         modelMapper.map(entity, output);
-        //output.add(linksAdder.toPaymentMethods());
+        output.add(linksAdder.toPaymentMethods("payment-methods"));
         return output;
     }
 

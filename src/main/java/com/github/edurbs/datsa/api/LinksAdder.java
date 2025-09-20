@@ -81,7 +81,7 @@ public class LinksAdder {
     }
 
     public Link toRestaurantPaymentMethods(Long restaurantId){
-        return linkTo(methodOn(RestaurantPaymentMethodController.class).listAll(restaurantId)).withSelfRel();
+        return linkTo(methodOn(RestaurantPaymentMethodController.class).listAll(restaurantId)).withRel("payment-methods");
     }
 
     public Link toRestaurantUsers(Long restaurantId){
