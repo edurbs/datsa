@@ -81,6 +81,14 @@ public class LinksAdder {
         return linkTo(methodOn(RestaurantProductController.class).getOne(restaurantId, productId)).withRel(rel);
     }
 
+    public Link toProducts(Long restaurantId, String rel) {
+        return linkTo(methodOn(RestaurantProductController.class).getOne(restaurantId, null)).withRel(rel);
+    }
+
+    public Link toProducts(Long restaurantId) {
+        return linkTo(methodOn(RestaurantProductController.class).getAll(restaurantId, null)).withSelfRel();
+    }
+
     public Link toRestaurantPaymentMethods(Long restaurantId){
         return linkTo(methodOn(RestaurantPaymentMethodController.class).listAll(restaurantId)).withRel("payment-methods");
     }

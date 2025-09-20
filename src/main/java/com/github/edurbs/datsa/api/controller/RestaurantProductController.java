@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,10 +26,6 @@ import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 
 import lombok.AllArgsConstructor;
 
-
-
-
-
 @RestController
 @RequestMapping("/restaurants/{restaurantId}/products")
 @AllArgsConstructor
@@ -39,20 +36,16 @@ public class RestaurantProductController {
     private ProductMapper productMapper;
 
     @GetMapping
-    public Set<ProductOutput> getAll(@PathVariable Long restaurantId, @RequestParam(required = false) Boolean inactiveIncluded) {
+    public CollectionModel<ProductOutput> getAll(@PathVariable Long restaurantId, @RequestParam(required = false) Boolean inactiveIncluded) {
         if(Boolean.TRUE.equals(inactiveIncluded)){
-            return productMapper.toOutputList(restaurantRegistryService.getAllProducts(restaurantId))
-                .stream()
-                .collect(Collectors.toSet());
+            return productMapper.toCollectionModel(restaurantRegistryService.getAllProducts(restaurantId));
         }
-        return productMapper.toOutputList(restaurantRegistryService.getAllActiveProducts(restaurantId))
-            .stream()
-            .collect(Collectors.toSet());
+        return productMapper.toCollectionModel(restaurantRegistryService.getAllActiveProducts(restaurantId));
     }
 
     @GetMapping("/{productId}")
     public ProductOutput getOne(@PathVariable Long restaurantId, @PathVariable Long productId) {
-        return productMapper.toOutput(restaurantRegistryService.getProduct(restaurantId, productId));
+        return productMapper.toModel(restaurantRegistryService.getProduct(restaurantId, productId));
     }
 
     @PostMapping
@@ -62,7 +55,7 @@ public class RestaurantProductController {
         var product = productMapper.toDomain(productInput);
         product.setRestaurant(restaurant);
         var productSaved = productRegistryService.save(product);
-        return productMapper.toOutput(productSaved);
+        return productMapper.toModel(productSaved);
     }
 
     @PutMapping("/{productId}")
@@ -70,7 +63,7 @@ public class RestaurantProductController {
         var product = productRegistryService.getByRestaurant(restaurantId, productId);
         productMapper.copyToDomain(productInput, product);
         var productSaved = productRegistryService.save(product);
-        return productMapper.toOutput(productSaved);
+        return productMapper.toModel(productSaved);
     }
 
     @DeleteMapping("/{productId}")

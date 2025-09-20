@@ -49,9 +49,11 @@ public class RestaurantMapper extends RepresentationModelAssemblerSupport<Restau
         modelMapper.map(entity, model);
         KitchenOutput kitchen = model.getKitchen();
         kitchen.add(linksAdder.toKitchen(kitchen.getId()));
-        CitySummaryOutput city = model.getAddress().getCity();
-        city.add(linksAdder.toCity(city.getId()));
-        model.add(linksAdder.toRestaurants());
+        if(model.getAddress()!=null) {
+            CitySummaryOutput city = model.getAddress().getCity();
+            city.add(linksAdder.toCity(city.getId()));
+            model.add(linksAdder.toRestaurants());
+        }
         if(entity.canBeOpened()){
             model.add(linksAdder.toRestaurantOpen(restaurantId));
         }
@@ -66,6 +68,7 @@ public class RestaurantMapper extends RepresentationModelAssemblerSupport<Restau
         }
         model.add(linksAdder.toRestaurantPaymentMethods(restaurantId));
         model.add(linksAdder.toRestaurantUsers(restaurantId, "users"));
+        model.add(linksAdder.toProducts(restaurantId, "products"));
         return model;
     }
 
