@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,21 +37,28 @@ public class RestaurantUserController {
     public CollectionModel<UserOutput> getAllUsers(@PathVariable Long restaurantId) {
         Restaurant restaurant = restaurantRegistryService.getById(restaurantId);
         Set<User> users = restaurant.getUsers();
-        return userMapper.toCollectionModel(users)
+        CollectionModel<UserOutput> collectionModel = userMapper.toCollectionModel(users)
             .removeLinks()
-            .add(linksAdder.toRestaurantUsers(restaurantId));
+            .add(linksAdder.toRestaurantUsers(restaurantId))
+            .add(linksAdder.toAssociateUser(restaurantId, "associate"));
+        collectionModel.getContent().forEach(userOutput -> {
+            userOutput.add(linksAdder.toDisassociateUser(restaurantId, userOutput.getId(), "disassociate"));
+        });
+        return collectionModel;
     }
 
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void disassociateUser(@PathVariable Long restaurantId, @PathVariable Long userId){
+    public ResponseEntity<Void> disassociateUser(@PathVariable Long restaurantId, @PathVariable Long userId){
         restaurantRegistryService.disassociateUser(restaurantId, userId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void associateUser(@PathVariable Long restaurantId, @PathVariable Long userId) {
+    public ResponseEntity<Void> associateUser(@PathVariable Long restaurantId, @PathVariable Long userId) {
         restaurantRegistryService.associateUser(restaurantId, userId);
+        return ResponseEntity.noContent().build();
     }
 
 

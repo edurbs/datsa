@@ -38,7 +38,7 @@ public class RestaurantPaymentMethodController {
             .add(linksAdder.associatePaymentMethod(restaurantId, "associate"));
 
         collectionModel.getContent().forEach(paymentMethod -> {
-            paymentMethod.add(linksAdder.disassociatePaymentMethod(restaurantId, paymentMethod.getId(), "disassociate"));
+            paymentMethod.add(linksAdder.toDisassociatePaymentMethod(restaurantId, paymentMethod.getId(), "disassociate"));
         });
         return collectionModel;
 

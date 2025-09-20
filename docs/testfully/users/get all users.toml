@@ -2,7 +2,7 @@
 # More info: https://docs.testfully.io
 
 "$schema" = "https://testfully.io/schemas/request.json"
-name = "get all"
+name = "get all users"
 seq = 1758139932712000
 method = "get"
 url = "{{baseurl}}/users"

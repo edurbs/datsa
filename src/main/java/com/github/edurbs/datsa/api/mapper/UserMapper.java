@@ -45,6 +45,8 @@ public class UserMapper extends RepresentationModelAssemblerSupport<User, UserOu
     public @NonNull UserOutput toModel(@NonNull User domainModel) {
         UserOutput userOutput = createModelWithId(domainModel.getId(), domainModel);
         mapper.map(domainModel,userOutput);
+        userOutput.add(linksAdder.toUsers("users"));
+        userOutput.add(linksAdder.toUserGroups(domainModel.getId()));
         return userOutput;
     }
 

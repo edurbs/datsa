@@ -22,6 +22,7 @@ import com.github.edurbs.datsa.api.controller.RestaurantUserController;
 import com.github.edurbs.datsa.api.controller.StateController;
 import com.github.edurbs.datsa.api.controller.StatusOrderController;
 import com.github.edurbs.datsa.api.controller.UserController;
+import com.github.edurbs.datsa.api.controller.UserGroupController;
 
 @Component
 public class LinksAdder {
@@ -84,7 +85,7 @@ public class LinksAdder {
         return linkTo(methodOn(RestaurantPaymentMethodController.class).listAll(restaurantId)).withRel("payment-methods");
     }
 
-    public Link disassociatePaymentMethod(Long restaurantId, Long paymentMethodId, String rel) {
+    public Link toDisassociatePaymentMethod(Long restaurantId, Long paymentMethodId, String rel) {
         return linkTo(methodOn(RestaurantPaymentMethodController.class).disassociate(restaurantId, paymentMethodId)).withRel(rel);
     }
 
@@ -92,8 +93,21 @@ public class LinksAdder {
         return linkTo(methodOn(RestaurantPaymentMethodController.class).associate(restaurantId, null)).withRel(rel);
     }
 
+    public Link toRestaurantUsers(Long restaurantId, String rel){
+        return linkTo(methodOn(RestaurantUserController.class).getAllUsers(restaurantId)).withRel(rel);
+    }
+
     public Link toRestaurantUsers(Long restaurantId){
-        return linkTo(methodOn(RestaurantUserController.class).getAllUsers(restaurantId)).withRel("users");
+        return linkTo(methodOn(RestaurantUserController.class).getAllUsers(restaurantId)).withSelfRel();
+    }
+
+
+    public Link toAssociateUser(Long restaurantId, String rel) {
+        return linkTo(methodOn(RestaurantUserController.class).associateUser(restaurantId, null)).withRel(rel);
+    }
+
+    public Link toDisassociateUser(Long restaurantId, Long userId, String rel) {
+        return linkTo(methodOn(RestaurantUserController.class).disassociateUser(restaurantId, userId)).withRel(rel);
     }
 
     public Link toUser(Long userId) {
@@ -101,11 +115,20 @@ public class LinksAdder {
     }
 
     public Link toUsers() {
-        return linkTo(methodOn(UserController.class).getAll()).withRel("users");
+        return linkTo(methodOn(UserController.class).getAll()).withSelfRel();
     }
 
+    public Link toUsers(String rel) {
+        return linkTo(methodOn(UserController.class).getAll()).withRel(rel);
+    }
+
+    public Link toUserGroups(Long userId) {
+        return linkTo(methodOn(UserGroupController.class).getAll(userId)).withRel("groups");
+    }
+
+
     public Link toGroups() {
-        return linkTo(methodOn(GroupController.class).getAll()).withRel("groups");
+        return linkTo(methodOn(GroupController.class).getAll()).withSelfRel();
     }
 
     public Link toPaymentMethod(Long paymentMethodId) {
@@ -144,8 +167,6 @@ public class LinksAdder {
         return linkTo(KitchenController.class
             ).withRel("kitchens");
     }
-
-
 
 
 

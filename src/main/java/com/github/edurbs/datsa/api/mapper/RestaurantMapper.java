@@ -65,7 +65,7 @@ public class RestaurantMapper extends RepresentationModelAssemblerSupport<Restau
             model.add(linksAdder.toRestaurantInactivate(restaurantId));
         }
         model.add(linksAdder.toRestaurantPaymentMethods(restaurantId));
-        model.add(linksAdder.toRestaurantUsers(restaurantId));
+        model.add(linksAdder.toRestaurantUsers(restaurantId, "users"));
         return model;
     }
 
