@@ -1,8 +1,5 @@
 package com.github.edurbs.datsa.api;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import com.github.edurbs.datsa.api.controller.*;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.TemplateVariable;
@@ -11,22 +8,35 @@ import org.springframework.hateoas.TemplateVariables;
 import org.springframework.hateoas.UriTemplate;
 import org.springframework.stereotype.Component;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @Component
 public class LinksAdder {
 
     private final TemplateVariables pageVariables = new TemplateVariables(
-            new TemplateVariable("page", VariableType.REQUEST_PARAM),
-            new TemplateVariable("size", VariableType.REQUEST_PARAM),
-            new TemplateVariable("sort", VariableType.REQUEST_PARAM));
-    private final TemplateVariables filterVariables = new TemplateVariables(
-            new TemplateVariable("userId", VariableType.REQUEST_PARAM),
-            new TemplateVariable("restaurantId", VariableType.REQUEST_PARAM),
-            new TemplateVariable("beginCreationDate", VariableType.REQUEST_PARAM),
-            new TemplateVariable("endCreationDate", VariableType.REQUEST_PARAM));
+        new TemplateVariable("page", VariableType.REQUEST_PARAM),
+        new TemplateVariable("size", VariableType.REQUEST_PARAM),
+        new TemplateVariable("sort", VariableType.REQUEST_PARAM));
+    private final TemplateVariables orderFilterVariables = new TemplateVariables(
+        new TemplateVariable("userId", VariableType.REQUEST_PARAM),
+        new TemplateVariable("restaurantId", VariableType.REQUEST_PARAM),
+        new TemplateVariable("beginCreationDate", VariableType.REQUEST_PARAM),
+        new TemplateVariable("endCreationDate", VariableType.REQUEST_PARAM));
+    private final TemplateVariables dailySalesFilterVariables = new TemplateVariables(
+        new TemplateVariable("restaurantId", VariableType.REQUEST_PARAM),
+        new TemplateVariable("beginCreationDate", VariableType.REQUEST_PARAM),
+        new TemplateVariable("endCreationDate", VariableType.REQUEST_PARAM),
+        new TemplateVariable("timeOffset", VariableType.REQUEST_PARAM)
+    );
 
     public Link toOrders() {
         String orderUrl = linkTo(OrderController.class).toUri().toString();
-        return Link.of(UriTemplate.of(orderUrl, pageVariables.concat(filterVariables)), "orders");
+        return Link.of(UriTemplate.of(orderUrl, pageVariables.concat(orderFilterVariables)), "orders");
+    }
+
+    public Link toOrders(String rel) {
+        return linkTo(OrderController.class).withRel(rel);
     }
 
     public Link toOrderConfirm(String orderUUID, String rel) {
@@ -41,16 +51,28 @@ public class LinksAdder {
         return linkTo(methodOn(StatusOrderController.class).delivery(orderUUID)).withRel(rel);
     }
 
-    public Link toRestaurantOpen(Long restaurantId){
+    public Link toStatistics(String rel) {
+        return linkTo(StatisticsController.class).withRel(rel);
+    }
+
+    public Link toDailySales() {
+        String statisticsUrl = linkTo(methodOn(StatisticsController.class).getDailySales(null,null)).toUri().toString();
+        return Link.of(UriTemplate.of(statisticsUrl, pageVariables.concat(dailySalesFilterVariables)),"daily-sales");
+    }
+
+    public Link toRestaurantOpen(Long restaurantId) {
         return linkTo(methodOn(RestaurantController.class).open(restaurantId)).withRel("open");
     }
-    public Link toRestaurantClose(Long restaurantId){
+
+    public Link toRestaurantClose(Long restaurantId) {
         return linkTo(methodOn(RestaurantController.class).close(restaurantId)).withRel("close");
     }
-    public Link toRestaurantActivate(Long restaurantId){
+
+    public Link toRestaurantActivate(Long restaurantId) {
         return linkTo(methodOn(RestaurantController.class).activate(restaurantId)).withRel("activate");
     }
-    public Link toRestaurantInactivate(Long restaurantId){
+
+    public Link toRestaurantInactivate(Long restaurantId) {
         return linkTo(methodOn(RestaurantController.class).inactivate(restaurantId)).withRel("inactivate");
     }
 
@@ -59,9 +81,13 @@ public class LinksAdder {
     }
 
     public Link toRestaurants() {
-                String restaurantUrl = linkTo(RestaurantController.class).toUri().toString();
-        TemplateVariables variables = new TemplateVariables( new TemplateVariable("projection", VariableType.REQUEST_PARAM));
+        String restaurantUrl = linkTo(RestaurantController.class).toUri().toString();
+        TemplateVariables variables = new TemplateVariables(new TemplateVariable("projection", VariableType.REQUEST_PARAM));
         return Link.of(UriTemplate.of(restaurantUrl, variables), "restaurants");
+    }
+
+    public Link toRestaurants(String rel){
+        return linkTo(RestaurantController.class).withRel(rel);
     }
 
     public Link toRestaurantProduct(Long restaurantId, Long productId, String rel) {
@@ -84,7 +110,7 @@ public class LinksAdder {
         return linkTo(methodOn(RestaurantProductPhotoController.class).getPhoto(restaurantId, productId)).withRel(rel);
     }
 
-    public Link toRestaurantPaymentMethods(Long restaurantId){
+    public Link toRestaurantPaymentMethods(Long restaurantId) {
         return linkTo(methodOn(RestaurantPaymentMethodController.class).listAll(restaurantId)).withRel("payment-methods");
     }
 
@@ -96,14 +122,13 @@ public class LinksAdder {
         return linkTo(methodOn(RestaurantPaymentMethodController.class).associate(restaurantId, null)).withRel(rel);
     }
 
-    public Link toRestaurantUsers(Long restaurantId, String rel){
+    public Link toRestaurantUsers(Long restaurantId, String rel) {
         return linkTo(methodOn(RestaurantUserController.class).getAllUsers(restaurantId)).withRel(rel);
     }
 
-    public Link toRestaurantUsers(Long restaurantId){
+    public Link toRestaurantUsers(Long restaurantId) {
         return linkTo(methodOn(RestaurantUserController.class).getAllUsers(restaurantId)).withSelfRel();
     }
-
 
     public Link toAssociateUser(Long restaurantId, String rel) {
         return linkTo(methodOn(RestaurantUserController.class).associateUser(restaurantId, null)).withRel(rel);
@@ -141,11 +166,11 @@ public class LinksAdder {
         return linkTo(methodOn(PaymentMethodController.class).getById(paymentMethodId, null)).withSelfRel();
     }
 
-    public Link toPaymentMethods(){
+    public Link toPaymentMethods() {
         return linkTo(PaymentMethodController.class).withSelfRel();
     }
 
-    public Link toPaymentMethods(String rel){
+    public Link toPaymentMethods(String rel) {
         return linkTo(PaymentMethodController.class).withRel(rel);
     }
 
@@ -154,7 +179,11 @@ public class LinksAdder {
     }
 
     public Link toCities() {
-        return linkTo(methodOn(CityController.class).listAll()).withRel("cities");
+        return linkTo(methodOn(CityController.class).listAll()).withSelfRel();
+    }
+
+    public Link toCities(String rel) {
+        return linkTo(CityController.class).withRel(rel);
     }
 
     public Link toState(Long stateId) {
@@ -162,7 +191,11 @@ public class LinksAdder {
     }
 
     public Link toStates() {
-        return linkTo(methodOn(StateController.class).listAll()).withRel("states");
+        return linkTo(methodOn(StateController.class).listAll()).withSelfRel();
+    }
+
+    public Link toStates(String rel) {
+        return linkTo(StateController.class).withRel(rel);
     }
 
     public Link toKitchen(Long kitchenId) {
@@ -170,8 +203,11 @@ public class LinksAdder {
     }
 
     public Link toKitchens() {
-        return linkTo(KitchenController.class
-            ).withRel("kitchens");
+        return linkTo(KitchenController.class).withSelfRel();
+    }
+
+    public Link toKitchens(String rel) {
+        return linkTo(KitchenController.class).withRel(rel);
     }
 
     public Link toPermissions(Long groupId, String rel) {
@@ -180,6 +216,10 @@ public class LinksAdder {
 
     public Link toPermissions() {
         return linkTo(methodOn(PermissionController.class).findAll()).withSelfRel();
+    }
+
+    public Link toPermissions(String rel) {
+        return linkTo(PermissionController.class).withRel(rel);
     }
 
     public Link toDissociatePermission(Long groupId, Long permissionId, String rel) {
@@ -197,4 +237,5 @@ public class LinksAdder {
     public Link toDissociateGroup(Long userId, String rel) {
         return linkTo(methodOn(UserGroupController.class).dissociate(userId, null)).withRel(rel);
     }
+
 }
