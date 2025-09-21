@@ -49,7 +49,8 @@ public class ProductMapper extends RepresentationModelAssemblerSupport<Product, 
             model = instantiateModel(entity);
         }
         modelMapper.map(entity, model);
-        model.add(linksAdder.toProducts(restaurantId));
+        model.add(linksAdder.toProducts(restaurantId, "products"));
+        model.add(linksAdder.toProductPhoto(restaurantId, productId, "photo"));
         return model;
     }
 

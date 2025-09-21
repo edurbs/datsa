@@ -3,26 +3,13 @@ package com.github.edurbs.datsa.api;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import com.github.edurbs.datsa.api.controller.*;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.TemplateVariable;
 import org.springframework.hateoas.TemplateVariable.VariableType;
 import org.springframework.hateoas.TemplateVariables;
 import org.springframework.hateoas.UriTemplate;
 import org.springframework.stereotype.Component;
-
-import com.github.edurbs.datsa.api.controller.CityController;
-import com.github.edurbs.datsa.api.controller.GroupController;
-import com.github.edurbs.datsa.api.controller.KitchenController;
-import com.github.edurbs.datsa.api.controller.OrderController;
-import com.github.edurbs.datsa.api.controller.PaymentMethodController;
-import com.github.edurbs.datsa.api.controller.RestaurantController;
-import com.github.edurbs.datsa.api.controller.RestaurantPaymentMethodController;
-import com.github.edurbs.datsa.api.controller.RestaurantProductController;
-import com.github.edurbs.datsa.api.controller.RestaurantUserController;
-import com.github.edurbs.datsa.api.controller.StateController;
-import com.github.edurbs.datsa.api.controller.StatusOrderController;
-import com.github.edurbs.datsa.api.controller.UserController;
-import com.github.edurbs.datsa.api.controller.UserGroupController;
 
 @Component
 public class LinksAdder {
@@ -87,6 +74,14 @@ public class LinksAdder {
 
     public Link toProducts(Long restaurantId) {
         return linkTo(methodOn(RestaurantProductController.class).getAll(restaurantId, null)).withSelfRel();
+    }
+
+    public Link toProductPhoto(Long restaurantId, Long productId) {
+        return linkTo(methodOn(RestaurantProductPhotoController.class).getPhoto(restaurantId, productId)).withSelfRel();
+    }
+
+    public Link toProductPhoto(Long restaurantId, Long productId, String rel) {
+        return linkTo(methodOn(RestaurantProductPhotoController.class).getPhoto(restaurantId, productId)).withRel(rel);
     }
 
     public Link toRestaurantPaymentMethods(Long restaurantId){
@@ -175,7 +170,5 @@ public class LinksAdder {
         return linkTo(KitchenController.class
             ).withRel("kitchens");
     }
-
-
 
 }

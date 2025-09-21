@@ -33,7 +33,7 @@ public class ProductPhoto implements DomainModel {
     Long size;
 
     public Long getRestaurantId(){
-        if(getProduct()==null) return null;
+        if(getProduct()==null || getProduct().getRestaurant() == null) return null;
         return getProduct().getRestaurant().getId();
     }
 

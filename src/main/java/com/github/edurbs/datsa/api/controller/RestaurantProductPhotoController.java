@@ -53,15 +53,16 @@ public class RestaurantProductPhotoController {
         photo.setContentType(file.getContentType());
         photo.setSize(file.getSize());
         photo.setFileName(file.getOriginalFilename());
+
         ProductPhoto savedPhoto = productPhotoCatalogService.save(photo, file.getInputStream());
-        return productPhotoMapper.toOutput(savedPhoto);
+        return productPhotoMapper.toModel(savedPhoto);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ProductPhotoOutput getPhoto(@PathVariable Long restaurantId, @PathVariable Long productId){
         Product product = productRegistryService.getByRestaurant(restaurantId, productId);
         ProductPhoto photo = productPhotoCatalogService.get(product);
-        return productPhotoMapper.toOutput(photo);
+        return productPhotoMapper.toModel(photo);
     }
 
     @DeleteMapping
