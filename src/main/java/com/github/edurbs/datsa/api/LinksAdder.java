@@ -189,4 +189,12 @@ public class LinksAdder {
     public Link toAssociatePermissions(Long groupId, String rel) {
         return linkTo(methodOn(GroupPermissionController.class).dissociatePermission(groupId, null)).withRel(rel);
     }
+
+    public Link toAssociateGroup(Long userId, Long groupId, String rel) {
+        return linkTo(methodOn(UserGroupController.class).associate(userId, groupId)).withRel(rel);
+    }
+
+    public Link toDissociateGroup(Long userId, String rel) {
+        return linkTo(methodOn(UserGroupController.class).dissociate(userId, null)).withRel(rel);
+    }
 }

@@ -23,10 +23,12 @@ public class GroupMapper extends RepresentationModelAssemblerSupport<Group, Grou
     private LinksAdder linksAdder;
 
     public GroupMapper(){
+
         super(GroupController.class, GroupOutput.class);
     }
 
     public Group toDomain(GroupInput inputModel) {
+
         return modelMapper.map(inputModel, Group.class);
     }
 
@@ -36,19 +38,19 @@ public class GroupMapper extends RepresentationModelAssemblerSupport<Group, Grou
     }
 
     @Override
-    public @NonNull GroupOutput toModel(@NonNull Group domainModel) {
-        GroupOutput groupOutput = createModelWithId(domainModel.getId(), domainModel);
-        modelMapper.map(domainModel, groupOutput);
+    public @NonNull GroupOutput toModel(@NonNull Group entity) {
+        GroupOutput groupOutput = createModelWithId(entity.getId(), entity);
+        modelMapper.map(entity, groupOutput);
         groupOutput.add(linksAdder.toGroups("groups"));
-        groupOutput.add(linksAdder.toPermissions(domainModel.getId(), "permissions"));
+        groupOutput.add(linksAdder.toPermissions(entity.getId(), "permissions"));
         return groupOutput;
     }
 
-    @Override
-    public CollectionModel<GroupOutput> toCollectionModel(
-            Iterable<? extends Group> entities) {
-        return super.toCollectionModel(entities).add(linksAdder.toGroups());
-    }
+//    @Override
+//    public CollectionModel<GroupOutput> toCollectionModel(
+//            Iterable<? extends Group> entities) {
+//        return super.toCollectionModel(entities).add(linksAdder.toGroups());
+//    }
 
 
 
