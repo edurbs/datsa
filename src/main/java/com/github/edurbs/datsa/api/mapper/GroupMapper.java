@@ -39,7 +39,8 @@ public class GroupMapper extends RepresentationModelAssemblerSupport<Group, Grou
     public @NonNull GroupOutput toModel(@NonNull Group domainModel) {
         GroupOutput groupOutput = createModelWithId(domainModel.getId(), domainModel);
         modelMapper.map(domainModel, groupOutput);
-        groupOutput.add(linksAdder.toGroups());
+        groupOutput.add(linksAdder.toGroups("groups"));
+        groupOutput.add(linksAdder.toPermissions(domainModel.getId(), "permissions"));
         return groupOutput;
     }
 

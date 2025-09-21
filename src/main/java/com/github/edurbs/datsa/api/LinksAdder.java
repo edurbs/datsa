@@ -129,9 +129,12 @@ public class LinksAdder {
         return linkTo(methodOn(UserGroupController.class).getAll(userId)).withRel("groups");
     }
 
-
     public Link toGroups() {
         return linkTo(methodOn(GroupController.class).getAll()).withSelfRel();
+    }
+
+    public Link toGroups(String rel) {
+        return linkTo(methodOn(GroupController.class).getAll()).withRel(rel);
     }
 
     public Link toPaymentMethod(Long paymentMethodId) {
@@ -171,4 +174,7 @@ public class LinksAdder {
             ).withRel("kitchens");
     }
 
+    public Link toPermissions(Long groupId, String rel) {
+        return linkTo(methodOn(GroupPermissionController.class).getAll(groupId)).withRel(rel);
+    }
 }
