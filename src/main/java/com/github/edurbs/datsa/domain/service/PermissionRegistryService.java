@@ -8,6 +8,8 @@ import com.github.edurbs.datsa.domain.repository.PermissionRepository;
 
 import lombok.AllArgsConstructor;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class PermissionRegistryService {
@@ -17,6 +19,10 @@ public class PermissionRegistryService {
     public Permission getOne(Long permissionId){
         return permissionRepository.findById(permissionId)
                 .orElseThrow(() -> new PermissionNotFoundException(permissionId));
+    }
+
+    public List<Permission> getAll(){
+        return permissionRepository.findAll();
     }
 
 }

@@ -1,8 +1,9 @@
 package com.github.edurbs.datsa.api.controller;
 
-import java.util.Set;
-
+import com.github.edurbs.datsa.api.LinksAdder;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,29 +31,39 @@ public class GroupPermissionController {
 
     private PermissionMapper permissionMapper;
 
+    private LinksAdder linksAdder;
+
     @GetMapping
-    public Set<PermissionOutput> getAll(@PathVariable Long groupId) {
-        return permissionMapper.toOutputList(groupRegistryService.getAllPermissions(groupId));
+    public CollectionModel<PermissionOutput> getAll(@PathVariable Long groupId) {
+        CollectionModel<PermissionOutput> permissionOutputs = permissionMapper.toCollectionModel(groupRegistryService.getAllPermissions(groupId))
+            .add(linksAdder.toPermissions(groupId, "permissions"))
+            .add(linksAdder.toAssociatePermissions(groupId, "associate"));
+        permissionOutputs.getContent().forEach(permissionOutput -> {
+            permissionOutput.add(linksAdder.toDissociatePermission(groupId, permissionOutput.getId(), "dissociate"));
+        });
+        return  permissionOutputs;
     }
 
     @PutMapping("/{permissionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void associatePermission (@PathVariable Long groupId, @PathVariable Long permissionId) {
+    public ResponseEntity<Void> associatePermission (@PathVariable Long groupId, @PathVariable Long permissionId) {
         try{
             groupRegistryService.associatePermission(groupId, permissionId);
         } catch (PermissionNotFoundException e){
             throw new ModelValidationException(e.getMessage());
         }
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{permissionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void dissociatePermission (@PathVariable Long groupId, @PathVariable Long permissionId){
+    public ResponseEntity<Void> dissociatePermission (@PathVariable Long groupId, @PathVariable Long permissionId){
         try {
             groupRegistryService.dissociatePermission(groupId, permissionId);
         } catch (PermissionNotFoundException e) {
             throw new ModelValidationException(e.getMessage());
         }
+        return ResponseEntity.notFound().build();
     }
 
 

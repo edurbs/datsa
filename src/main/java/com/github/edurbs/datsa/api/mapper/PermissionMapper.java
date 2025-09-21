@@ -1,44 +1,39 @@
 package com.github.edurbs.datsa.api.mapper;
 
-import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
-
+import com.github.edurbs.datsa.api.LinksAdder;
+import com.github.edurbs.datsa.api.controller.PermissionController;
 import com.github.edurbs.datsa.api.dto.input.PermissionInput;
 import com.github.edurbs.datsa.api.dto.output.PermissionOutput;
 import com.github.edurbs.datsa.domain.model.Permission;
-
-import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
-public class PermissionMapper implements IMapper<Permission, PermissionInput, PermissionOutput> {
+public class PermissionMapper extends RepresentationModelAssemblerSupport<Permission, PermissionOutput> {
 
+    @Autowired
     private ModelMapper modelMapper;
 
-    @Override
+    @Autowired
+    private LinksAdder linksAdder;
+
+    public PermissionMapper() {
+        super(PermissionController.class, PermissionOutput.class);
+    }
+
     public Permission toDomain(PermissionInput inputModel) {
         return modelMapper.map(inputModel, Permission.class);
     }
 
-    @Override
     public void copyToDomain(PermissionInput inputModel, Permission domainModel) {
         modelMapper.map(inputModel, domainModel);
     }
 
     @Override
-    public PermissionOutput toOutput(Permission domainModel) {
+    public PermissionOutput toModel(Permission domainModel) {
         return modelMapper.map(domainModel, PermissionOutput.class);
     }
-
-    @Override
-    public Set<PermissionOutput> toOutputList(Collection<Permission> domainModels) {
-        return domainModels.stream()
-                .map(this::toOutput)
-                .collect(Collectors.toSet());
-    }
-
 }
