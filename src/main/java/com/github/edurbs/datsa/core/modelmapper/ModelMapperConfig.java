@@ -1,5 +1,7 @@
 package com.github.edurbs.datsa.core.modelmapper;
 
+import com.github.edurbs.datsa.api.v2.dto.input.CityInputV2;
+import com.github.edurbs.datsa.domain.model.City;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +25,9 @@ public class ModelMapperConfig {
 
         mapper.createTypeMap(OrderItemInput.class, OrderItem.class)
             .addMappings(m -> m.skip(OrderItem::setId));
+
+        mapper.createTypeMap(CityInputV2.class, City.class)
+            .addMappings(m -> m.skip(City::setId));
 
         return mapper;
     }

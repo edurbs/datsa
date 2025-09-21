@@ -12,6 +12,7 @@ public class MyHalConfiguration {
     public HalConfiguration globalPolicy(){
         return new HalConfiguration()
             .withMediaType(MediaType.APPLICATION_JSON)
-            .withMediaType(MyMediaTypes.V1_APPLICATION_JSON);
+            .withMediaType(MyMediaTypes.V1_APPLICATION_JSON)
+            .withMediaType(MyMediaTypes.V2_APPLICATION_JSON);
     }
 }
