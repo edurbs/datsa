@@ -23,7 +23,7 @@ import com.github.edurbs.datsa.api.v1.mapper.UserMapper;
 import com.github.edurbs.datsa.domain.service.UserRegistryService;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/v1/users")
 public class UserController {
 
     @Autowired

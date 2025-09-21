@@ -35,7 +35,7 @@ import com.github.edurbs.datsa.domain.service.OrderRegistryService;
 
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/v1/orders")
 public class OrderController {
 
     @Autowired

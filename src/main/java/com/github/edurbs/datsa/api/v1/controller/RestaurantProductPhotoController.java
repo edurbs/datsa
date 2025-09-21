@@ -28,7 +28,7 @@ import com.github.edurbs.datsa.domain.service.PhotoStorageService.FetchedPhoto;
 
 
 @RestController
-@RequestMapping("/restaurants/{restaurantId}/products/{productId}/photo")
+@RequestMapping("/v1/restaurants/{restaurantId}/products/{productId}/photo")
 public class RestaurantProductPhotoController {
 
     @Autowired

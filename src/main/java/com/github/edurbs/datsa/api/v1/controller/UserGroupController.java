@@ -21,7 +21,7 @@ import lombok.AllArgsConstructor;
 
 
 @RestController
-@RequestMapping("/users/{userId}/groups")
+@RequestMapping("/v1/users/{userId}/groups")
 @AllArgsConstructor
 public class UserGroupController {
 

@@ -23,7 +23,7 @@ import lombok.AllArgsConstructor;
 
 
 @RestController
-@RequestMapping("/groups/{groupId}/permissions")
+@RequestMapping("/v1/groups/{groupId}/permissions")
 @AllArgsConstructor
 public class GroupPermissionController {
 

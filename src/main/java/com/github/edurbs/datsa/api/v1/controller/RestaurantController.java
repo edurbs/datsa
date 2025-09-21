@@ -33,7 +33,7 @@ import com.github.edurbs.datsa.domain.exception.StateNotFoundException;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 
 @RestController
-@RequestMapping("/restaurants")
+@RequestMapping("/v1/restaurants")
 public class RestaurantController {
 
     @Autowired

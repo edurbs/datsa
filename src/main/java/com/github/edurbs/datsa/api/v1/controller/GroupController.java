@@ -21,7 +21,7 @@ import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.service.GroupRegistryService;
 
 @RestController
-@RequestMapping("/groups")
+@RequestMapping("/v1/groups")
 public class GroupController {
 
     @Autowired

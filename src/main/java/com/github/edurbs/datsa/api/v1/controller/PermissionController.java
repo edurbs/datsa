@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/permissions")
+@RequestMapping("/v1/permissions")
 @AllArgsConstructor
 public class PermissionController {
     private final PermissionRegistryService permissionRegistryService;

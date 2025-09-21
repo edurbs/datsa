@@ -19,7 +19,7 @@ import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/restaurants/{restaurantId}/payment-methods")
+@RequestMapping("/v1/restaurants/{restaurantId}/payment-methods")
 @RequiredArgsConstructor
 public class RestaurantPaymentMethodController {
 

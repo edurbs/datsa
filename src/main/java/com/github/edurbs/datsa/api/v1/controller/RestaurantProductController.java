@@ -24,7 +24,7 @@ import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/restaurants/{restaurantId}/products")
+@RequestMapping("/v1/restaurants/{restaurantId}/products")
 @AllArgsConstructor
 public class RestaurantProductController {
 

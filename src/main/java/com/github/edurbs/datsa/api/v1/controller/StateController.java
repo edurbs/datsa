@@ -21,7 +21,7 @@ import com.github.edurbs.datsa.api.v1.mapper.StateMapper;
 import com.github.edurbs.datsa.domain.service.StateRegistryService;
 
 @RestController
-@RequestMapping("/states")
+@RequestMapping("/v1/states")
 public class StateController {
 
     @Autowired

@@ -4,7 +4,6 @@ import com.github.edurbs.datsa.api.ResourceUriHelper;
 import com.github.edurbs.datsa.api.v2.dto.input.CityInputV2;
 import com.github.edurbs.datsa.api.v2.dto.output.CityOutputV2;
 import com.github.edurbs.datsa.api.v2.mapper.CityMapperV2;
-import com.github.edurbs.datsa.core.web.MyMediaTypes;
 import com.github.edurbs.datsa.domain.exception.CityNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/cities")
+@RequestMapping("/v2/cities")
 public class CityControllerV2 {
 
     @Autowired
@@ -27,12 +26,12 @@ public class CityControllerV2 {
     @Autowired
     private CityMapperV2 cityMapper;
 
-    @GetMapping(produces = MyMediaTypes.V2_APPLICATION_JSON_VALUE)
+    @GetMapping()
     public CollectionModel<CityOutputV2> listAll() {
         return cityMapper.toCollectionModel(cityRegistryService.getAll());
     }
 
-    @GetMapping(path = "/{cityId}", produces = MyMediaTypes.V2_APPLICATION_JSON_VALUE)
+    @GetMapping("/{cityId}")
     public CityOutputV2 getById(@PathVariable Long cityId) {
         try {
             return cityMapper.toModel(cityRegistryService.getById(cityId));
@@ -41,7 +40,7 @@ public class CityControllerV2 {
         }
     }
 
-    @PostMapping(produces = MyMediaTypes.V2_APPLICATION_JSON_VALUE)
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public CityOutputV2 add(@RequestBody @Valid CityInputV2 cityInput) {
         try {
@@ -55,7 +54,7 @@ public class CityControllerV2 {
         }
     }
 
-    @PutMapping(path = "/{cityId}", produces = MyMediaTypes.V2_APPLICATION_JSON_VALUE)
+    @PutMapping("/{cityId}")
     public CityOutputV2 alter(@PathVariable Long cityId, @RequestBody @Valid CityInputV2 cityInput) {
         try {
             var city = cityRegistryService.getById(cityId);
@@ -69,7 +68,7 @@ public class CityControllerV2 {
         }
     }
 
-    @DeleteMapping(path = "/{cityId}", produces = MyMediaTypes.V2_APPLICATION_JSON_VALUE)
+    @DeleteMapping("/{cityId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long cityId) {
         cityRegistryService.remove(cityId);

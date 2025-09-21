@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.edurbs.datsa.domain.service.StatusOrderService;
 
 @RestController
-@RequestMapping(value = "/orders/{uuid}")
+@RequestMapping(value = "/v1/orders/{uuid}")
 public class StatusOrderController {
 
     @Autowired

@@ -25,7 +25,7 @@ import com.github.edurbs.datsa.domain.model.Kitchen;
 import com.github.edurbs.datsa.domain.service.KitchenRegistryService;
 
 @RestController
-@RequestMapping("/kitchens")
+@RequestMapping("/v1/kitchens")
 public class KitchenController {
 
     @Autowired

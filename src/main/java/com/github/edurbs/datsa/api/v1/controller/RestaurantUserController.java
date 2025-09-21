@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RestController
-@RequestMapping("/restaurants/{restaurantId}/users")
+@RequestMapping("/v1/restaurants/{restaurantId}/users")
 @RequiredArgsConstructor
 public class RestaurantUserController {
 

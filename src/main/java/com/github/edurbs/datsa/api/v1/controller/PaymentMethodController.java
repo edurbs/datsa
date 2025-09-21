@@ -28,7 +28,7 @@ import com.github.edurbs.datsa.api.v1.mapper.PaymentMethodMapper;
 import com.github.edurbs.datsa.domain.service.PaymentMethodRegistryService;
 
 @RestController
-@RequestMapping("/payment-methods")
+@RequestMapping("/v1/payment-methods")
 public class PaymentMethodController {
 
     private static final String ETAG_NOT_MODIFIED = "0";
