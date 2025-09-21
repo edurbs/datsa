@@ -4,8 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.github.edurbs.datsa.api.dto.input.OrderItemInput;
-import com.github.edurbs.datsa.api.dto.output.AddressOutput;
+import com.github.edurbs.datsa.api.v1.dto.input.OrderItemInput;
+import com.github.edurbs.datsa.api.v1.dto.output.AddressOutput;
 import com.github.edurbs.datsa.domain.model.Address;
 import com.github.edurbs.datsa.domain.model.OrderItem;
 

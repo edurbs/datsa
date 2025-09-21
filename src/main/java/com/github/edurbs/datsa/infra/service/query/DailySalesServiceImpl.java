@@ -10,7 +10,7 @@ import javax.persistence.criteria.Predicate;
 
 import org.springframework.stereotype.Repository;
 
-import com.github.edurbs.datsa.api.dto.DailySales;
+import com.github.edurbs.datsa.api.v1.dto.DailySales;
 import com.github.edurbs.datsa.domain.filter.DailySalesFilter;
 import com.github.edurbs.datsa.domain.model.Order;
 import com.github.edurbs.datsa.domain.model.OrderStatus;
