@@ -9,7 +9,7 @@ seq = 1758135078229000
 baseurl = "http://localhost:8080"
 
 [basic_auth]
-username = "datsa"
-password = "123456"
+username = "eduardo"
+password = "123"
 bearer = "Authorization"
 prefix = "Basic"
