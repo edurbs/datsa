@@ -2,10 +2,7 @@
 # More info: https://docs.testfully.io
 
 "$schema" = "https://testfully.io/schemas/request.json"
-name = "all cities"
-seq = 1758139373720000
+name = "one"
+seq = 1758423612463000
 method = "get"
-url = "{{baseurl}}/v1/cities"
-
-[headers]
--Accept = "application/vnd.datsa.v2+json"
+url = "{{baseurl}}/groups/1"
