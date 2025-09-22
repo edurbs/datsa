@@ -12,10 +12,10 @@ public class ApiDeadHandler implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if(request.getRequestURI().startsWith("/v1/")){
-            response.setStatus(HttpStatus.GONE.value());
-            return false;
-        }
+//        if(request.getRequestURI().startsWith("/v1/")){
+//            response.setStatus(HttpStatus.GONE.value());
+//            return false;
+//        }
         return true;
     }
 }

@@ -1,31 +1,24 @@
 package com.github.edurbs.datsa.api.v1.controller;
 
-import javax.validation.Valid;
-
+import com.github.edurbs.datsa.api.v1.dto.input.KitchenInput;
+import com.github.edurbs.datsa.api.v1.dto.output.KitchenOutput;
+import com.github.edurbs.datsa.api.v1.mapper.KitchenMapper;
+import com.github.edurbs.datsa.domain.model.Kitchen;
+import com.github.edurbs.datsa.domain.service.KitchenRegistryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.github.edurbs.datsa.api.v1.dto.input.KitchenInput;
-import com.github.edurbs.datsa.api.v1.dto.output.KitchenOutput;
-import com.github.edurbs.datsa.api.v1.mapper.KitchenMapper;
-import com.github.edurbs.datsa.domain.model.Kitchen;
-import com.github.edurbs.datsa.domain.service.KitchenRegistryService;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/v1/kitchens")
+@Slf4j
 public class KitchenController {
 
     @Autowired
@@ -39,6 +32,7 @@ public class KitchenController {
 
     @GetMapping()
     public PagedModel<KitchenOutput> listAll(Pageable pageable) {
+        log.info("Getting kitchens...");
         Page<Kitchen> kitchensPage = kitchenRegistryService.getAll(pageable);
         return pagedResourcesAssembler.toModel(kitchensPage, kitchenMapper);
     }
