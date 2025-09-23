@@ -5,4 +5,4 @@
 name = "get all"
 seq = 1758140338238000
 method = "get"
-url = "{{baseurl}}/v1/kitchens"
+url = "{{baseurl}}/v1/kitchens/1"

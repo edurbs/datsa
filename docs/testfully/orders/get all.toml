@@ -6,9 +6,3 @@ name = "get all"
 seq = 1758135462218000
 method = "get"
 url = "http://localhost:8080/v1/orders/"
-
-[basic_auth]
-username = "datsa"
-password = "123456"
-bearer = "Authorization"
-prefix = "Basic"

@@ -7,9 +7,17 @@ seq = 1758135078229000
 
 [variables]
 baseurl = "http://localhost:8080"
+api = "http://localhost:8080"
+auth = "http://localhost:8081"
 
-[basic_auth]
+[oauth2]
+provider = "other"
+access_token_url = "{{auth}}/oauth/token"
+client_authentication_type = "basic_auth_header"
+client_id = "datsa-web"
+grant_type = "resource_owner_password"
+client_secret = "123"
 username = "eduardo"
 password = "123"
-bearer = "Authorization"
-prefix = "Basic"
+code_challenge_method = "plain"
+refresh_policy = "per_request"
