@@ -8,9 +8,10 @@ method = "post"
 url = "{{auth}}/oauth/check_token"
 
 
+
 [[url_encoded]]
 name = "token"
-value = "-fsc54Za6SqZtb0YvWov_zWurCw"
+value = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTg3MTk1NTksInVzZXJfbmFtZSI6ImVkdWFyZG8iLCJhdXRob3JpdGllcyI6WyJST0xFX0FkbWluIl0sImp0aSI6IjlhSFNTTEVHNGp0QUphUlBaRG4wcjhVMUF2MCIsImNsaWVudF9pZCI6ImRhdHNhLXdlYiIsInNjb3BlIjpbIndyaXRlIiwicmVhZCJdfQ.lD_ytWVqiYtnthvFOEE6JgTndN18HBeGG3u7KJO74FQ"
 enabled = true
 
 [basic_auth]
