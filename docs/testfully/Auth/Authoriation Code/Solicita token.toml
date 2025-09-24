@@ -6,16 +6,27 @@ name = "Solicita token"
 seq = 1758663840946000
 method = "post"
 url = "{{auth}}/oauth/token"
-no_auth = true
+
 
 
 
 
 
 [[url_encoded]]
-name = "code"
-value = "wmSKGq"
+name = "username"
+value = "eduardo"
 enabled = true
+
+
+
+
+
+
+[[url_encoded]]
+name = "password"
+value = "123"
+enabled = true
+
 
 
 
@@ -23,32 +34,11 @@ enabled = true
 
 [[url_encoded]]
 name = "grant_type"
-value = "authorization_code"
+value = "password"
 enabled = true
 
-
-
-
-
-[[url_encoded]]
-name = "redirect_uri"
-value = "http://localhost:8081"
-enabled = true
-
-
-
-
-
-[[url_encoded]]
-name = "code_verifier"
-value = "StringAleatoria"
-enabled = true
-
-
-
-
-
-[[url_encoded]]
-name = "client_id"
-value = "datsa-analytics"
-enabled = true
+[basic_auth]
+username = "datsa-web"
+password = "123"
+bearer = "Authorization"
+prefix = "Basic"
