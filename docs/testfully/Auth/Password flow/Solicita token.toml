@@ -6,24 +6,3 @@ name = "Solicita token"
 seq = 1000
 method = "post"
 url = "{{auth}}/oauth/token"
-
-[[url_encoded]]
-name = "username"
-value = "eduardo"
-enabled = true
-
-[[url_encoded]]
-name = "password"
-value = "123"
-enabled = true
-
-[[url_encoded]]
-name = "grant_type"
-value = "password"
-enabled = true
-
-[basic_auth]
-username = "datsa-web"
-password = "123"
-bearer = "Authorization"
-prefix = "Basic"

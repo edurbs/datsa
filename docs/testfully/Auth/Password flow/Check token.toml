@@ -7,9 +7,10 @@ seq = 2000
 method = "post"
 url = "{{auth}}/oauth/check_token"
 
+
 [[url_encoded]]
 name = "token"
-value = "NNJn6fBdNwrCfJSpSx2WmbpbOZM"
+value = "-fsc54Za6SqZtb0YvWov_zWurCw"
 enabled = true
 
 [basic_auth]
