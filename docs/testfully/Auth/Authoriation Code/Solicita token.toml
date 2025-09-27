@@ -12,6 +12,7 @@ url = "{{auth}}/oauth/token"
 
 
 
+
 [[url_encoded]]
 name = "username"
 value = "eduardo"
@@ -22,10 +23,12 @@ enabled = true
 
 
 
+
 [[url_encoded]]
 name = "password"
 value = "123"
 enabled = true
+
 
 
 
