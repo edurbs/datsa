@@ -360,15 +360,31 @@ values (
     );
 INSERT IGNORE INTO user (id, name, email, password, registration_date,
         last_update_date)
-VALUES (1, 'Eduardo', 'edurbs@gmail.com', '12345678', utc_timestamp,
+VALUES (1, 'Eduardo', 'eduardo.ger@gmail.com', '$2a$12$26pOnOiAOVDqK58WelYc2exCcyQiOTEMZF8JeQjNASB.E5/g1W.j.', utc_timestamp,
         utc_timestamp);
 INSERT IGNORE INTO user (id, name, email, password, registration_date,
         last_update_date)
-VALUES (2, 'Maria', 'edurbs@gmail.com', '12345678', utc_timestamp,
+VALUES (2, 'Maria', 'maria.vnd@gmail.com', '$2a$12$26pOnOiAOVDqK58WelYc2exCcyQiOTEMZF8JeQjNASB.E5/g1W.j.', utc_timestamp,
         utc_timestamp);
 INSERT IGNORE INTO user (id, name, email, password, registration_date,
         last_update_date)
-VALUES (3, 'José', 'edurbs@gmail.com', '12345678', utc_timestamp,
+VALUES (3, 'José', 'jose.aux@gmail.com', '$2a$12$26pOnOiAOVDqK58WelYc2exCcyQiOTEMZF8JeQjNASB.E5/g1W.j.', utc_timestamp,
+        utc_timestamp);
+INSERT IGNORE INTO user (id, name, email, password, registration_date,
+        last_update_date)
+VALUES (4, 'João', 'joao.cad@gmail.com', '$2a$12$26pOnOiAOVDqK58WelYc2exCcyQiOTEMZF8JeQjNASB.E5/g1W.j.', utc_timestamp,
+        utc_timestamp);
+INSERT IGNORE INTO user (id, name, email, password, registration_date,
+        last_update_date)
+VALUES (5, 'Manoel', 'manoel.loja@gmail.com', '$2a$12$26pOnOiAOVDqK58WelYc2exCcyQiOTEMZF8JeQjNASB.E5/g1W.j.', utc_timestamp,
+        utc_timestamp);
+INSERT IGNORE INTO user (id, name, email, password, registration_date,
+        last_update_date)
+VALUES (6, 'Joaquim', 'joaquim@gmail.com', '$2a$12$26pOnOiAOVDqK58WelYc2exCcyQiOTEMZF8JeQjNASB.E5/g1W.j.', utc_timestamp,
+        utc_timestamp);
+INSERT IGNORE INTO user (id, name, email, password, registration_date,
+        last_update_date)
+VALUES (7, 'Benetido', 'benedito@gmail.com', '$2a$12$26pOnOiAOVDqK58WelYc2exCcyQiOTEMZF8JeQjNASB.E5/g1W.j.', utc_timestamp,
         utc_timestamp);
 INSERT ignore into group_permission (group_id, permission_id) VALUES (1,1);
 INSERT ignore into group_permission (group_id, permission_id) VALUES (1,2);
