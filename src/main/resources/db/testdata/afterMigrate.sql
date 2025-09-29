@@ -53,24 +53,25 @@ insert ignore into payment_method (id, description, updated_at)
 values (2, 'Cartão de débito', utc_timestamp);
 insert ignore into payment_method (id, description, updated_at)
 values (3, 'Dinheiro', utc_timestamp);
-insert ignore into permission (id, name, description)
-values (
-        1,
-        'CONSULTAR_COZINHAS',
-        'Permite consultar cozinhas'
-    );
-insert ignore into permission (id, name, description)
-values (
-        2,
-        'EDITAR_COZINHAS',
-        'Permite editar cozinhas'
-    );
-insert ignore into permission (id, name, description)
-values (
-        3,
-        'EXCLUIR_COZINHAS',
-        'Permite excluir cozinhas'
-    );
+
+insert into permission (id, name, description) values (1, 'CONSULT_KITCHENS', 'Allows consulting kitchens');
+insert into permission (id, name, description) values (2, 'EDIT_KITCHENS', 'Allows editing kitchens');
+insert into permission (id, name, description) values (3, 'CONSULT_PAYMENT_METHODS', 'Allows consulting payment methods');
+insert into permission (id, name, description) values (4, 'EDIT_PAYMENT_METHODS', 'Allows creating or editing payment methods');
+insert into permission (id, name, description) values (5, 'CONSULT_CITIES', 'Allows consulting cities');
+insert into permission (id, name, description) values (6, 'EDIT_CITIES', 'Allows creating or editing cities');
+insert into permission (id, name, description) values (7, 'CONSULT_STATES', 'Allows consulting states');
+insert into permission (id, name, description) values (8, 'EDIT_STATES', 'Allows creating or editing states');
+insert into permission (id, name, description) values (9, 'CONSULT_USERS', 'Allows consulting users');
+insert into permission (id, name, description) values (10, 'EDIT_USERS', 'Allows creating or editing users');
+insert into permission (id, name, description) values (11, 'CONSULT_RESTAURANTS', 'Allows consulting restaurants');
+insert into permission (id, name, description) values (12, 'EDIT_RESTAURANTS', 'Allows creating, editing or managing restaurants');
+insert into permission (id, name, description) values (13, 'CONSULT_PRODUCTS', 'Allows consulting products');
+insert into permission (id, name, description) values (14, 'EDIT_PRODUCTS', 'Allows creating or editing products');
+insert into permission (id, name, description) values (15, 'CONSULT_ORDERS', 'Allows consulting orders');
+insert into permission (id, name, description) values (16, 'MANAGE_ORDERS', 'Allows managing orders');
+insert into permission (id, name, description) values (17, 'GENERATE_REPORTS', 'Allows generating reports');
+
 insert ignore into restaurant (
         id,
         name,
@@ -334,30 +335,27 @@ values (1, 1),
     (5, 1),
     (5, 2),
     (6, 3);
-INSERT IGNORE INTO group_system (id, name, description)
-values (
-        1,
-        'ADMIN',
-        'Administrador do sistema'
-    );
-INSERT IGNORE INTO group_system (id, name, description)
-values (
-        2,
-        'USER',
-        'Usuário do sistema'
-    );
-INSERT IGNORE INTO group_system (id, name, description)
-values (
-        3,
-        'USER',
-        'Gerente do restaurante'
-    );
-INSERT IGNORE INTO group_system (id, name, description)
-values (
-        4,
-        'SELLER',
-        'Vendedor do restaurante'
-    );
+insert into group_system (id, name, description) values (1, 'Gerente', "Grupo do gerente"), (2, 'Vendedor', "grupos dos vendedores"), (3, 'Secretária', "grupo das secretárias"), (4, 'Cadastrador', "grupos dos cadastradores");
+
+# Adiciona todas as permissoes no grupo do gerente
+insert into group_permission (group_id, permission_id)
+select 1, id from permission;
+
+# Adiciona permissoes no grupo do vendedor
+insert into group_permission (group_id, permission_id)
+select 2, id from permission where name like 'CONSULT_%';
+
+insert into group_permission (group_id, permission_id) values (2, 14);
+
+# Adiciona permissoes no grupo do auxiliar
+insert into group_permission (group_id, permission_id)
+select 3, id from permission where name like 'CONSULT_%';
+
+# Adiciona permissoes no grupo cadastrador
+insert into group_permission (group_id, permission_id)
+select 4, id from permission where name like '%_RESTAURANTS' or name like '%_PRODUCTS';
+
+
 INSERT IGNORE INTO user (id, name, email, password, registration_date,
         last_update_date)
 VALUES (1, 'Eduardo', 'eduardo.ger@gmail.com', '$2a$12$26pOnOiAOVDqK58WelYc2exCcyQiOTEMZF8JeQjNASB.E5/g1W.j.', utc_timestamp,
@@ -384,20 +382,14 @@ VALUES (6, 'Joaquim', 'joaquim@gmail.com', '$2a$12$26pOnOiAOVDqK58WelYc2exCcyQiO
         utc_timestamp);
 INSERT IGNORE INTO user (id, name, email, password, registration_date,
         last_update_date)
-VALUES (7, 'Benetido', 'benedito@gmail.com', '$2a$12$26pOnOiAOVDqK58WelYc2exCcyQiOTEMZF8JeQjNASB.E5/g1W.j.', utc_timestamp,
+VALUES (7, 'Benedito', 'benedito@gmail.com', '$2a$12$26pOnOiAOVDqK58WelYc2exCcyQiOTEMZF8JeQjNASB.E5/g1W.j.', utc_timestamp,
         utc_timestamp);
-INSERT ignore into group_permission (group_id, permission_id) VALUES (1,1);
-INSERT ignore into group_permission (group_id, permission_id) VALUES (1,2);
-INSERT ignore into group_permission (group_id, permission_id) VALUES (1,3);
-INSERT ignore into group_permission (group_id, permission_id) VALUES (2,1);
-INSERT ignore into group_permission (group_id, permission_id) VALUES (2,2);
-INSERT ignore into group_permission (group_id, permission_id) VALUES (3,1);
+
 INSERT ignore into user_group (user_id, group_id) values (1,1);
 INSERT ignore into user_group (user_id, group_id) values (1,2);
-INSERT ignore into user_group (user_id, group_id) values (1,3);
-INSERT ignore into user_group (user_id, group_id) values (2,3);
-INSERT ignore into user_group (user_id, group_id) values (2,4);
-INSERT ignore into user_group (user_id, group_id) values (3,4);
+INSERT ignore into user_group (user_id, group_id) values (2,2);
+INSERT ignore into user_group (user_id, group_id) values (3,3);
+INSERT ignore into user_group (user_id, group_id) values (4,4);
 INSERT ignore into restaurant_user (restaurant_id, user_id) values (1,1);
 INSERT ignore into restaurant_user (restaurant_id, user_id) values (2,1);
 INSERT ignore into restaurant_user (restaurant_id, user_id) values (2,2);
