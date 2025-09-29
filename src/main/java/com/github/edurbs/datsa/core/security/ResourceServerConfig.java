@@ -1,9 +1,16 @@
 package com.github.edurbs.datsa.core.security;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 
 @SuppressWarnings("deprecation")
 @Configuration
@@ -14,11 +21,32 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .anyRequest().authenticated() // must use the basic authentication
+                .antMatchers(HttpMethod.POST, "/v1/kitchens/**").hasAuthority("EDIT_KITCHENS")
+                .antMatchers(HttpMethod.PUT, "/v1/kitchens/**").hasAuthority("EDIT_KITCHENS")
+                .antMatchers(HttpMethod.GET, "/v1/kitchens/**").authenticated()
+                .anyRequest().denyAll()
+                //.anyRequest().authenticated() // must use the basic authentication
             .and()
                 .cors()
             .and()
-                .oauth2ResourceServer().jwt(); // token type
+                .oauth2ResourceServer()
+                .jwt() // token type
+                .jwtAuthenticationConverter(jwtAuthenticationConverter());
+    }
+
+    private JwtAuthenticationConverter jwtAuthenticationConverter(){
+        var jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            List<String> authorities = jwt.getClaimAsStringList("authorities");
+            if(authorities == null){
+                authorities = Collections.emptyList();
+            }
+            return authorities.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+
+        });
+        return jwtAuthenticationConverter;
     }
 
 }
