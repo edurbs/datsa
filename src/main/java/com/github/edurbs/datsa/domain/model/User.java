@@ -55,20 +55,16 @@ public class User implements DomainModel {
             inverseJoinColumns = @JoinColumn(name = "group_id"))
     Set<Group> groups = new HashSet<>();
 
-    public boolean passwordEqualsTo(String password){
-        return this.password.equals(password);
-    }
-
-    public boolean passwordNotEqualsTo(String password){
-        return !passwordEqualsTo(password);
-    }
-
     public boolean addGroup(Group group) {
         return groups.add(group);
     }
 
     public boolean removeGroup(Group group){
         return groups.remove(group);
+    }
+
+    public boolean isNew(){
+        return getId() == null;
     }
 
 }

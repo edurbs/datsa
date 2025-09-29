@@ -1,5 +1,7 @@
 package com.github.edurbs.datsa.api.v1.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import com.github.edurbs.datsa.api.v1.dto.input.UserPasswordInput;
 import com.github.edurbs.datsa.api.v1.dto.input.UserUpdateInput;
 import com.github.edurbs.datsa.api.v1.dto.output.UserOutput;
 import com.github.edurbs.datsa.api.v1.mapper.UserMapper;
+import com.github.edurbs.datsa.domain.model.User;
 import com.github.edurbs.datsa.domain.service.UserRegistryService;
 
 @RestController
@@ -32,31 +35,32 @@ public class UserController {
     @Autowired
     private UserRegistryService service;
 
+
     @GetMapping
     public CollectionModel<UserOutput> getAll() {
-        var users = service.getAll();
+        List<User> users = service.getAll();
         return mapper.toCollectionModel(users);
     }
 
     @GetMapping("/{id}")
     public UserOutput getOne(@PathVariable Long id) {
-        var user = service.getById(id);
+        User user = service.getById(id);
         return mapper.toModel(user);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserOutput add(@RequestBody @Valid UserInput userInput) {
-        var domainUser = mapper.toDomain(userInput);
-        var userSaved = service.save(domainUser);
+        User domainUser = mapper.toDomain(userInput);
+        User userSaved = service.save(domainUser);
         return mapper.toModel(userSaved);
     }
 
     @PutMapping("/{id}")
     public UserOutput alter(@PathVariable Long id, @RequestBody @Valid UserUpdateInput userUpdateInput) {
-        var domainUser = service.getById(id);
+        User domainUser = service.getById(id);
         mapper.copyToDomain(userUpdateInput, domainUser);
-        var alteredUser = service.save(domainUser);
+        User alteredUser = service.save(domainUser);
         return mapper.toModel(alteredUser);
     }
 

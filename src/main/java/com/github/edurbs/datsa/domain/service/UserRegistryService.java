@@ -4,9 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.validation.ValidationException;
-
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +24,7 @@ public class UserRegistryService {
 
     private UserRepository userRepository;
     private GroupRegistryService groupRegistryService;
+    private PasswordEncoder passwordEncoder;
 
     public List<User> getAll(){
         return userRepository.findAll();
@@ -53,9 +53,13 @@ public class UserRegistryService {
         // remove the user instance from JPA, so it will not update the database automatically
         userRepository.detach(user);
 
+        if(user.isNew()){
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
         Optional<User> userFromDB = userRepository.findByEmail(user.getEmail());
         if(userFromDB.isPresent() && !userFromDB.get().equals(user) ){
-            throw new ValidationException("The email %s is already used by another user".formatted(user.getEmail()));
+            throw new ModelValidationException("The email %s is already used by another user".formatted(user.getEmail()));
         }
         return userRepository.save(user);
     }
@@ -65,12 +69,12 @@ public class UserRegistryService {
     }
 
     @Transactional
-    public User changePassword(Long id, String oldPassword, String newPassword) {
-        var user = getById(id);
-        if(user.passwordNotEqualsTo(oldPassword)){
-            throw new ModelValidationException("Wrong password");
+    public User changePassword(Long id, String currentPassword, String newPassword) {
+        User user = getById(id);
+        if(!passwordEncoder.matches(currentPassword, user.getPassword())){
+            throw new ModelValidationException("Current password informed does not matches the user password");
         }
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         return userRepository.save(user);
     }
 

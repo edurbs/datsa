@@ -5,4 +5,4 @@
 name = "get one user"
 seq = 1758236553017500
 method = "get"
-url = "{{baseurl}}/users/1"
+url = "{{baseurl}}/v1/users/1"
