@@ -8,7 +8,7 @@ method = "post"
 url = "{{baseurl}}/v1/users"
 json = """
 {
-  "name": "Regiane",
+  "name": "Regiane2",
   "email": "regiane@gmail.com",
   "password": "12345678"
 }
