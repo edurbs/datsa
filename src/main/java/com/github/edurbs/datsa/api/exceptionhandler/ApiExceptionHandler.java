@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -182,7 +183,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.RESOURCE_NOT_FOUND;
         String detail = ex.getMessage();
         Problem problem = createProblemBuilder(status, problemType, detail)
-                .userMessage(detail)
+                .userMessage("Registry not found.")
                 .build();
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }
@@ -193,7 +194,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.ENTITY_IN_USE;
         String detail = ex.getMessage();
         Problem problem = createProblemBuilder(status, problemType, detail)
-                .userMessage(detail)
+                .userMessage("The registry is in use.")
+                .build();
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex, WebRequest request){
+        HttpStatus status = HttpStatus.valueOf(403);
+        ProblemType problemType = ProblemType.ACCESS_DENIED;
+        String detail = ex.getMessage();
+        Problem problem = createProblemBuilder(status, problemType, detail)
+                .userMessage("You don't have permission to this operation.")
                 .build();
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }
@@ -204,7 +216,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.VALIDATION_ERROR;
         String detail = ex.getMessage();
         Problem problem = createProblemBuilder(status, problemType, detail)
-                .userMessage(detail)
+                .userMessage("Validation error.")
                 .build();
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }

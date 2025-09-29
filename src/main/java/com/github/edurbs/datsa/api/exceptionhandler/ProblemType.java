@@ -10,6 +10,7 @@ public enum ProblemType {
     JSON_ERROR("/json-error", "Json error"),
     RESOURCE_NOT_FOUND("/resource-not-found", "Resource not found"),
     ENTITY_IN_USE("/entity-in-use", "Entity in use"),
+    ACCESS_DENIED("/access-denied", "Access denied"),
     VALIDATION_ERROR("/validation-error", "Validation error")
     ;
 
