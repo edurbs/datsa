@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.edurbs.datsa.api.v1.dto.input.KitchenInput;
 import com.github.edurbs.datsa.api.v1.dto.output.KitchenOutput;
 import com.github.edurbs.datsa.api.v1.mapper.KitchenMapper;
+import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.model.Kitchen;
 import com.github.edurbs.datsa.domain.service.KitchenRegistryService;
 
@@ -41,7 +41,7 @@ public class KitchenController {
     @Autowired
     private PagedResourcesAssembler<Kitchen> pagedResourcesAssembler;
 
-    @PreAuthorize("isAuthenticated()")
+    @CheckSecurity.Kitchens.CanConsult
     @GetMapping()
     public PagedModel<KitchenOutput> listAll(Pageable pageable) {
         log.info("Getting kitchens...");
@@ -49,13 +49,13 @@ public class KitchenController {
         return pagedResourcesAssembler.toModel(kitchensPage, kitchenMapper);
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @CheckSecurity.Kitchens.CanConsult
     @GetMapping("/{kitchenId}")
     public KitchenOutput getById(@PathVariable Long kitchenId) {
         return kitchenMapper.toModel(kitchenRegistryService.getById(kitchenId));
     }
 
-    @PreAuthorize("hasAuthority('EDIT_KITCHENS')")
+    @CheckSecurity.Kitchens.CanEdit
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public KitchenOutput add(@RequestBody @Valid KitchenInput kitchenInput) {
@@ -64,7 +64,7 @@ public class KitchenController {
         return kitchenMapper.toModel(kitchenAdded);
     }
 
-    @PreAuthorize("hasAuthority('EDIT_KITCHENS')")
+    @CheckSecurity.Kitchens.CanEdit
     @PutMapping("/{kitchenId}")
     public KitchenOutput alter(@PathVariable Long kitchenId, @RequestBody @Valid KitchenInput kitchenInput) {
         var kitchen = kitchenRegistryService.getById(kitchenId);
@@ -73,7 +73,7 @@ public class KitchenController {
         return kitchenMapper.toModel(alteredKitchen);
     }
 
-    @PreAuthorize("hasAuthority('EDIT_KITCHENS')")
+    @CheckSecurity.Kitchens.CanEdit
     @DeleteMapping("/{kitchenId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long kitchenId) {
