@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,21 +15,15 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 @SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/v1/kitchens/**").hasAuthority("EDIT_KITCHENS")
-                .antMatchers(HttpMethod.PUT, "/v1/kitchens/**").hasAuthority("EDIT_KITCHENS")
-                .antMatchers(HttpMethod.GET, "/v1/kitchens/**").authenticated()
-                .anyRequest().denyAll()
-                //.anyRequest().authenticated() // must use the basic authentication
-            .and()
-                .cors()
-            .and()
-                .oauth2ResourceServer()
+            .csrf().disable()
+            .cors().and()
+            .oauth2ResourceServer()
                 .jwt() // token type
                 .jwtAuthenticationConverter(jwtAuthenticationConverter());
     }
