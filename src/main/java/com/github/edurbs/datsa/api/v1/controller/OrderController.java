@@ -25,6 +25,7 @@ import com.github.edurbs.datsa.api.v1.mapper.OrderMapper;
 import com.github.edurbs.datsa.api.v1.mapper.OrderSummaryMapper;
 import com.github.edurbs.datsa.core.data.PageWrapper;
 import com.github.edurbs.datsa.core.data.PageableTranslator;
+import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.filter.OrderFilter;
 import com.github.edurbs.datsa.domain.model.Order;
@@ -50,6 +51,9 @@ public class OrderController {
     @Autowired
     private PagedResourcesAssembler<Order> pagedResourcesAssembler;
 
+    @Autowired
+    private MySecurity mySecurity;
+
     @GetMapping("/{uuid}")
     public OrderOutput getById(@PathVariable String uuid) {
         return orderMapper.toModel(orderRegistryService.getById(uuid));
@@ -70,9 +74,8 @@ public class OrderController {
             Order newOrder = new Order();
             orderMapper.copyToDomain(orderInput, newOrder);
             newOrder.setUser(new User());
-            newOrder.getUser().setId(1L);
+            newOrder.getUser().setId(mySecurity.getUserId());
             return orderMapper.toModel(orderRegistryService.newOrder(newOrder));
-
         } catch (Exception e) {
             throw new ModelValidationException(e.getMessage());
         }
