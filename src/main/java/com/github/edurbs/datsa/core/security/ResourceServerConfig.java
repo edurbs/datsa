@@ -1,16 +1,18 @@
 package com.github.edurbs.datsa.core.security;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
 @SuppressWarnings("deprecation")
 @Configuration
@@ -35,9 +37,15 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
             if(authorities == null){
                 authorities = Collections.emptyList();
             }
-            return authorities.stream()
+
+            var scopesAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+            Collection<GrantedAuthority> grantedAuthorities = scopesAuthoritiesConverter.convert(jwt);
+
+            grantedAuthorities.addAll(authorities.stream()
                 .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                .toList());
+
+            return grantedAuthorities;
 
         });
         return jwtAuthenticationConverter;
