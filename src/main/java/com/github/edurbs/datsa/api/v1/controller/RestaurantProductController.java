@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.edurbs.datsa.api.v1.dto.input.ProductInput;
 import com.github.edurbs.datsa.api.v1.dto.output.ProductOutput;
 import com.github.edurbs.datsa.api.v1.mapper.ProductMapper;
+import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.service.ProductRegistryService;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 
@@ -32,6 +33,7 @@ public class RestaurantProductController {
     private ProductRegistryService productRegistryService;
     private ProductMapper productMapper;
 
+    @CheckSecurity.Restaurants.CanConsult
     @GetMapping
     public CollectionModel<ProductOutput> getAll(@PathVariable Long restaurantId, @RequestParam(required = false) Boolean inactiveIncluded) {
         if(Boolean.TRUE.equals(inactiveIncluded)){
@@ -40,11 +42,13 @@ public class RestaurantProductController {
         return productMapper.toCollectionModel(restaurantRegistryService.getAllActiveProducts(restaurantId));
     }
 
+    @CheckSecurity.Restaurants.CanConsult
     @GetMapping("/{productId}")
     public ProductOutput getOne(@PathVariable Long restaurantId, @PathVariable Long productId) {
         return productMapper.toModel(restaurantRegistryService.getProduct(restaurantId, productId));
     }
 
+    @CheckSecurity.Restaurants.CanEditAndManage
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProductOutput add(@PathVariable Long restaurantId, @RequestBody @Valid ProductInput productInput) {
@@ -55,6 +59,7 @@ public class RestaurantProductController {
         return productMapper.toModel(productSaved);
     }
 
+    @CheckSecurity.Restaurants.CanEditAndManage
     @PutMapping("/{productId}")
     public ProductOutput alter(@PathVariable Long restaurantId, @PathVariable Long productId, @RequestBody @Valid ProductInput productInput) {
         var product = productRegistryService.getByRestaurant(restaurantId, productId);
@@ -63,6 +68,7 @@ public class RestaurantProductController {
         return productMapper.toModel(productSaved);
     }
 
+    @CheckSecurity.Restaurants.CanEditAndManage
     @DeleteMapping("/{productId}")
     public void remove(@PathVariable Long restaurantId, @PathVariable Long productId){
         productRegistryService.remove(productId);

@@ -5,4 +5,4 @@
 name = "close"
 seq = 1758219139252000
 method = "put"
-url = "http://localhost:8080/restaurants/1/close"
+url = "http://localhost:8080/v1/restaurants/2/close"

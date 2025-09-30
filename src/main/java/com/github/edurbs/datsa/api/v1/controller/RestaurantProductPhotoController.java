@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
-import com.github.edurbs.datsa.domain.service.PhotoStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -14,17 +12,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.github.edurbs.datsa.api.v1.dto.input.ProductPhotoInput;
 import com.github.edurbs.datsa.api.v1.dto.output.ProductPhotoOutput;
 import com.github.edurbs.datsa.api.v1.mapper.ProductPhotoMapper;
+import com.github.edurbs.datsa.core.security.CheckSecurity;
+import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.model.Product;
 import com.github.edurbs.datsa.domain.model.ProductPhoto;
+import com.github.edurbs.datsa.domain.service.PhotoStorageService;
+import com.github.edurbs.datsa.domain.service.PhotoStorageService.FetchedPhoto;
 import com.github.edurbs.datsa.domain.service.ProductPhotoCatalogService;
 import com.github.edurbs.datsa.domain.service.ProductRegistryService;
-import com.github.edurbs.datsa.domain.service.PhotoStorageService.FetchedPhoto;
 
 
 @RestController
@@ -43,6 +51,7 @@ public class RestaurantProductPhotoController {
     @Autowired
     PhotoStorageService photoStorageService;
 
+    @CheckSecurity.Restaurants.CanEditAndManage
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ProductPhotoOutput updatePhoto(@PathVariable Long restaurantId, @PathVariable Long productId, @Valid ProductPhotoInput productPhotoInput) throws IOException {
         Product product = productRegistryService.getByRestaurant(restaurantId, productId);
@@ -58,6 +67,7 @@ public class RestaurantProductPhotoController {
         return productPhotoMapper.toModel(savedPhoto);
     }
 
+    @CheckSecurity.Restaurants.CanConsult
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ProductPhotoOutput getPhoto(@PathVariable Long restaurantId, @PathVariable Long productId){
         Product product = productRegistryService.getByRestaurant(restaurantId, productId);
@@ -65,6 +75,7 @@ public class RestaurantProductPhotoController {
         return productPhotoMapper.toModel(photo);
     }
 
+    @CheckSecurity.Restaurants.CanEditAndManage
     @DeleteMapping
     public ResponseEntity<ResponseStatus> delete(@PathVariable Long restaurantId, @PathVariable Long productId){
         Product product = productRegistryService.getByRestaurant(restaurantId, productId);
@@ -73,6 +84,7 @@ public class RestaurantProductPhotoController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurants.CanConsult
     @GetMapping
     public ResponseEntity<?> getPhotoData(@PathVariable Long restaurantId, @PathVariable Long productId, @RequestHeader(name="accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         try {

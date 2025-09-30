@@ -26,6 +26,7 @@ import com.github.edurbs.datsa.api.v1.dto.output.RestaurantSummaryOutput;
 import com.github.edurbs.datsa.api.v1.mapper.RestaurantMapper;
 import com.github.edurbs.datsa.api.v1.mapper.RestaurantNameMapper;
 import com.github.edurbs.datsa.api.v1.mapper.RestaurantSummaryMapper;
+import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.exception.CityNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.exception.RestaurantNotFoundException;
@@ -48,21 +49,25 @@ public class RestaurantController {
     @Autowired
     private RestaurantNameMapper restaurantNameMapper;
 
+    @CheckSecurity.Restaurants.CanConsult
     @GetMapping
     public CollectionModel<RestaurantSummaryOutput> listAll() {
         return restaurantSummaryMapper.toCollectionModel(restaurantRegistryService.getAll());
     }
 
+    @CheckSecurity.Restaurants.CanConsult
     @GetMapping(params = "projection=only-name")
     public CollectionModel<RestaurantNameOutput> listAllOnlyName() {
         return restaurantNameMapper.toCollectionModel(restaurantRegistryService.getAll());
     }
 
+    @CheckSecurity.Restaurants.CanConsult
     @GetMapping("/{restaurantId}")
     public RestaurantOutput getById(@PathVariable Long restaurantId) {
         return restaurantMapper.toModel(restaurantRegistryService.getById(restaurantId));
     }
 
+    @CheckSecurity.Restaurants.CanEdit
     @PostMapping
     public ResponseEntity<RestaurantOutput> add(@RequestBody @Valid RestaurantInput restaurantInput) {
         try {
@@ -76,6 +81,7 @@ public class RestaurantController {
         }
     }
 
+    @CheckSecurity.Restaurants.CanEdit
     @PutMapping("/{restaurantId}")
     public RestaurantOutput alter(@PathVariable Long restaurantId,
             @RequestBody @Valid RestaurantInput restaurantInput) {
@@ -89,12 +95,14 @@ public class RestaurantController {
         }
     }
 
+    @CheckSecurity.Restaurants.CanEdit
     @DeleteMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long restaurantId) {
         restaurantRegistryService.remove(restaurantId);
     }
 
+    @CheckSecurity.Restaurants.CanEdit
     @PutMapping("/{restaurantId}/activate")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> activate(@PathVariable Long restaurantId) {
@@ -102,6 +110,7 @@ public class RestaurantController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurants.CanEdit
     @PutMapping("/activations")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> activations(@RequestBody List<Long> restaurantIds){
@@ -113,6 +122,7 @@ public class RestaurantController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurants.CanEdit
     @DeleteMapping("/{restaurantId}/inactivate")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> inactivate(@PathVariable Long restaurantId) {
@@ -120,6 +130,7 @@ public class RestaurantController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurants.CanEdit
     @DeleteMapping("/inactivations")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> inactivations(@RequestBody List<Long> restaurantIds){
@@ -131,6 +142,7 @@ public class RestaurantController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurants.CanEditAndManage
     @PutMapping("/{restaurantId}/open")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> open(@PathVariable Long restaurantId) {
@@ -138,6 +150,7 @@ public class RestaurantController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurants.CanEditAndManage
     @PutMapping("/{restaurantId}/close")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> close(@PathVariable Long restaurantId) {

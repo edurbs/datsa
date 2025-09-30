@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.dto.output.UserOutput;
 import com.github.edurbs.datsa.api.v1.mapper.UserMapper;
+import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 import com.github.edurbs.datsa.domain.model.User;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
@@ -33,6 +34,7 @@ public class RestaurantUserController {
     private final UserMapper userMapper;
     private final LinksAdder linksAdder;
 
+    @CheckSecurity.Restaurants.CanConsult
     @GetMapping
     public CollectionModel<UserOutput> getAllUsers(@PathVariable Long restaurantId) {
         Restaurant restaurant = restaurantRegistryService.getById(restaurantId);
@@ -47,6 +49,7 @@ public class RestaurantUserController {
         return collectionModel;
     }
 
+    @CheckSecurity.Restaurants.CanEdit
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> disassociateUser(@PathVariable Long restaurantId, @PathVariable Long userId){
@@ -54,6 +57,7 @@ public class RestaurantUserController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurants.CanEdit
     @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> associateUser(@PathVariable Long restaurantId, @PathVariable Long userId) {

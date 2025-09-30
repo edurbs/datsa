@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.dto.output.PaymentMethodOutput;
 import com.github.edurbs.datsa.api.v1.mapper.PaymentMethodMapper;
+import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class RestaurantPaymentMethodController {
 
     private final LinksAdder linksAdder;
 
+    @CheckSecurity.Restaurants.CanConsult
     @GetMapping
     public CollectionModel<PaymentMethodOutput> listAll(@PathVariable Long restaurantId) {
         var restaurant = restaurantRegistryService.getById(restaurantId);
@@ -44,6 +46,7 @@ public class RestaurantPaymentMethodController {
 
     }
 
+    @CheckSecurity.Restaurants.CanEditAndManage
     @DeleteMapping("/{paymentMethodId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> disassociate(@PathVariable Long restaurantId, @PathVariable Long paymentMethodId){
@@ -51,6 +54,7 @@ public class RestaurantPaymentMethodController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurants.CanEditAndManage
     @PutMapping("/{paymentMethodId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> associate(@PathVariable Long restaurantId, @PathVariable Long paymentMethodId){

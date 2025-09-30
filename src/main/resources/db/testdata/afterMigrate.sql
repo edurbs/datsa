@@ -54,20 +54,13 @@ values (2, 'Cartão de débito', utc_timestamp);
 insert ignore into payment_method (id, description, updated_at)
 values (3, 'Dinheiro', utc_timestamp);
 
-insert into permission (id, name, description) values (1, 'CONSULT_KITCHENS', 'Allows consulting kitchens');
 insert into permission (id, name, description) values (2, 'EDIT_KITCHENS', 'Allows editing kitchens');
-insert into permission (id, name, description) values (3, 'CONSULT_PAYMENT_METHODS', 'Allows consulting payment methods');
 insert into permission (id, name, description) values (4, 'EDIT_PAYMENT_METHODS', 'Allows creating or editing payment methods');
-insert into permission (id, name, description) values (5, 'CONSULT_CITIES', 'Allows consulting cities');
 insert into permission (id, name, description) values (6, 'EDIT_CITIES', 'Allows creating or editing cities');
-insert into permission (id, name, description) values (7, 'CONSULT_STATES', 'Allows consulting states');
 insert into permission (id, name, description) values (8, 'EDIT_STATES', 'Allows creating or editing states');
 insert into permission (id, name, description) values (9, 'CONSULT_USERS', 'Allows consulting users');
 insert into permission (id, name, description) values (10, 'EDIT_USERS', 'Allows creating or editing users');
-insert into permission (id, name, description) values (11, 'CONSULT_RESTAURANTS', 'Allows consulting restaurants');
 insert into permission (id, name, description) values (12, 'EDIT_RESTAURANTS', 'Allows creating, editing or managing restaurants');
-insert into permission (id, name, description) values (13, 'CONSULT_PRODUCTS', 'Allows consulting products');
-insert into permission (id, name, description) values (14, 'EDIT_PRODUCTS', 'Allows creating or editing products');
 insert into permission (id, name, description) values (15, 'CONSULT_ORDERS', 'Allows consulting orders');
 insert into permission (id, name, description) values (16, 'MANAGE_ORDERS', 'Allows managing orders');
 insert into permission (id, name, description) values (17, 'GENERATE_REPORTS', 'Allows generating reports');
@@ -344,8 +337,6 @@ select 1, id from permission;
 # Adiciona permissoes no grupo do vendedor
 insert into group_permission (group_id, permission_id)
 select 2, id from permission where name like 'CONSULT_%';
-
-insert into group_permission (group_id, permission_id) values (2, 14);
 
 # Adiciona permissoes no grupo do auxiliar
 insert into group_permission (group_id, permission_id)

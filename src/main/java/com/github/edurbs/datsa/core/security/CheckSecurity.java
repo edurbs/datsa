@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public @interface CheckSecurity {
 
     public @interface Kitchens{
+
         @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDIT_KITCHENS')")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
@@ -20,7 +21,24 @@ public @interface CheckSecurity {
         @Target(ElementType.METHOD)
         public @interface CanConsult {}
 
+    }
 
+    public @interface Restaurants{
+
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDIT_RESTAURANTS')")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        public @interface CanEdit {}
+
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDIT_RESTAURANTS') or @mySecurity.manageRestaurant(#restaurantId)")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        public @interface CanEditAndManage {}
+
+        @PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('CONSULT_RESTAURANTS')")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        public @interface CanConsult {}
     }
 
 }
