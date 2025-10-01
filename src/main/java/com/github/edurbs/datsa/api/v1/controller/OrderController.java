@@ -25,6 +25,7 @@ import com.github.edurbs.datsa.api.v1.mapper.OrderMapper;
 import com.github.edurbs.datsa.api.v1.mapper.OrderSummaryMapper;
 import com.github.edurbs.datsa.core.data.PageWrapper;
 import com.github.edurbs.datsa.core.data.PageableTranslator;
+import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.filter.OrderFilter;
@@ -54,6 +55,7 @@ public class OrderController {
     @Autowired
     private MySecurity mySecurity;
 
+    @CheckSecurity.Orders.CanSearch
     @GetMapping("/{uuid}")
     public OrderOutput getById(@PathVariable String uuid) {
         return orderMapper.toModel(orderRegistryService.getById(uuid));

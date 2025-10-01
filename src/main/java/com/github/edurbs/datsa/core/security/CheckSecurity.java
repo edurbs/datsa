@@ -5,6 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public @interface CheckSecurity {
@@ -35,10 +36,19 @@ public @interface CheckSecurity {
         @Target(ElementType.METHOD)
         public @interface CanEditAndManage {}
 
-        @PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('CONSULT_RESTAURANTS')")
+        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface CanConsult {}
+    }
+
+    public @interface Orders{
+
+        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+        @PostAuthorize("hasAuthority('CONSULT_ORDERS') or @mySecurity.getUserId() == returnObject.user.id or @mySecurity.manageRestaurant(returnObject.restaurant.id)")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        public @interface CanSearch {}
     }
 
 }
