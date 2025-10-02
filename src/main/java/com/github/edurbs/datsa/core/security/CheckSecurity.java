@@ -106,4 +106,27 @@ public @interface CheckSecurity {
         public @interface CanConsult {}
     }
 
+    public @interface UsersGroupsPermissions{
+
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and @mySecurity.getUserId() == #userId")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        public @interface CanEditOwnPassword { }
+
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and (hasAuthority('EDIT_USERS_GROUPS_PERMISSIONS') or @mySecurity.getUserId() == #userId)")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        public @interface CanEditUser { }
+
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDIT_USERS_GROUPS_PERMISSIONS')")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        public @interface CanEdit { }
+
+        @PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('CONSULT_USERS_GROUPS_PERMISSIONS')")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        public @interface CanConsult { }
+    }
+
 }

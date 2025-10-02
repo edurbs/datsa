@@ -22,6 +22,7 @@ import com.github.edurbs.datsa.api.v1.dto.input.UserPasswordInput;
 import com.github.edurbs.datsa.api.v1.dto.input.UserUpdateInput;
 import com.github.edurbs.datsa.api.v1.dto.output.UserOutput;
 import com.github.edurbs.datsa.api.v1.mapper.UserMapper;
+import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.model.User;
 import com.github.edurbs.datsa.domain.service.UserRegistryService;
 
@@ -35,19 +36,21 @@ public class UserController {
     @Autowired
     private UserRegistryService service;
 
-
+    @CheckSecurity.UsersGroupsPermissions.CanConsult
     @GetMapping
     public CollectionModel<UserOutput> getAll() {
         List<User> users = service.getAll();
         return mapper.toCollectionModel(users);
     }
 
+    @CheckSecurity.UsersGroupsPermissions.CanConsult
     @GetMapping("/{id}")
     public UserOutput getOne(@PathVariable Long id) {
         User user = service.getById(id);
         return mapper.toModel(user);
     }
 
+    @CheckSecurity.UsersGroupsPermissions.CanEdit
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserOutput add(@RequestBody @Valid UserInput userInput) {
@@ -56,6 +59,7 @@ public class UserController {
         return mapper.toModel(userSaved);
     }
 
+    @CheckSecurity.UsersGroupsPermissions.CanEditUser
     @PutMapping("/{id}")
     public UserOutput alter(@PathVariable Long id, @RequestBody @Valid UserUpdateInput userUpdateInput) {
         User domainUser = service.getById(id);
@@ -64,18 +68,18 @@ public class UserController {
         return mapper.toModel(alteredUser);
     }
 
+    @CheckSecurity.UsersGroupsPermissions.CanEdit
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remove(@PathVariable Long id){
         service.remove(id);
     }
 
-    @PutMapping("/{id}/password")
-    public UserOutput alterPassword(@PathVariable Long id, @RequestBody @Valid UserPasswordInput userPasswordInput) {
-        var domainUser = service.changePassword(id, userPasswordInput.getOldPassword(), userPasswordInput.getNewPassword());
+    @CheckSecurity.UsersGroupsPermissions.CanEditOwnPassword
+    @PutMapping("/{userId}/password")
+    public UserOutput alterPassword(@PathVariable Long userId, @RequestBody @Valid UserPasswordInput userPasswordInput) {
+        var domainUser = service.changePassword(userId, userPasswordInput.getOldPassword(), userPasswordInput.getNewPassword());
         return mapper.toModel(domainUser);
     }
-
-
 
 }

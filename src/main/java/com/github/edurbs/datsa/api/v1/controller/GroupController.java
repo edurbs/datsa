@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.edurbs.datsa.api.v1.dto.input.GroupInput;
 import com.github.edurbs.datsa.api.v1.dto.output.GroupOutput;
 import com.github.edurbs.datsa.api.v1.mapper.GroupMapper;
+import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.exception.GroupNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.service.GroupRegistryService;
@@ -30,12 +31,14 @@ public class GroupController {
     @Autowired
     private GroupMapper mapper;
 
+    @CheckSecurity.UsersGroupsPermissions.CanConsult
     @GetMapping
     public CollectionModel<GroupOutput> getAll() {
         var groups = registryService.getAll();
         return mapper.toCollectionModel(groups);
     }
 
+    @CheckSecurity.UsersGroupsPermissions.CanConsult
     @GetMapping("/{id}")
     public GroupOutput getOne(@PathVariable Long id) {
         try {
@@ -46,6 +49,7 @@ public class GroupController {
         }
     }
 
+    @CheckSecurity.UsersGroupsPermissions.CanEdit
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public GroupOutput add(@RequestBody GroupInput groupInput) {
@@ -54,6 +58,7 @@ public class GroupController {
         return mapper.toModel(groupAdded);
     }
 
+    @CheckSecurity.UsersGroupsPermissions.CanEdit
     @PutMapping("/{id}")
     public GroupOutput alter(@PathVariable Long id, @RequestBody GroupInput input) {
         var group = registryService.getById(id);
@@ -62,6 +67,7 @@ public class GroupController {
         return mapper.toModel(groupAltered);
     }
 
+    @CheckSecurity.UsersGroupsPermissions.CanEdit
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remove(@PathVariable Long id) {

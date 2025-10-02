@@ -1,6 +1,5 @@
 package com.github.edurbs.datsa.api.v1.controller;
 
-import com.github.edurbs.datsa.api.v1.LinksAdder;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.dto.output.PermissionOutput;
 import com.github.edurbs.datsa.api.v1.mapper.PermissionMapper;
+import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.exception.PermissionNotFoundException;
 import com.github.edurbs.datsa.domain.service.GroupRegistryService;
@@ -33,6 +34,7 @@ public class GroupPermissionController {
 
     private LinksAdder linksAdder;
 
+    @CheckSecurity.UsersGroupsPermissions.CanConsult
     @GetMapping
     public CollectionModel<PermissionOutput> getAll(@PathVariable Long groupId) {
         CollectionModel<PermissionOutput> permissionOutputs = permissionMapper.toCollectionModel(groupRegistryService.getAllPermissions(groupId))
@@ -44,6 +46,7 @@ public class GroupPermissionController {
         return  permissionOutputs;
     }
 
+    @CheckSecurity.UsersGroupsPermissions.CanEdit
     @PutMapping("/{permissionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> associatePermission (@PathVariable Long groupId, @PathVariable Long permissionId) {
@@ -55,6 +58,7 @@ public class GroupPermissionController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.UsersGroupsPermissions.CanEdit
     @DeleteMapping("/{permissionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> dissociatePermission (@PathVariable Long groupId, @PathVariable Long permissionId){
