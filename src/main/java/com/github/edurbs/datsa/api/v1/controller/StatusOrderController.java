@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.service.StatusOrderService;
 
 @RestController
@@ -18,6 +19,7 @@ public class StatusOrderController {
     @Autowired
     private StatusOrderService statusOrderService;
 
+    @CheckSecurity.Orders.CanManageOrders
     @PutMapping("/confirm")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> confirm(@PathVariable String uuid) {
@@ -25,6 +27,7 @@ public class StatusOrderController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Orders.CanManageOrders
     @PutMapping("/cancel")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> cancel(@PathVariable String uuid) {
@@ -32,6 +35,7 @@ public class StatusOrderController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Orders.CanManageOrders
     @PutMapping("/delivery")
     public ResponseEntity<Void> delivery(@PathVariable String uuid) {
         statusOrderService.delivery(uuid);

@@ -70,6 +70,7 @@ public class OrderController {
         return pagedResourcesAssembler.toModel(ordersPage, orderSummaryMapper);
     }
 
+    @CheckSecurity.Orders.CanEdit
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public OrderOutput newOrder(@Valid @RequestBody OrderInput orderInput) {

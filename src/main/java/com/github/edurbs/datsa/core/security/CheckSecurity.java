@@ -54,6 +54,18 @@ public @interface CheckSecurity {
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface CanSearchWithFilter {}
+
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and isAuthenticated()")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        public @interface CanEdit { }
+
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and (hasAuthority('MANAGE_ORDERS') or "
+                + "@mySecurity.manageRestaurantOrder(#uuid))")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        public @interface CanManageOrders {
+        }
     }
 
 }

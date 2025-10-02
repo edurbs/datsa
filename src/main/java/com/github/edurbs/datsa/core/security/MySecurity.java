@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
+import com.github.edurbs.datsa.domain.repository.OrderRepository;
 import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
 
 @Component
@@ -13,6 +14,9 @@ public class MySecurity {
 
     @Autowired
     private RestaurantRepository restaurantRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     public Authentication getAuthentication(){
         return SecurityContextHolder.getContext().getAuthentication();
@@ -28,6 +32,10 @@ public class MySecurity {
             return false;
         }
         return restaurantRepository.existsByIdAndUsers_Id(restaurantId, getUserId());
+    }
+
+    public boolean manageRestaurantOrder(String uuid){
+        return orderRepository.existsByUuidAndRestaurantUsersId(uuid, getUserId());
     }
 
 
