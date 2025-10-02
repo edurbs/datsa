@@ -48,7 +48,12 @@ public @interface CheckSecurity {
         @PostAuthorize("hasAuthority('CONSULT_ORDERS') or @mySecurity.getUserId() == returnObject.user.id or @mySecurity.manageRestaurant(returnObject.restaurant.id)")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
-        public @interface CanSearch {}
+        public @interface CanFindById {}
+
+        @PreAuthorize("hasAuthority('SCOPE_READ') and (hasAuthority('CONSULT_ORDERS') or @mySecurity.manageRestaurant(#orderFilter.restaurantId) or @mySecurity.getUserId() == #orderFilter.userId)")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        public @interface CanSearchWithFilter {}
     }
 
 }

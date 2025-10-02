@@ -55,12 +55,13 @@ public class OrderController {
     @Autowired
     private MySecurity mySecurity;
 
-    @CheckSecurity.Orders.CanSearch
+    @CheckSecurity.Orders.CanFindById
     @GetMapping("/{uuid}")
     public OrderOutput getById(@PathVariable String uuid) {
         return orderMapper.toModel(orderRegistryService.getById(uuid));
     }
 
+    @CheckSecurity.Orders.CanSearchWithFilter
     @GetMapping()
     public PagedModel<OrderSummaryOutput> search(OrderFilter orderFilter, Pageable pageable) {
         Pageable translatedPageable = translatePageable(pageable);

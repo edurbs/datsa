@@ -24,6 +24,9 @@ public class MySecurity {
     }
 
     public boolean manageRestaurant(Long restaurantId){
+        if(restaurantId==null){
+            return false;
+        }
         return restaurantRepository.existsByIdAndUsers_Id(restaurantId, getUserId());
     }
 
