@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.edurbs.datsa.api.v1.dto.input.StateInput;
 import com.github.edurbs.datsa.api.v1.dto.output.StateOutput;
 import com.github.edurbs.datsa.api.v1.mapper.StateMapper;
+import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.service.StateRegistryService;
 
 @RestController
@@ -30,16 +31,19 @@ public class StateController {
     @Autowired
     private StateMapper stateMapper;
 
+    @CheckSecurity.State.CanConsult
     @GetMapping
     public CollectionModel<StateOutput> listAll() {
         return stateMapper.toCollectionModel(stateRegistryService.getAll());
     }
 
+    @CheckSecurity.State.CanConsult
     @GetMapping("/{stateId}")
     public StateOutput getById(@PathVariable Long stateId) {
         return stateMapper.toModel(stateRegistryService.getById(stateId));
     }
 
+    @CheckSecurity.State.CanEdit
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public StateOutput add(@RequestBody @Valid StateInput stateInput) {
@@ -48,6 +52,7 @@ public class StateController {
         return stateMapper.toModel(stateAdded);
     }
 
+    @CheckSecurity.State.CanEdit
     @PutMapping("/{stateId}")
     public StateOutput alter(@PathVariable Long stateId, @RequestBody @Valid StateInput stateInput) {
         var state = stateRegistryService.getById(stateId);
@@ -56,6 +61,7 @@ public class StateController {
         return stateMapper.toModel(alteredState);
     }
 
+    @CheckSecurity.State.CanEdit
     @DeleteMapping("/{stateId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long stateId) {
