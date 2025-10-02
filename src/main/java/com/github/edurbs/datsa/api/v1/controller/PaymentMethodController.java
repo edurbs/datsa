@@ -25,6 +25,7 @@ import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import com.github.edurbs.datsa.api.v1.dto.input.PaymentMethodInput;
 import com.github.edurbs.datsa.api.v1.dto.output.PaymentMethodOutput;
 import com.github.edurbs.datsa.api.v1.mapper.PaymentMethodMapper;
+import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.service.PaymentMethodRegistryService;
 
 @RestController
@@ -39,6 +40,7 @@ public class PaymentMethodController {
     @Autowired
     private PaymentMethodMapper mapper;
 
+    @CheckSecurity.PaymentMethods.CanConsult
     @GetMapping
     public ResponseEntity<CollectionModel<PaymentMethodOutput>> listAll(ServletWebRequest request) {
         String eTag = getETag(request);
@@ -65,6 +67,7 @@ public class PaymentMethodController {
         return eTag;
     }
 
+    @CheckSecurity.PaymentMethods.CanConsult
     @GetMapping("/{id}")
     public ResponseEntity<PaymentMethodOutput> getById(@PathVariable Long id, ServletWebRequest request) {
         String eTag = getETag(request);
@@ -78,6 +81,7 @@ public class PaymentMethodController {
             .body(paymentMethodOutput);
     }
 
+    @CheckSecurity.PaymentMethods.CanEdit
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentMethodOutput add(@RequestBody @Valid PaymentMethodInput input) {
@@ -86,6 +90,7 @@ public class PaymentMethodController {
         return mapper.toModel(domainAdded);
     }
 
+    @CheckSecurity.PaymentMethods.CanEdit
     @PutMapping("/{id}")
     public PaymentMethodOutput alter(@PathVariable Long id, @RequestBody @Valid PaymentMethodInput input) {
         var domain = registryService.getById(id);
@@ -94,6 +99,7 @@ public class PaymentMethodController {
         return mapper.toModel(alteredDomain);
     }
 
+    @CheckSecurity.PaymentMethods.CanEdit
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
