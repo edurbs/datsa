@@ -28,4 +28,7 @@ target/
 build/
 
 ### VS Code ###
-.vscode/
+.vscode
+
+### Theia IDE ###
+.theia
