@@ -11,6 +11,7 @@ import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.controller.PaymentMethodController;
 import com.github.edurbs.datsa.api.v1.dto.input.PaymentMethodInput;
 import com.github.edurbs.datsa.api.v1.dto.output.PaymentMethodOutput;
+import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.PaymentMethod;
 
 @Component
@@ -21,6 +22,9 @@ public class PaymentMethodMapper extends RepresentationModelAssemblerSupport<Pay
 
     @Autowired
     private LinksAdder linksAdder;
+
+    @Autowired
+    private MySecurity mySecurity;
 
     public PaymentMethodMapper(){
         super(PaymentMethodController.class, PaymentMethodOutput.class);
@@ -38,13 +42,21 @@ public class PaymentMethodMapper extends RepresentationModelAssemblerSupport<Pay
     public @NonNull PaymentMethodOutput toModel(@NonNull PaymentMethod entity){
         PaymentMethodOutput output = createModelWithId(entity.getId(), entity);
         modelMapper.map(entity, output);
-        output.add(linksAdder.toPaymentMethods("payment-methods"));
+        if(this.mySecurity.canConsultPaymentMethods()){
+            output.add(linksAdder.toPaymentMethods("payment-methods"));
+
+        }
         return output;
     }
 
     @Override
     public @NonNull CollectionModel<PaymentMethodOutput> toCollectionModel(@NonNull Iterable<? extends PaymentMethod> entities) {
-        return super.toCollectionModel(entities).add(linksAdder.toPaymentMethods());
+        CollectionModel<PaymentMethodOutput> collectionModel = super.toCollectionModel(entities);
+        if(this.mySecurity.canConsultPaymentMethods()){
+            collectionModel.add(linksAdder.toPaymentMethods());
+
+        }
+        return collectionModel;
     }
 
 

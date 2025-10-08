@@ -53,5 +53,70 @@ public class MySecurity {
             .anyMatch(authority -> authority.getAuthority().equals(authorityName));
     }
 
+    public boolean isAuthenticated(){
+        return getAuthentication().isAuthenticated();
+    }
+
+    public boolean hasWriteScope(){
+        return hasAuthority("SCOPE_WRITE");
+    }
+
+    public boolean hasReadScope(){
+        return hasAuthority("SCOPE_READ");
+    }
+
+    public boolean canConsultRestaurants(){
+        return isAuthenticatedAndHasReadScope();
+    }
+
+    public boolean canEditRestaurants(){
+        return hasWriteScope() && hasAuthority("EDIT_RESTAURANTS");
+    }
+
+    public boolean canEditAndManageRestaurant(Long restaurantId){
+        return hasWriteScope() && (hasAuthority("EDIT_RESTAURANTS") || manageRestaurant(restaurantId));
+    }
+
+    public boolean canConsultUsersGroupsPermissions(){
+        return hasReadScope() && hasAuthority("CONSULT_USERS_GROUPS_PERMISSIONS");
+    }
+
+    public boolean canEditUsersGroupsPermissions(){
+        return hasWriteScope() && hasAuthority("EDIT_USERS_GROUPS_PERMISSIONS");
+    }
+
+    public boolean canSearchWithFilter(Long userId, Long restaurantId){
+        return hasReadScope() && (hasAuthority("CONSULT_ORDERS") || authenticatedUserEquals(userId) || canEditAndManageRestaurant(restaurantId));
+    }
+
+    public boolean canSearchWithFilter(){
+        return isAuthenticatedAndHasReadScope();
+    }
+
+    private boolean isAuthenticatedAndHasReadScope() {
+        return isAuthenticated() && hasReadScope();
+    }
+
+    public boolean canConsultPaymentMethods(){
+        return isAuthenticatedAndHasReadScope();
+    }
+
+    public boolean canConsultCities(){
+        return isAuthenticatedAndHasReadScope();
+    }
+
+    public boolean canConsultStates(){
+        return isAuthenticatedAndHasReadScope();
+    }
+
+    public boolean canConsultKitchens(){
+        return isAuthenticatedAndHasReadScope();
+    }
+
+    public boolean canConsultStatistics(){
+        return hasReadScope() && hasAuthority("GENERATE_REPORTS");
+    }
+
+
 
 }

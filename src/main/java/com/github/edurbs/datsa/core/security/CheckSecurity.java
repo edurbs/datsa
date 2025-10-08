@@ -17,7 +17,7 @@ public @interface CheckSecurity {
         @Target(ElementType.METHOD)
         public @interface CanEdit {}
 
-        @PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('CONSULT_KITCHENS')")
+        @PreAuthorize("@mySecurity.canConsultKitchens()")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface CanConsult {}
@@ -26,17 +26,17 @@ public @interface CheckSecurity {
 
     public @interface Restaurants{
 
-        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDIT_RESTAURANTS')")
+        @PreAuthorize("@mySecurity.canEditRestaurants()")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface CanEdit {}
 
-        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDIT_RESTAURANTS') or @mySecurity.manageRestaurant(#restaurantId)")
+        @PreAuthorize("@mySecurity.canEditAndManageRestaurant(#restaurantId)")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface CanEditAndManage {}
 
-        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+        @PreAuthorize("@mySecurity.canEditRestaurants()")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface CanConsult {}
@@ -50,7 +50,7 @@ public @interface CheckSecurity {
         @Target(ElementType.METHOD)
         public @interface CanFindById {}
 
-        @PreAuthorize("hasAuthority('SCOPE_READ') and (hasAuthority('CONSULT_ORDERS') or @mySecurity.manageRestaurant(#orderFilter.restaurantId) or @mySecurity.authenticatedUserEquals(#orderFilter.userId))")
+        @PreAuthorize("@mySecurity.canSearchWithFilter(#orderFilter.userId, #orderFilter.restaurantId)")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface CanSearchWithFilter {}
@@ -60,7 +60,7 @@ public @interface CheckSecurity {
         @Target(ElementType.METHOD)
         public @interface CanEdit { }
 
-        @PreAuthorize("@mySecurity.canMmanageOrders(#uuid)")
+        @PreAuthorize("@mySecurity.canMamanageOrders(#uuid)")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface CanManageOrders {}
@@ -68,7 +68,7 @@ public @interface CheckSecurity {
 
     public @interface PaymentMethods{
 
-        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDIT_PAYMENT_METHODS')")
+        @PreAuthorize("@mySecurity.canConsultPaymentMethods")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface CanEdit { }
@@ -81,7 +81,7 @@ public @interface CheckSecurity {
 
     public @interface City{
 
-        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDIT_CITIES')")
+        @PreAuthorize("@mySecurity.canConsultCities")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface CanEdit { }
@@ -99,7 +99,7 @@ public @interface CheckSecurity {
         @Target(ElementType.METHOD)
         public @interface CanEdit { }
 
-        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+        @PreAuthorize("@mySecurity.canConsultStates")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface CanConsult {}
@@ -117,12 +117,12 @@ public @interface CheckSecurity {
         @Target(ElementType.METHOD)
         public @interface CanEditUser { }
 
-        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDIT_USERS_GROUPS_PERMISSIONS')")
+        @PreAuthorize("@mySecurity.canEditUsersGroupsPermissions()")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface CanEdit { }
 
-        @PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('CONSULT_USERS_GROUPS_PERMISSIONS')")
+        @PreAuthorize("@mySecurity.canConsultUsersGroupsPermissions()")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface CanConsult { }
@@ -130,7 +130,7 @@ public @interface CheckSecurity {
 
     public @interface Statistics{
 
-        @PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('GENERATE_REPORTS')")
+        @PreAuthorize("@mySecurity.canConsultStatistics")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface CanConsult { }

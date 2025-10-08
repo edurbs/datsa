@@ -12,6 +12,7 @@ import com.github.edurbs.datsa.api.v1.controller.UserController;
 import com.github.edurbs.datsa.api.v1.dto.input.UserInput;
 import com.github.edurbs.datsa.api.v1.dto.input.UserUpdateInput;
 import com.github.edurbs.datsa.api.v1.dto.output.UserOutput;
+import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.User;
 
 @Component
@@ -22,6 +23,9 @@ public class UserMapper extends RepresentationModelAssemblerSupport<User, UserOu
 
     @Autowired
     private LinksAdder linksAdder;
+
+    @Autowired
+    private MySecurity mySecurity;
 
     public UserMapper() {
         super(UserController.class, UserOutput.class);
@@ -45,8 +49,10 @@ public class UserMapper extends RepresentationModelAssemblerSupport<User, UserOu
     public @NonNull UserOutput toModel(@NonNull User domainModel) {
         UserOutput userOutput = createModelWithId(domainModel.getId(), domainModel);
         mapper.map(domainModel,userOutput);
-        userOutput.add(linksAdder.toUsers("users"));
-        userOutput.add(linksAdder.toUserGroups(domainModel.getId()));
+        if(this.mySecurity.canConsultUsersGroupsPermissions()){
+            userOutput.add(linksAdder.toUsers("users"));
+            userOutput.add(linksAdder.toUserGroups(domainModel.getId()));
+        }
         return userOutput;
     }
 

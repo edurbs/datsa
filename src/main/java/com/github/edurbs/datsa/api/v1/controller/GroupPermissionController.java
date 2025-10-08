@@ -1,5 +1,7 @@
 package com.github.edurbs.datsa.api.v1.controller;
 
+import java.util.Collection;
+
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +17,10 @@ import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.dto.output.PermissionOutput;
 import com.github.edurbs.datsa.api.v1.mapper.PermissionMapper;
 import com.github.edurbs.datsa.core.security.CheckSecurity;
+import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.exception.PermissionNotFoundException;
+import com.github.edurbs.datsa.domain.model.Permission;
 import com.github.edurbs.datsa.domain.service.GroupRegistryService;
 
 import lombok.AllArgsConstructor;
@@ -34,15 +38,21 @@ public class GroupPermissionController {
 
     private LinksAdder linksAdder;
 
+    private MySecurity mySecurity;
+
     @CheckSecurity.UsersGroupsPermissions.CanConsult
     @GetMapping
     public CollectionModel<PermissionOutput> getAll(@PathVariable Long groupId) {
-        CollectionModel<PermissionOutput> permissionOutputs = permissionMapper.toCollectionModel(groupRegistryService.getAllPermissions(groupId))
-            .add(linksAdder.toPermissions(groupId, "permissions"))
-            .add(linksAdder.toAssociatePermissions(groupId, "associate"));
-        permissionOutputs.getContent().forEach(permissionOutput -> {
-            permissionOutput.add(linksAdder.toDissociatePermission(groupId, permissionOutput.getId(), "dissociate"));
-        });
+        Collection<Permission> allPermissions = groupRegistryService.getAllPermissions(groupId);
+        CollectionModel<PermissionOutput> permissionOutputs = permissionMapper.toCollectionModel(allPermissions);
+        permissionOutputs.removeLinks();
+        permissionOutputs.add(linksAdder.toPermissions(groupId, "permissions"));
+        if(this.mySecurity.canEditUsersGroupsPermissions()){
+            permissionOutputs.add(linksAdder.toAssociatePermissions(groupId, "associate"));
+            permissionOutputs.getContent().forEach(permissionOutput -> {
+                permissionOutput.add(linksAdder.toDissociatePermission(groupId, permissionOutput.getId(), "dissociate"));
+            });
+        }
         return  permissionOutputs;
     }
 

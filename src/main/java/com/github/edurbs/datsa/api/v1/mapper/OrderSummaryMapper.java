@@ -10,6 +10,7 @@ import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.controller.OrderController;
 import com.github.edurbs.datsa.api.v1.dto.input.OrderInput;
 import com.github.edurbs.datsa.api.v1.dto.output.OrderSummaryOutput;
+import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.Order;
 
 @Component
@@ -20,6 +21,9 @@ public class OrderSummaryMapper extends RepresentationModelAssemblerSupport<Orde
 
     @Autowired
     private LinksAdder linksAdder;
+
+    @Autowired
+    private MySecurity mySecurity;
 
     public OrderSummaryMapper() {
         super(OrderController.class, OrderSummaryOutput.class);
@@ -37,8 +41,12 @@ public class OrderSummaryMapper extends RepresentationModelAssemblerSupport<Orde
     public @NonNull OrderSummaryOutput toModel(@NonNull Order domainModel) {
         OrderSummaryOutput orderSummaryOutput = createModelWithId(domainModel.getId(), domainModel);
         modelMapper.map(domainModel, orderSummaryOutput);
-        orderSummaryOutput.add(linksAdder.toOrders());
-        orderSummaryOutput.getRestaurant().add(linksAdder.toRestaurant(orderSummaryOutput.getRestaurant().getId()));
+        if(this.mySecurity.canSearchWithFilter()){
+            orderSummaryOutput.add(linksAdder.toOrders());
+        }
+        if(this.mySecurity.canConsultRestaurants()){
+            orderSummaryOutput.getRestaurant().add(linksAdder.toRestaurant(orderSummaryOutput.getRestaurant().getId()));
+        }
         return orderSummaryOutput;
     }
 

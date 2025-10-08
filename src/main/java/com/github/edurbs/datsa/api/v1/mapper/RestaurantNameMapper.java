@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.controller.RestaurantController;
 import com.github.edurbs.datsa.api.v1.dto.output.RestaurantNameOutput;
+import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 
 @Component
@@ -21,6 +22,9 @@ public class RestaurantNameMapper extends RepresentationModelAssemblerSupport<Re
     @Autowired
     private LinksAdder linksAdder;
 
+    @Autowired
+    private MySecurity mySecurity;
+
     public RestaurantNameMapper(){
         super(RestaurantController.class, RestaurantNameOutput.class);
     }
@@ -29,13 +33,19 @@ public class RestaurantNameMapper extends RepresentationModelAssemblerSupport<Re
     public @NonNull RestaurantNameOutput toModel(@NonNull Restaurant entity) {
         RestaurantNameOutput output = createModelWithId(entity.getId(), entity);
         modelMapper.map(entity, output);
-        output.add(linksAdder.toRestaurants());
+        if(this.mySecurity.canConsultRestaurants()){
+            output.add(linksAdder.toRestaurants());
+        }
         return output;
     }
 
     @Override
-    public CollectionModel<RestaurantNameOutput> toCollectionModel(Iterable<? extends Restaurant> entities) {
-        return super.toCollectionModel(entities).add(linksAdder.toRestaurants());
+    public @NonNull CollectionModel<RestaurantNameOutput> toCollectionModel(@NonNull Iterable<? extends Restaurant> entities) {
+        CollectionModel<RestaurantNameOutput> collectionModel = super.toCollectionModel(entities);
+        if(this.mySecurity.canConsultRestaurants()){
+            collectionModel.add(linksAdder.toRestaurants());
+        }
+        return collectionModel;
     }
 
 

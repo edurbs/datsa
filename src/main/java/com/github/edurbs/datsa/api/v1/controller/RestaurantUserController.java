@@ -17,6 +17,7 @@ import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.dto.output.UserOutput;
 import com.github.edurbs.datsa.api.v1.mapper.UserMapper;
 import com.github.edurbs.datsa.core.security.CheckSecurity;
+import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.Restaurant;
 import com.github.edurbs.datsa.domain.model.User;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
@@ -33,6 +34,7 @@ public class RestaurantUserController {
     private final RestaurantRegistryService restaurantRegistryService;
     private final UserMapper userMapper;
     private final LinksAdder linksAdder;
+    private final MySecurity mySecurity;
 
     @CheckSecurity.Restaurants.CanConsult
     @GetMapping
@@ -40,12 +42,15 @@ public class RestaurantUserController {
         Restaurant restaurant = restaurantRegistryService.getById(restaurantId);
         Set<User> users = restaurant.getUsers();
         CollectionModel<UserOutput> collectionModel = userMapper.toCollectionModel(users)
-            .removeLinks()
-            .add(linksAdder.toRestaurantUsers(restaurantId))
-            .add(linksAdder.toAssociateUser(restaurantId, "associate"));
-        collectionModel.getContent().forEach(userOutput -> {
-            userOutput.add(linksAdder.toDisassociateUser(restaurantId, userOutput.getId(), "disassociate"));
-        });
+            .removeLinks();
+        collectionModel.add(linksAdder.toRestaurantUsers(restaurantId));
+        if(this.mySecurity.canEditAndManageRestaurant(restaurantId)){
+            collectionModel.add(linksAdder.toAssociateUser(restaurantId, "associate"));
+            collectionModel.getContent().forEach(userOutput -> {
+                userOutput.add(linksAdder.toDisassociateUser(restaurantId, userOutput.getId(), "disassociate"));
+            });
+
+        }
         return collectionModel;
     }
 

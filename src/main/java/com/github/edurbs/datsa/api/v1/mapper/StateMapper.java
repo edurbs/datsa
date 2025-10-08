@@ -11,6 +11,7 @@ import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.controller.StateController;
 import com.github.edurbs.datsa.api.v1.dto.input.StateInput;
 import com.github.edurbs.datsa.api.v1.dto.output.StateOutput;
+import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.State;
 
 @Component
@@ -21,6 +22,9 @@ public class StateMapper extends RepresentationModelAssemblerSupport<State, Stat
 
     @Autowired
     private LinksAdder linksAdder;
+
+    @Autowired
+    private MySecurity mySecurity;
 
     public StateMapper() {
         super(StateController.class, StateOutput.class);
@@ -33,6 +37,9 @@ public class StateMapper extends RepresentationModelAssemblerSupport<State, Stat
     public @NonNull StateOutput toModel(@NonNull State state) {
         StateOutput stateOutput = createModelWithId(state.getId(), state);
         modelMapper.map(state, stateOutput);
+        if(this.mySecurity.canConsultStates()){
+            stateOutput.add(linksAdder.toStates("states"));
+        }
         return stateOutput;
     }
 
@@ -42,7 +49,11 @@ public class StateMapper extends RepresentationModelAssemblerSupport<State, Stat
 
     @Override
     public @NonNull CollectionModel<StateOutput> toCollectionModel(@NonNull Iterable<? extends State> entities) {
-        return super.toCollectionModel(entities)
-                .add(linksAdder.toStates());
+        CollectionModel<StateOutput> collectionModel = super.toCollectionModel(entities);
+        if(this.mySecurity.canConsultStates()){
+            collectionModel.add(linksAdder.toStates());
+
+        }
+        return collectionModel;
     }
 }

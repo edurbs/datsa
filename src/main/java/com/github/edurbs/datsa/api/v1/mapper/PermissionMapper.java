@@ -1,14 +1,18 @@
 package com.github.edurbs.datsa.api.v1.mapper;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
+
 import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.controller.PermissionController;
 import com.github.edurbs.datsa.api.v1.dto.input.PermissionInput;
 import com.github.edurbs.datsa.api.v1.dto.output.PermissionOutput;
+import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.Permission;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.stereotype.Component;
 
 @Component
 public class PermissionMapper extends RepresentationModelAssemblerSupport<Permission, PermissionOutput> {
@@ -18,6 +22,9 @@ public class PermissionMapper extends RepresentationModelAssemblerSupport<Permis
 
     @Autowired
     private LinksAdder linksAdder;
+
+    @Autowired
+    private MySecurity mySecurity;
 
     public PermissionMapper() {
         super(PermissionController.class, PermissionOutput.class);
@@ -32,7 +39,18 @@ public class PermissionMapper extends RepresentationModelAssemblerSupport<Permis
     }
 
     @Override
-    public PermissionOutput toModel(Permission domainModel) {
+    public @NonNull PermissionOutput toModel(@NonNull Permission domainModel) {
         return modelMapper.map(domainModel, PermissionOutput.class);
     }
+
+    @Override
+    public @NonNull CollectionModel<PermissionOutput> toCollectionModel(@NonNull Iterable<? extends Permission> entities) {
+        var collectionModel = super.toCollectionModel(entities);
+        if(this.mySecurity.canConsultUsersGroupsPermissions()){
+            collectionModel.add(linksAdder.toPermissions());
+        }
+        return collectionModel;
+    }
+
+
 }

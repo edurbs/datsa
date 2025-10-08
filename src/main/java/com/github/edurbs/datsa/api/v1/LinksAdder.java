@@ -1,6 +1,8 @@
 package com.github.edurbs.datsa.api.v1;
 
-import com.github.edurbs.datsa.api.v1.controller.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.TemplateVariable;
 import org.springframework.hateoas.TemplateVariable.VariableType;
@@ -8,8 +10,23 @@ import org.springframework.hateoas.TemplateVariables;
 import org.springframework.hateoas.UriTemplate;
 import org.springframework.stereotype.Component;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import com.github.edurbs.datsa.api.v1.controller.CityController;
+import com.github.edurbs.datsa.api.v1.controller.GroupController;
+import com.github.edurbs.datsa.api.v1.controller.GroupPermissionController;
+import com.github.edurbs.datsa.api.v1.controller.KitchenController;
+import com.github.edurbs.datsa.api.v1.controller.OrderController;
+import com.github.edurbs.datsa.api.v1.controller.PaymentMethodController;
+import com.github.edurbs.datsa.api.v1.controller.PermissionController;
+import com.github.edurbs.datsa.api.v1.controller.RestaurantController;
+import com.github.edurbs.datsa.api.v1.controller.RestaurantPaymentMethodController;
+import com.github.edurbs.datsa.api.v1.controller.RestaurantProductController;
+import com.github.edurbs.datsa.api.v1.controller.RestaurantProductPhotoController;
+import com.github.edurbs.datsa.api.v1.controller.RestaurantUserController;
+import com.github.edurbs.datsa.api.v1.controller.StateController;
+import com.github.edurbs.datsa.api.v1.controller.StatisticsController;
+import com.github.edurbs.datsa.api.v1.controller.StatusOrderController;
+import com.github.edurbs.datsa.api.v1.controller.UserController;
+import com.github.edurbs.datsa.api.v1.controller.UserGroupController;
 
 @Component
 public class LinksAdder {
@@ -230,12 +247,12 @@ public class LinksAdder {
         return linkTo(methodOn(GroupPermissionController.class).dissociatePermission(groupId, null)).withRel(rel);
     }
 
-    public Link toAssociateGroup(Long userId, Long groupId, String rel) {
-        return linkTo(methodOn(UserGroupController.class).associate(userId, groupId)).withRel(rel);
+    public Link toAssociateGroup(Long userId, String rel) {
+        return linkTo(methodOn(UserGroupController.class).associate(userId, null)).withRel(rel);
     }
 
-    public Link toDissociateGroup(Long userId, String rel) {
-        return linkTo(methodOn(UserGroupController.class).dissociate(userId, null)).withRel(rel);
+    public Link toDissociateGroup(Long userId, Long groupId, String rel) {
+        return linkTo(methodOn(UserGroupController.class).dissociate(userId, groupId)).withRel(rel);
     }
 
 }

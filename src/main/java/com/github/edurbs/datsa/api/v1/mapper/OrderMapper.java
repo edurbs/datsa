@@ -42,25 +42,39 @@ public class OrderMapper extends RepresentationModelAssemblerSupport<Order, Orde
         OrderOutput orderOutput = createModelWithId(domainModel.getUuid(), domainModel);
         modelMapper.map(domainModel, orderOutput);
 
-        orderOutput.add(linksAdder.toOrders());
-        if(mySecurity.canManageOrders(orderOutput.getUuid())){
-            if(domainModel.canBeConfirmed()){
+        if (this.mySecurity.canSearchWithFilter()) {
+            orderOutput.add(linksAdder.toOrders());
+        }
+        if (mySecurity.canManageOrders(orderOutput.getUuid())) {
+            if (domainModel.canBeConfirmed()) {
                 orderOutput.add(linksAdder.toOrderConfirm(orderOutput.getUuid(), "confirm"));
             }
-            if(domainModel.canBeCancelled()){
+            if (domainModel.canBeCancelled()) {
                 orderOutput.add(linksAdder.toOrderCancel(orderOutput.getUuid(), "cancel"));
             }
-            if(domainModel.canBeDelivered()){
+            if (domainModel.canBeDelivered()) {
                 orderOutput.add(linksAdder.toOrderDelivery(orderOutput.getUuid(), "delivery"));
             }
         }
-        orderOutput.getRestaurant().add(linksAdder.toRestaurant(orderOutput.getRestaurant().getId()));
-        orderOutput.getUser().add(linksAdder.toUser(orderOutput.getUser().getId()));
-        orderOutput.getPaymentMethod().add(linksAdder.toPaymentMethod(orderOutput.getPaymentMethod().getId()));
-        orderOutput.getAddress().getCity().add(linksAdder.toCity(orderOutput.getAddress().getCity().getId()));
-        orderOutput.getOrderItems().forEach(item ->
-            item.add(linksAdder.toRestaurantProduct(orderOutput.getRestaurant().getId(), item.getProductId(), "product"))
-        );
+        if (this.mySecurity.canConsultRestaurants()) {
+            orderOutput.getRestaurant().add(linksAdder.toRestaurant(orderOutput.getRestaurant().getId()));
+            orderOutput.getOrderItems().forEach(item -> item.add(linksAdder
+                    .toRestaurantProduct(orderOutput.getRestaurant().getId(), item.getProductId(), "product")));
+
+        }
+        if (this.mySecurity.canConsultUsersGroupsPermissions()) {
+            orderOutput.getUser().add(linksAdder.toUser(orderOutput.getUser().getId()));
+
+        }
+        if (this.mySecurity.canConsultPaymentMethods()) {
+            orderOutput.getPaymentMethod().add(linksAdder.toPaymentMethod(orderOutput.getPaymentMethod().getId()));
+
+        }
+        if (this.mySecurity.canConsultCities()) {
+            orderOutput.getAddress().getCity().add(linksAdder.toCity(orderOutput.getAddress().getCity().getId()));
+
+        }
+
         return orderOutput;
     }
 

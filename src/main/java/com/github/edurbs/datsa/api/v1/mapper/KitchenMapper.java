@@ -10,6 +10,7 @@ import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.controller.KitchenController;
 import com.github.edurbs.datsa.api.v1.dto.input.KitchenInput;
 import com.github.edurbs.datsa.api.v1.dto.output.KitchenOutput;
+import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.Kitchen;
 
 @Component
@@ -20,6 +21,9 @@ public class KitchenMapper extends RepresentationModelAssemblerSupport<Kitchen, 
 
     @Autowired
     private LinksAdder linksAdder;
+
+    @Autowired
+    private MySecurity mySecurity;
 
     public KitchenMapper(){
         super(KitchenController.class, KitchenOutput.class);
@@ -33,7 +37,10 @@ public class KitchenMapper extends RepresentationModelAssemblerSupport<Kitchen, 
     public @NonNull KitchenOutput toModel(@NonNull  Kitchen kitchen) {
         KitchenOutput kitchenOutput = createModelWithId(kitchen.getId(), kitchen);
         modelMapper.map(kitchen, kitchenOutput);
-        kitchenOutput.add(linksAdder.toKitchens());
+        if(this.mySecurity.canConsultKitchens()){
+            kitchenOutput.add(linksAdder.toKitchens());
+
+        }
         return kitchenOutput;
     }
 

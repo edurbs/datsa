@@ -15,6 +15,7 @@ import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.dto.output.GroupOutput;
 import com.github.edurbs.datsa.api.v1.mapper.GroupMapper;
 import com.github.edurbs.datsa.core.security.CheckSecurity;
+import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.service.UserRegistryService;
 
 import lombok.AllArgsConstructor;
@@ -29,15 +30,19 @@ public class UserGroupController {
     private final GroupMapper groupMapper;
     private final UserRegistryService userRegistryService;
     private final LinksAdder linksAdder;
+    private final MySecurity mySecurity;
 
     @CheckSecurity.UsersGroupsPermissions.CanConsult
     @GetMapping
     public CollectionModel<GroupOutput> getAll(@PathVariable Long userId) {
         CollectionModel<GroupOutput>  groupOutputCollectionModel = groupMapper.toCollectionModel(userRegistryService.getGroups(userId));
-        groupOutputCollectionModel.getContent().forEach(groupOutput -> {
-            groupOutput.add(linksAdder.toAssociateGroup(userId, groupOutput.getId(), "associate"));
-        });
-        groupOutputCollectionModel.add(linksAdder.toDissociateGroup(userId, "dissociate"));
+        groupOutputCollectionModel.removeLinks();
+        if(this.mySecurity.canEditUsersGroupsPermissions()){
+            groupOutputCollectionModel.getContent().forEach(groupOutput -> {
+                groupOutput.add(linksAdder.toDissociateGroup(userId, groupOutput.getId(), "dissociate"));
+            });
+            groupOutputCollectionModel.add(linksAdder.toAssociateGroup(userId, "associate"));
+        }
         return groupOutputCollectionModel;
     }
 

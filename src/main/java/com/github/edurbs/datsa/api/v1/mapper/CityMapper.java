@@ -11,6 +11,7 @@ import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.controller.CityController;
 import com.github.edurbs.datsa.api.v1.dto.input.CityInput;
 import com.github.edurbs.datsa.api.v1.dto.output.CityOutput;
+import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.City;
 import com.github.edurbs.datsa.domain.model.State;
 
@@ -22,6 +23,9 @@ public class CityMapper extends RepresentationModelAssemblerSupport<City, CityOu
 
     @Autowired
     private LinksAdder linksAdder;
+
+    @Autowired
+    private MySecurity mySecurity;
 
     public CityMapper() {
         super(CityController.class, CityOutput.class);
@@ -40,15 +44,24 @@ public class CityMapper extends RepresentationModelAssemblerSupport<City, CityOu
     public @NonNull CityOutput toModel(@NonNull City city) {
         CityOutput cityOutput = createModelWithId(city.getId(), city);
         modelMapper.map(city, cityOutput);
-        cityOutput.getState().add(linksAdder.toState(cityOutput.getState().getId()));
+        if(this.mySecurity.canConsultCities()){
+            cityOutput.add(linksAdder.toCities("cities"));
+        }
+        if(this.mySecurity.canConsultStates()){
+            cityOutput.getState().add(linksAdder.toState(cityOutput.getState().getId()));
+
+        }
         return cityOutput;
     }
 
     @Override
     public @NonNull CollectionModel<CityOutput> toCollectionModel(@NonNull Iterable<? extends City> entities) {
-        return super.toCollectionModel(entities)
-                // add the link to the this in the bottom
-                .add(linksAdder.toCities());
+        CollectionModel<CityOutput> collectionModel = super.toCollectionModel(entities);
+        if(this.mySecurity.canConsultCities()){
+            // add the link to the this in the bottom
+            collectionModel.add(linksAdder.toCities());
+        }
+        return collectionModel;
     }
 
 }

@@ -15,6 +15,7 @@ import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.dto.output.PaymentMethodOutput;
 import com.github.edurbs.datsa.api.v1.mapper.PaymentMethodMapper;
 import com.github.edurbs.datsa.core.security.CheckSecurity;
+import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,19 +30,22 @@ public class RestaurantPaymentMethodController {
     private final PaymentMethodMapper paymentMethodMapper;
 
     private final LinksAdder linksAdder;
+    private final MySecurity mySecurity;
 
     @CheckSecurity.Restaurants.CanConsult
     @GetMapping
     public CollectionModel<PaymentMethodOutput> listAll(@PathVariable Long restaurantId) {
         var restaurant = restaurantRegistryService.getById(restaurantId);
-        CollectionModel<PaymentMethodOutput> collectionModel = paymentMethodMapper.toCollectionModel(restaurant.getPaymentMethods())
-            .removeLinks()
-            .add(linksAdder.toRestaurantPaymentMethods(restaurantId))
-            .add(linksAdder.associatePaymentMethod(restaurantId, "associate"));
-
-        collectionModel.getContent().forEach(paymentMethod -> {
-            paymentMethod.add(linksAdder.toDisassociatePaymentMethod(restaurantId, paymentMethod.getId(), "disassociate"));
-        });
+        CollectionModel<PaymentMethodOutput> collectionModel = paymentMethodMapper
+                .toCollectionModel(restaurant.getPaymentMethods()).removeLinks();
+        collectionModel.add(linksAdder.toRestaurantPaymentMethods(restaurantId));
+        if (this.mySecurity.canEditAndManageRestaurant(restaurantId)) {
+            collectionModel.add(linksAdder.associatePaymentMethod(restaurantId, "associate"));
+            collectionModel.getContent().forEach(paymentMethod -> {
+                paymentMethod.add(
+                        linksAdder.toDisassociatePaymentMethod(restaurantId, paymentMethod.getId(), "disassociate"));
+            });
+        }
         return collectionModel;
 
     }
@@ -49,7 +53,7 @@ public class RestaurantPaymentMethodController {
     @CheckSecurity.Restaurants.CanEditAndManage
     @DeleteMapping("/{paymentMethodId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> disassociate(@PathVariable Long restaurantId, @PathVariable Long paymentMethodId){
+    public ResponseEntity<Void> disassociate(@PathVariable Long restaurantId, @PathVariable Long paymentMethodId) {
         restaurantRegistryService.disassociatePaymentMethod(restaurantId, paymentMethodId);
         return ResponseEntity.noContent().build();
     }
@@ -57,11 +61,9 @@ public class RestaurantPaymentMethodController {
     @CheckSecurity.Restaurants.CanEditAndManage
     @PutMapping("/{paymentMethodId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> associate(@PathVariable Long restaurantId, @PathVariable Long paymentMethodId){
+    public ResponseEntity<Void> associate(@PathVariable Long restaurantId, @PathVariable Long paymentMethodId) {
         restaurantRegistryService.associatePaymentMethod(restaurantId, paymentMethodId);
         return ResponseEntity.noContent().build();
     }
-
-
 
 }
