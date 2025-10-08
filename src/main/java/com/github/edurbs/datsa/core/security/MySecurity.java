@@ -38,5 +38,9 @@ public class MySecurity {
         return orderRepository.existsByUuidAndRestaurantUsersId(uuid, getUserId());
     }
 
+    public boolean authenticatedUserEquals(Long userId){
+        return getUserId() != null && userId != null && getUserId().equals(userId);
+    }
+
 
 }
