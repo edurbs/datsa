@@ -10,6 +10,7 @@ import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.controller.OrderController;
 import com.github.edurbs.datsa.api.v1.dto.input.OrderInput;
 import com.github.edurbs.datsa.api.v1.dto.output.OrderOutput;
+import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.Order;
 
 @Component
@@ -20,6 +21,9 @@ public class OrderMapper extends RepresentationModelAssemblerSupport<Order, Orde
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private MySecurity mySecurity;
 
     public OrderMapper() {
         super(OrderController.class, OrderOutput.class);
@@ -39,14 +43,16 @@ public class OrderMapper extends RepresentationModelAssemblerSupport<Order, Orde
         modelMapper.map(domainModel, orderOutput);
 
         orderOutput.add(linksAdder.toOrders());
-        if(domainModel.canBeConfirmed()){
-            orderOutput.add(linksAdder.toOrderConfirm(orderOutput.getUuid(), "confirm"));
-        }
-        if(domainModel.canBeCancelled()){
-            orderOutput.add(linksAdder.toOrderCancel(orderOutput.getUuid(), "cancel"));
-        }
-        if(domainModel.canBeDelivered()){
-            orderOutput.add(linksAdder.toOrderDelivery(orderOutput.getUuid(), "delivery"));
+        if(mySecurity.canManageOrders(orderOutput.getUuid())){
+            if(domainModel.canBeConfirmed()){
+                orderOutput.add(linksAdder.toOrderConfirm(orderOutput.getUuid(), "confirm"));
+            }
+            if(domainModel.canBeCancelled()){
+                orderOutput.add(linksAdder.toOrderCancel(orderOutput.getUuid(), "cancel"));
+            }
+            if(domainModel.canBeDelivered()){
+                orderOutput.add(linksAdder.toOrderDelivery(orderOutput.getUuid(), "delivery"));
+            }
         }
         orderOutput.getRestaurant().add(linksAdder.toRestaurant(orderOutput.getRestaurant().getId()));
         orderOutput.getUser().add(linksAdder.toUser(orderOutput.getUser().getId()));

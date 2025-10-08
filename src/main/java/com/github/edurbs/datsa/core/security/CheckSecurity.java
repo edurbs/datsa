@@ -60,8 +60,7 @@ public @interface CheckSecurity {
         @Target(ElementType.METHOD)
         public @interface CanEdit { }
 
-        @PreAuthorize("hasAuthority('SCOPE_WRITE') and (hasAuthority('MANAGE_ORDERS') or "
-                + "@mySecurity.manageRestaurantOrder(#uuid))")
+        @PreAuthorize("@mySecurity.canMmanageOrders(#uuid)")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface CanManageOrders {}

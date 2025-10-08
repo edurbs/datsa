@@ -42,5 +42,16 @@ public class MySecurity {
         return getUserId() != null && userId != null && getUserId().equals(userId);
     }
 
+    public boolean canManageOrders(String orderId){
+        // @PreAuthorize("hasAuthority('SCOPE_WRITE') and (hasAuthority('MANAGE_ORDERS') or "
+        //        + "@mySecurity.manageRestaurantOrder(#uuid))")
+        return hasAuthority("SCOPE_WRITE") && (hasAuthority("MANAGE_ORDERS") || manageRestaurantOrder(orderId));
+    }
+
+    public boolean hasAuthority(String authorityName){
+        return getAuthentication().getAuthorities().stream()
+            .anyMatch(authority -> authority.getAuthority().equals(authorityName));
+    }
+
 
 }
