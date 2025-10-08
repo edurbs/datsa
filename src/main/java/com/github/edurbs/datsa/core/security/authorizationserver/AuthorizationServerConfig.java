@@ -1,6 +1,7 @@
 package com.github.edurbs.datsa.core.security.authorizationserver;
 
 import java.security.KeyPair;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 
 import javax.sql.DataSource;
@@ -24,6 +25,11 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.KeyUse;
+import com.nimbusds.jose.jwk.RSAKey;
 
 @SuppressWarnings("deprecation")
 @Configuration
@@ -81,16 +87,29 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
     @Bean
+    public JWKSet jwkSet(){
+        RSAKey.Builder builder = new RSAKey.Builder( (RSAPublicKey) keyPair().getPublic())
+            .keyUse(KeyUse.SIGNATURE)
+            .algorithm(JWSAlgorithm.RS256)
+            .keyID("datsa-key-id");
+        return new JWKSet(builder.build());
+    }
+
+    private KeyPair keyPair(){
+        String keyStorePass = jwtKeyStoreProperties.getPassword(); // password to open the keystore
+        String keyPairAlias = jwtKeyStoreProperties.getKeypairAlias(); // key name
+        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(jwtKeyStoreProperties.getJksLocation(), keyStorePass.toCharArray());
+        return keyStoreKeyFactory.getKeyPair(keyPairAlias); // get the key
+    }
+
+    @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
         // command to generate the keystore
         // keytool -genkeypair -alias datsa -keyalg RSA -keypass 123456 -keystore
         // datsa.jks -storepass 123456 -validity 3650
-        String keyStorePass = jwtKeyStoreProperties.getPassword(); // password to open the keystore
-        String keyPairAlias = jwtKeyStoreProperties.getKeypairAlias(); // key name
-        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(jwtKeyStoreProperties.getJksLocation(), keyStorePass.toCharArray());
-        KeyPair keyPair = keyStoreKeyFactory.getKeyPair(keyPairAlias); // get the key
-        jwtAccessTokenConverter.setKeyPair(keyPair);
+
+        jwtAccessTokenConverter.setKeyPair(keyPair());
         return jwtAccessTokenConverter;
     }
 
