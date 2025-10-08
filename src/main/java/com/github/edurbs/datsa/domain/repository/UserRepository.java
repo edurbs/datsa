@@ -4,10 +4,10 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import com.github.edurbs.datsa.domain.model.User;
+import com.github.edurbs.datsa.domain.model.MyUser;
 
 @Repository
-public interface UserRepository extends CustomJpaRepository<User, Long>{
+public interface UserRepository extends CustomJpaRepository<MyUser, Long>{
 
-    Optional<User> findByEmail(String email);
+    Optional<MyUser> findByEmail(String email);
 }

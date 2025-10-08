@@ -19,7 +19,7 @@ import com.github.edurbs.datsa.api.v1.mapper.UserMapper;
 import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.Restaurant;
-import com.github.edurbs.datsa.domain.model.User;
+import com.github.edurbs.datsa.domain.model.MyUser;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class RestaurantUserController {
     @GetMapping
     public CollectionModel<UserOutput> getAllUsers(@PathVariable Long restaurantId) {
         Restaurant restaurant = restaurantRegistryService.getById(restaurantId);
-        Set<User> users = restaurant.getUsers();
+        Set<MyUser> users = restaurant.getUsers();
         CollectionModel<UserOutput> collectionModel = userMapper.toCollectionModel(users)
             .removeLinks();
         collectionModel.add(linksAdder.toRestaurantUsers(restaurantId));

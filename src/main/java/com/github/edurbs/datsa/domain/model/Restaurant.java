@@ -80,7 +80,7 @@ public class Restaurant implements DomainModel {
         joinColumns = @JoinColumn(name="restaurant_id"),
         inverseJoinColumns = @JoinColumn(name="user_id")
     )
-    private Set<User> users = new HashSet<>();
+    private Set<MyUser> users = new HashSet<>();
 
     public void activate() {
         setActive(true);
@@ -145,11 +145,11 @@ public class Restaurant implements DomainModel {
         return isActive();
     }
 
-    public boolean addUser(User user){
+    public boolean addUser(MyUser user){
         return getUsers().add(user);
     }
 
-    public boolean removeUser(User user){
+    public boolean removeUser(MyUser user){
         return getUsers().remove(user);
     }
 

@@ -23,7 +23,7 @@ import com.github.edurbs.datsa.api.v1.dto.input.UserUpdateInput;
 import com.github.edurbs.datsa.api.v1.dto.output.UserOutput;
 import com.github.edurbs.datsa.api.v1.mapper.UserMapper;
 import com.github.edurbs.datsa.core.security.CheckSecurity;
-import com.github.edurbs.datsa.domain.model.User;
+import com.github.edurbs.datsa.domain.model.MyUser;
 import com.github.edurbs.datsa.domain.service.UserRegistryService;
 
 @RestController
@@ -39,14 +39,14 @@ public class UserController {
     @CheckSecurity.UsersGroupsPermissions.CanConsult
     @GetMapping
     public CollectionModel<UserOutput> getAll() {
-        List<User> users = service.getAll();
+        List<MyUser> users = service.getAll();
         return mapper.toCollectionModel(users);
     }
 
     @CheckSecurity.UsersGroupsPermissions.CanConsult
     @GetMapping("/{id}")
     public UserOutput getOne(@PathVariable Long id) {
-        User user = service.getById(id);
+        MyUser user = service.getById(id);
         return mapper.toModel(user);
     }
 
@@ -54,17 +54,17 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserOutput add(@RequestBody @Valid UserInput userInput) {
-        User domainUser = mapper.toDomain(userInput);
-        User userSaved = service.save(domainUser);
+        MyUser domainUser = mapper.toDomain(userInput);
+        MyUser userSaved = service.save(domainUser);
         return mapper.toModel(userSaved);
     }
 
     @CheckSecurity.UsersGroupsPermissions.CanEditUser
     @PutMapping("/{id}")
     public UserOutput alter(@PathVariable Long id, @RequestBody @Valid UserUpdateInput userUpdateInput) {
-        User domainUser = service.getById(id);
+        MyUser domainUser = service.getById(id);
         mapper.copyToDomain(userUpdateInput, domainUser);
-        User alteredUser = service.save(domainUser);
+        MyUser alteredUser = service.save(domainUser);
         return mapper.toModel(alteredUser);
     }
 

@@ -15,7 +15,7 @@ import com.github.edurbs.datsa.domain.model.Order;
 import com.github.edurbs.datsa.domain.model.PaymentMethod;
 import com.github.edurbs.datsa.domain.model.Product;
 import com.github.edurbs.datsa.domain.model.Restaurant;
-import com.github.edurbs.datsa.domain.model.User;
+import com.github.edurbs.datsa.domain.model.MyUser;
 import com.github.edurbs.datsa.domain.repository.OrderRepository;
 import com.github.edurbs.datsa.domain.repository.spec.OrderSpecs;
 
@@ -60,7 +60,7 @@ public class OrderRegistryService {
 
     private void validateOrder(Order order){
         City city = cityRegistryService.getById(order.getAddress().getCity().getId());
-        User user = userRegistryService.getById(order.getUser().getId());
+        MyUser user = userRegistryService.getById(order.getUser().getId());
         Restaurant restaurant = restaurantRegistryService.getById(order.getRestaurant().getId());
         PaymentMethod paymentMethod = paymentMethodRegistryService.getById(order.getPaymentMethod().getId());
         order.getAddress().setCity(city);

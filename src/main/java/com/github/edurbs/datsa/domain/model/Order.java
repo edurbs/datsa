@@ -80,7 +80,7 @@ public class Order extends AbstractAggregateRoot<Order> implements DomainModel {
     @ManyToOne
     @JoinColumn(name = "customer_user_id",nullable = false)
     @ToString.Include
-    private User user;
+    private MyUser user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items = new ArrayList<>();

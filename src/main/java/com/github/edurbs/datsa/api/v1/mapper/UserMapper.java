@@ -13,10 +13,10 @@ import com.github.edurbs.datsa.api.v1.dto.input.UserInput;
 import com.github.edurbs.datsa.api.v1.dto.input.UserUpdateInput;
 import com.github.edurbs.datsa.api.v1.dto.output.UserOutput;
 import com.github.edurbs.datsa.core.security.MySecurity;
-import com.github.edurbs.datsa.domain.model.User;
+import com.github.edurbs.datsa.domain.model.MyUser;
 
 @Component
-public class UserMapper extends RepresentationModelAssemblerSupport<User, UserOutput> {
+public class UserMapper extends RepresentationModelAssemblerSupport<MyUser, UserOutput> {
 
     @Autowired
     private ModelMapper mapper;
@@ -32,21 +32,21 @@ public class UserMapper extends RepresentationModelAssemblerSupport<User, UserOu
     }
 
 
-    public User toDomain(UserInput inputModel) {
-        return mapper.map(inputModel, User.class);
+    public MyUser toDomain(UserInput inputModel) {
+        return mapper.map(inputModel, MyUser.class);
     }
 
-    public void copyToDomain(UserUpdateInput userUpdateInput, User domainModel){
+    public void copyToDomain(UserUpdateInput userUpdateInput, MyUser domainModel){
         mapper.map(userUpdateInput, domainModel);
     }
 
 
-    public void copyToDomain(UserInput inputModel, User domainModel) {
+    public void copyToDomain(UserInput inputModel, MyUser domainModel) {
         mapper.map(inputModel, domainModel);
     }
 
     @Override
-    public @NonNull UserOutput toModel(@NonNull User domainModel) {
+    public @NonNull UserOutput toModel(@NonNull MyUser domainModel) {
         UserOutput userOutput = createModelWithId(domainModel.getId(), domainModel);
         mapper.map(domainModel,userOutput);
         if(this.mySecurity.canConsultUsersGroupsPermissions()){
@@ -57,7 +57,7 @@ public class UserMapper extends RepresentationModelAssemblerSupport<User, UserOu
     }
 
     @Override
-    public @NonNull CollectionModel<UserOutput> toCollectionModel(@NonNull Iterable<? extends User> entities) {
+    public @NonNull CollectionModel<UserOutput> toCollectionModel(@NonNull Iterable<? extends MyUser> entities) {
         return super.toCollectionModel(entities)
             // add the link to the this in the bottom
             .add(linksAdder.toUsers());

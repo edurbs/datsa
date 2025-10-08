@@ -13,7 +13,7 @@ import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.exception.RestaurantNotFoundException;
 import com.github.edurbs.datsa.domain.model.Product;
 import com.github.edurbs.datsa.domain.model.Restaurant;
-import com.github.edurbs.datsa.domain.model.User;
+import com.github.edurbs.datsa.domain.model.MyUser;
 import com.github.edurbs.datsa.domain.repository.ProductRepository;
 import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
 
@@ -167,14 +167,14 @@ public class RestaurantRegistryService {
     @Transactional
     public void associateUser(Long restauranteId, Long userId){
         var restaurant = getById(restauranteId);
-        User user = userRegistryService.getById(userId);
+        MyUser user = userRegistryService.getById(userId);
         restaurant.addUser(user);
     }
 
     @Transactional
     public void disassociateUser(Long restaurantId, Long userId){
         var restaurant = getById(restaurantId);
-        User user = userRegistryService.getById(userId);
+        MyUser user = userRegistryService.getById(userId);
         restaurant.removeUser(user);
     }
 

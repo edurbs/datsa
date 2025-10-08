@@ -13,7 +13,7 @@ import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.exception.UserNotFoundException;
 import com.github.edurbs.datsa.domain.model.Group;
-import com.github.edurbs.datsa.domain.model.User;
+import com.github.edurbs.datsa.domain.model.MyUser;
 import com.github.edurbs.datsa.domain.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
@@ -26,11 +26,11 @@ public class UserRegistryService {
     private GroupRegistryService groupRegistryService;
     private PasswordEncoder passwordEncoder;
 
-    public List<User> getAll(){
+    public List<MyUser> getAll(){
         return userRepository.findAll();
     }
 
-    public User getById(Long id){
+    public MyUser getById(Long id){
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
@@ -49,7 +49,7 @@ public class UserRegistryService {
     }
 
     @Transactional
-    public User save(User user){
+    public MyUser save(MyUser user){
         // remove the user instance from JPA, so it will not update the database automatically
         userRepository.detach(user);
 
@@ -57,7 +57,7 @@ public class UserRegistryService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
-        Optional<User> userFromDB = userRepository.findByEmail(user.getEmail());
+        Optional<MyUser> userFromDB = userRepository.findByEmail(user.getEmail());
         if(userFromDB.isPresent() && !userFromDB.get().equals(user) ){
             throw new ModelValidationException("The email %s is already used by another user".formatted(user.getEmail()));
         }
@@ -69,8 +69,8 @@ public class UserRegistryService {
     }
 
     @Transactional
-    public User changePassword(Long id, String currentPassword, String newPassword) {
-        User user = getById(id);
+    public MyUser changePassword(Long id, String currentPassword, String newPassword) {
+        MyUser user = getById(id);
         if(!passwordEncoder.matches(currentPassword, user.getPassword())){
             throw new ModelValidationException("Current password informed does not matches the user password");
         }

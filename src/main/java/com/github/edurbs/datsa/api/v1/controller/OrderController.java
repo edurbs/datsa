@@ -30,7 +30,7 @@ import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.filter.OrderFilter;
 import com.github.edurbs.datsa.domain.model.Order;
-import com.github.edurbs.datsa.domain.model.User;
+import com.github.edurbs.datsa.domain.model.MyUser;
 import com.github.edurbs.datsa.domain.service.OrderRegistryService;
 
 
@@ -77,7 +77,7 @@ public class OrderController {
         try {
             Order newOrder = new Order();
             orderMapper.copyToDomain(orderInput, newOrder);
-            newOrder.setUser(new User());
+            newOrder.setUser(new MyUser());
             newOrder.getUser().setId(mySecurity.getUserId());
             return orderMapper.toModel(orderRegistryService.newOrder(newOrder));
         } catch (Exception e) {
