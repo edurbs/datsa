@@ -1,7 +1,12 @@
 set foreign_key_checks = 0;
+lock tables city write, kitchen write, `state` write, payment_method write,
+	group_system write, group_permission write, permission write,
+	product write, restaurant write, restaurant_payment_method write,
+	restaurant_user write, `user` write, user_group write,
+	`order` write, order_item write, product_photo write, oauth_client_details write;
 delete from city;
 delete from kitchen;
-delete from state;
+delete from `state`;
 delete from payment_method;
 delete from group_system;
 delete from group_permission;
@@ -10,11 +15,13 @@ delete from product;
 delete from restaurant;
 delete from restaurant_payment_method;
 delete from restaurant_user;
-delete from user;
+delete from `user`;
 delete from user_group;
 delete from `order`;
 delete from order_item;
 delete from product_photo;
+delete from oauth_client_details;
+
 set foreign_key_checks = 1;
 alter table city auto_increment = 1;
 alter table kitchen auto_increment = 1;
@@ -438,3 +445,38 @@ values (5, 'c3d4e5f6-a1b2-9012-cdab-3456789012cd', 6, 2, 1, 5, '38400-444', 'Rua
 
 insert into order_item (id, order_id, product_id, quantity, unit_price, total_price, note)
 values (7, 5, 9, 2, 8.00, 16.00, 'Bem passado');
+
+insert into oauth_client_details (
+  client_id, resource_ids, client_secret,
+  scope, authorized_grant_types, web_server_redirect_uri, authorities,
+  access_token_validity, refresh_token_validity, autoapprove
+)
+values (
+  'datsa-web', null, '$2a$12$qHf0PrTy5bFPfbhuK85j9utw4kyq3HBNDPmihb1sMjPcqQ42Zta/C',
+  'READ,WRITE', 'password,authorization_code', 'http://localhost:8080,http://localhost:8080/swagger-ui/oauth2-redirect.html', null,
+  60 * 60 * 6, 60 * 24 * 60 * 60, null
+);
+
+insert into oauth_client_details (
+  client_id, resource_ids, client_secret,
+  scope, authorized_grant_types, web_server_redirect_uri, authorities,
+  access_token_validity, refresh_token_validity, autoapprove
+)
+values (
+  'datsa-analytics', null, '$2a$12$qHf0PrTy5bFPfbhuK85j9utw4kyq3HBNDPmihb1sMjPcqQ42Zta/C',
+  'READ,WRITE', 'authorization_code', 'http://www.foodanalytics.local:8082', null,
+  null, null, null
+);
+
+insert into oauth_client_details (
+  client_id, resource_ids, client_secret,
+  scope, authorized_grant_types, web_server_redirect_uri, authorities,
+  access_token_validity, refresh_token_validity, autoapprove
+)
+values (
+  'faturamento', null, '$2a$12$qHf0PrTy5bFPfbhuK85j9utw4kyq3HBNDPmihb1sMjPcqQ42Zta/C',
+  'READ,WRITE', 'client_credentials', null, 'CONSULTAR_PEDIDOS,GERAR_RELATORIOS',
+  null, null, null
+);
+
+unlock tables;
