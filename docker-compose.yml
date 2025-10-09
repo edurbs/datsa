@@ -1,0 +1,27 @@
+version: "3.9"
+
+networks:
+  datsa-network:
+    driver: bridge
+
+services:
+  datsa-mysql:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: "senha"
+    ports:
+      - "3306:3306"
+    networks:
+      - datsa-network
+  datsa-api:
+    image: datsa-api
+    command: CMD ["./wait-for-it.sh", "-t", "30", "datsa-mysql:3306", "--", "java", "-jar", "api.jar"]
+    environment:
+      DB_HOST: datsa-mysql
+    ports:
+      - "8080:8080"
+    networks:
+      - datsa-network
+    depends_on:
+      - datsa-mysql
