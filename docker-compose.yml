@@ -27,6 +27,7 @@ services:
       DB_HOST: datsa-mysql
       SPRING_SESSION_STORE_TYPE: redis
       SPRING_REDIS_HOST: datsa-redis
+      SPRING_PROFILES_ACTIVE: dev
     networks:
       - datsa-network
     depends_on:
