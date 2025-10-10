@@ -23,7 +23,7 @@ public class SmtpSenderService implements EmailSenderService {
     private JavaMailSender javaMailSender;
 
     @Autowired
-    private Configuration freemarkerConfig;
+    private EmailProcessorTemplate emailProcessorTemplate;
 
     @Override
     public void send(Message message) {
@@ -37,7 +37,7 @@ public class SmtpSenderService implements EmailSenderService {
 
     protected MimeMessage createMimeMessage(Message message) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        String body = processTemplate(message);
+        String body = emailProcessorTemplate.processTemplate(message);
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
         helper.setFrom(emailProperties.getSender());
         helper.setTo(message.getRecipients().toArray(new String[0]));
@@ -46,13 +46,5 @@ public class SmtpSenderService implements EmailSenderService {
         return mimeMessage;
     }
 
-    protected String processTemplate(Message message){
-        try {
-            Template template = freemarkerConfig.getTemplate(message.getBody());
-            return FreeMarkerTemplateUtils.processTemplateIntoString(template, message.getModels());
-        } catch (Exception e) {
-            throw new EmailException("Can't write email template: "+e.getMessage(), e);
-        }
 
-    }
 }
