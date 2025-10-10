@@ -15,11 +15,18 @@ services:
     networks:
       - datsa-network
 
+  datsa-redis:
+    image: redis:6.2.1-alpine
+    networks:
+      - datsa-network
+
   datsa-api:
     image: datsa-api
     command: CMD ["./wait-for-it.sh", "-t", "30", "datsa-mysql:3306", "--", "java", "-jar", "api.jar"]
     environment:
       DB_HOST: datsa-mysql
+      SPRING_SESSION_STORE_TYPE: redis
+      SPRING_REDIS_HOST: datsa-redis
     networks:
       - datsa-network
     depends_on:
