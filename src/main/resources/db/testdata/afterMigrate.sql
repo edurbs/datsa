@@ -464,7 +464,7 @@ insert into oauth_client_details (
 )
 values (
   'datsa-analytics', null, '$2a$12$qHf0PrTy5bFPfbhuK85j9utw4kyq3HBNDPmihb1sMjPcqQ42Zta/C',
-  'READ,WRITE', 'authorization_code', 'http://www.foodanalytics.local:8082', null,
+  'READ,WRITE', 'authorization_code', 'http://localhost:8080', null,
   null, null, null
 );
 

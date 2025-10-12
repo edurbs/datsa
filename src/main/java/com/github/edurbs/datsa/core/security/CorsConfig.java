@@ -16,8 +16,8 @@ public class CorsConfig {
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilterRegistrationBean(){
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.setAllowedOrigins(Collections.singletonList("http://localhost"));
+        config.setAllowCredentials(false);
+        config.setAllowedOrigins(Collections.singletonList("*"));
         config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowedHeaders(Collections.singletonList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

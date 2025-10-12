@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -21,10 +22,12 @@ import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
+import org.springframework.security.oauth2.provider.code.RedisAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -52,10 +55,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private DataSource dataSource;
 
+    @Autowired
+    private RedisConnectionFactory redisConnectionFactory;
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.jdbc(dataSource);
     }
+
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
@@ -73,6 +80,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints
                 .authenticationManager(authenticationManager) // only the password flow needs this
                 .userDetailsService(userDetailsService)
+                .authorizationCodeServices(new RedisAuthorizationCodeServices(redisConnectionFactory))
                 .reuseRefreshTokens(false) // must not reuse refresh tokens
                 .accessTokenConverter(jwtAccessTokenConverter()) // generate JWT tokens (instead of opaque tokens)
                 .tokenEnhancer(enhancerChain) // add claims (custom properties) to JWT token
