@@ -9,7 +9,7 @@ import lombok.Setter;
 @Relation(collectionRelation = "groups")
 @Getter
 @Setter
-public class GroupOutput extends RepresentationModel<GroupOutput> implements OutputModel {
+public class GroupOutput extends RepresentationModel<GroupOutput> {
 
     private Long id;
     private String name;

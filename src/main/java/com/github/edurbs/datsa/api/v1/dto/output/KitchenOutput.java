@@ -9,7 +9,7 @@ import lombok.Setter;
 @Relation(collectionRelation = "kitchens")
 @Getter
 @Setter
-public class KitchenOutput extends RepresentationModel<KitchenOutput> implements OutputModel {
+public class KitchenOutput extends RepresentationModel<KitchenOutput> {
 
     private Long id;
     private String name;

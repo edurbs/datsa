@@ -1,15 +1,15 @@
 package com.github.edurbs.datsa.api.v1.dto.input;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import lombok.Getter;
-import lombok.Setter;
-
 @Getter
 @Setter
-public class AddressInput implements InputModel {
+public class AddressInput {
 
     @NotBlank
     private String zipCode;

@@ -8,7 +8,7 @@ import org.springframework.hateoas.server.core.Relation;
 @Relation(collectionRelation = "permissions")
 @Getter
 @Setter
-public class PermissionOutput extends RepresentationModel<PermissionOutput> implements OutputModel {
+public class PermissionOutput extends RepresentationModel<PermissionOutput> {
 
     private Long id;
     private String name;

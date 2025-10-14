@@ -9,7 +9,7 @@ import lombok.Setter;
 @Relation(collectionRelation = "paymentmethods")
 @Setter
 @Getter
-public class PaymentMethodOutput extends RepresentationModel<PaymentMethodOutput> implements OutputModel {
+public class PaymentMethodOutput extends RepresentationModel<PaymentMethodOutput> {
 
     private Long id;
     private String description;

@@ -9,7 +9,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductPhotoOutput extends RepresentationModel<ProductPhotoOutput> implements OutputModel {
+public class ProductPhotoOutput extends RepresentationModel<ProductPhotoOutput> {
 
     String fileName;
     String description;

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Relation(collectionRelation = "cities")
 @Setter
 @Getter
-public class CitySummaryOutput extends RepresentationModel<CitySummaryOutput> implements OutputModel {
+public class CitySummaryOutput extends RepresentationModel<CitySummaryOutput> {
 
     private Long id;
     private String name;

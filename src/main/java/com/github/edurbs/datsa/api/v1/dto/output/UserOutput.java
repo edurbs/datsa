@@ -9,7 +9,7 @@ import lombok.Setter;
 @Relation(collectionRelation = "users")
 @Setter
 @Getter
-public class UserOutput extends RepresentationModel<UserOutput> implements OutputModel {
+public class UserOutput extends RepresentationModel<UserOutput> {
 
     private Long id;
     private String name;

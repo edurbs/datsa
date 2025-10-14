@@ -1,18 +1,17 @@
 package com.github.edurbs.datsa.api.v1.dto.input;
 
-import java.math.BigDecimal;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
-
-import lombok.Getter;
-import lombok.Setter;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class RestaurantInput implements InputModel {
+public class RestaurantInput {
 
     @NotBlank
     private String name;
