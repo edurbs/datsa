@@ -24,7 +24,7 @@ import com.github.edurbs.datsa.api.v1.controller.RestaurantProductPhotoControlle
 import com.github.edurbs.datsa.api.v1.controller.RestaurantUserController;
 import com.github.edurbs.datsa.api.v1.controller.StateController;
 import com.github.edurbs.datsa.api.v1.controller.StatisticsController;
-import com.github.edurbs.datsa.api.v1.controller.StatusOrderController;
+import com.github.edurbs.datsa.api.v1.controller.OrderStatusController;
 import com.github.edurbs.datsa.api.v1.controller.UserController;
 import com.github.edurbs.datsa.api.v1.controller.UserGroupController;
 
@@ -57,15 +57,15 @@ public class LinksAdder {
     }
 
     public Link toOrderConfirm(String orderUUID, String rel) {
-        return linkTo(methodOn(StatusOrderController.class).confirm(orderUUID)).withRel(rel);
+        return linkTo(methodOn(OrderStatusController.class).confirm(orderUUID)).withRel(rel);
     }
 
     public Link toOrderCancel(String orderUUID, String rel) {
-        return linkTo(methodOn(StatusOrderController.class).cancel(orderUUID)).withRel(rel);
+        return linkTo(methodOn(OrderStatusController.class).cancel(orderUUID)).withRel(rel);
     }
 
     public Link toOrderDelivery(String orderUUID, String rel) {
-        return linkTo(methodOn(StatusOrderController.class).delivery(orderUUID)).withRel(rel);
+        return linkTo(methodOn(OrderStatusController.class).delivery(orderUUID)).withRel(rel);
     }
 
     public Link toStatistics(String rel) {

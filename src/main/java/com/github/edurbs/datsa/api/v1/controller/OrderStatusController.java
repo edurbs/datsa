@@ -1,6 +1,6 @@
 package com.github.edurbs.datsa.api.v1.controller;
 
-import com.github.edurbs.datsa.api.v1.openapi.controller.StatusOrderControllerOpenApi;
+import com.github.edurbs.datsa.api.v1.openapi.controller.OrderStatusControllerOpenApi;
 import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.service.StatusOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/v1/orders/{uuid}")
-public class StatusOrderController implements StatusOrderControllerOpenApi {
+public class OrderStatusController implements OrderStatusControllerOpenApi {
 
     @Autowired
     private StatusOrderService statusOrderService;

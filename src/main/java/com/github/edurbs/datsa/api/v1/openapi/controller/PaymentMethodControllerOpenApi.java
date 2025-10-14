@@ -3,6 +3,7 @@ package com.github.edurbs.datsa.api.v1.openapi.controller;
 import com.github.edurbs.datsa.api.v1.dto.input.PaymentMethodInput;
 import com.github.edurbs.datsa.api.v1.dto.output.PaymentMethodOutput;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import javax.validation.Valid;
 
 @SecurityRequirement(name="security_auth")
+@Tag(name="Payment methods", description = "Payment methods registry")
 public interface PaymentMethodControllerOpenApi {
     ResponseEntity<CollectionModel<PaymentMethodOutput>> listAll(ServletWebRequest request);
 
