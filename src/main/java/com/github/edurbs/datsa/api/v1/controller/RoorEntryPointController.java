@@ -1,17 +1,16 @@
 package com.github.edurbs.datsa.api.v1.controller;
 
+import com.github.edurbs.datsa.api.v1.LinksAdder;
+import com.github.edurbs.datsa.api.v1.openapi.controller.RoorEntryPointControllerOpenApi;
+import com.github.edurbs.datsa.core.security.MySecurity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.edurbs.datsa.api.v1.LinksAdder;
-import com.github.edurbs.datsa.core.security.MySecurity;
-
 @RestController
 @RequestMapping
-public class RoorEntryPointController {
+public class RoorEntryPointController implements RoorEntryPointControllerOpenApi {
 
     @Autowired
     private LinksAdder linksAdder;
@@ -20,6 +19,7 @@ public class RoorEntryPointController {
     private MySecurity mySecurity;
 
     @GetMapping
+    @Override
     public RootEntryPointModel root() {
         RootEntryPointModel rootEntryPointModel = new RootEntryPointModel();
         if (this.mySecurity.canConsultKitchens()) {
@@ -52,7 +52,4 @@ public class RoorEntryPointController {
         return rootEntryPointModel;
     }
 
-    private static class RootEntryPointModel extends RepresentationModel<RootEntryPointModel> {
-
-    }
 }

@@ -1,29 +1,22 @@
 package com.github.edurbs.datsa.api.v1.controller;
 
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.dto.output.PaymentMethodOutput;
 import com.github.edurbs.datsa.api.v1.mapper.PaymentMethodMapper;
+import com.github.edurbs.datsa.api.v1.openapi.controller.RestaurantPaymentMethodControllerOpenApi;
 import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/restaurants/{restaurantId}/payment-methods")
 @RequiredArgsConstructor
-public class RestaurantPaymentMethodController {
+public class RestaurantPaymentMethodController implements RestaurantPaymentMethodControllerOpenApi {
 
     private final RestaurantRegistryService restaurantRegistryService;
 
@@ -34,6 +27,7 @@ public class RestaurantPaymentMethodController {
 
     @CheckSecurity.Restaurants.CanConsult
     @GetMapping
+    @Override
     public CollectionModel<PaymentMethodOutput> listAll(@PathVariable Long restaurantId) {
         var restaurant = restaurantRegistryService.getById(restaurantId);
         CollectionModel<PaymentMethodOutput> collectionModel = paymentMethodMapper
@@ -53,6 +47,7 @@ public class RestaurantPaymentMethodController {
     @CheckSecurity.Restaurants.CanEditAndManage
     @DeleteMapping("/{paymentMethodId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Override
     public ResponseEntity<Void> disassociate(@PathVariable Long restaurantId, @PathVariable Long paymentMethodId) {
         restaurantRegistryService.disassociatePaymentMethod(restaurantId, paymentMethodId);
         return ResponseEntity.noContent().build();
@@ -61,6 +56,7 @@ public class RestaurantPaymentMethodController {
     @CheckSecurity.Restaurants.CanEditAndManage
     @PutMapping("/{paymentMethodId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Override
     public ResponseEntity<Void> associate(@PathVariable Long restaurantId, @PathVariable Long paymentMethodId) {
         restaurantRegistryService.associatePaymentMethod(restaurantId, paymentMethodId);
         return ResponseEntity.noContent().build();

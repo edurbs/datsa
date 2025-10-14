@@ -1,29 +1,21 @@
 package com.github.edurbs.datsa.api.v1.controller;
 
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.github.edurbs.datsa.api.v1.dto.input.StateInput;
 import com.github.edurbs.datsa.api.v1.dto.output.StateOutput;
 import com.github.edurbs.datsa.api.v1.mapper.StateMapper;
+import com.github.edurbs.datsa.api.v1.openapi.controller.StateControllerOpenApi;
 import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.service.StateRegistryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/v1/states")
-public class StateController {
+public class StateController implements StateControllerOpenApi {
 
     @Autowired
     private StateRegistryService stateRegistryService;
@@ -33,12 +25,14 @@ public class StateController {
 
     @CheckSecurity.State.CanConsult
     @GetMapping
+    @Override
     public CollectionModel<StateOutput> listAll() {
         return stateMapper.toCollectionModel(stateRegistryService.getAll());
     }
 
     @CheckSecurity.State.CanConsult
     @GetMapping("/{stateId}")
+    @Override
     public StateOutput getById(@PathVariable Long stateId) {
         return stateMapper.toModel(stateRegistryService.getById(stateId));
     }
@@ -46,6 +40,7 @@ public class StateController {
     @CheckSecurity.State.CanEdit
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Override
     public StateOutput add(@RequestBody @Valid StateInput stateInput) {
         var state = stateMapper.toDomain(stateInput);
         var stateAdded = stateRegistryService.save(state);
@@ -54,6 +49,7 @@ public class StateController {
 
     @CheckSecurity.State.CanEdit
     @PutMapping("/{stateId}")
+    @Override
     public StateOutput alter(@PathVariable Long stateId, @RequestBody @Valid StateInput stateInput) {
         var state = stateRegistryService.getById(stateId);
         stateMapper.copyToDomain(stateInput, state);
@@ -64,6 +60,7 @@ public class StateController {
     @CheckSecurity.State.CanEdit
     @DeleteMapping("/{stateId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Override
     public void delete(@PathVariable Long stateId) {
         stateRegistryService.remove(stateId);
     }

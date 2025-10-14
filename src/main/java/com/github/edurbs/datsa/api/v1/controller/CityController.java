@@ -2,6 +2,7 @@ package com.github.edurbs.datsa.api.v1.controller;
 
 import javax.validation.Valid;
 
+import com.github.edurbs.datsa.api.v1.openapi.controller.CityControllerOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ import com.github.edurbs.datsa.domain.service.CityRegistryService;
 
 @RestController
 @RequestMapping("/v1/cities")
-public class CityController {
+public class CityController implements CityControllerOpenApi {
 
     @Autowired
     private CityRegistryService cityRegistryService;
@@ -38,12 +39,14 @@ public class CityController {
 
     @CheckSecurity.City.CanConsult
     @GetMapping
+    @Override
     public CollectionModel<CityOutput> listAll() {
         return cityMapper.toCollectionModel(cityRegistryService.getAll());
     }
 
     @CheckSecurity.City.CanConsult
     @GetMapping("/{cityId}")
+    @Override
     public CityOutput getById(@PathVariable Long cityId) {
         try {
             return cityMapper.toModel(cityRegistryService.getById(cityId));
@@ -55,6 +58,7 @@ public class CityController {
     @CheckSecurity.City.CanEdit
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Override
     public CityOutput add(@RequestBody @Valid CityInput cityInput) {
         try {
             var city = cityMapper.toDomain(cityInput);
@@ -69,6 +73,7 @@ public class CityController {
 
     @CheckSecurity.City.CanEdit
     @PutMapping("/{cityId}")
+    @Override
     public CityOutput alter(@PathVariable Long cityId, @RequestBody @Valid CityInput cityInput) {
         try {
             var city = cityRegistryService.getById(cityId);
@@ -85,6 +90,7 @@ public class CityController {
     @CheckSecurity.City.CanEdit
     @DeleteMapping("/{cityId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Override
     public void delete(@PathVariable Long cityId) {
         cityRegistryService.remove(cityId);
     }
