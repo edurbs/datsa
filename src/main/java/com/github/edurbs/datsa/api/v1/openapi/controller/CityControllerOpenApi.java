@@ -2,24 +2,30 @@ package com.github.edurbs.datsa.api.v1.openapi.controller;
 
 import com.github.edurbs.datsa.api.v1.dto.input.CityInput;
 import com.github.edurbs.datsa.api.v1.dto.output.CityOutput;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.validation.Valid;
 
 @SecurityRequirement(name="security_auth")
 @Tag(name = "Cities", description = "Cities registry")
 public interface CityControllerOpenApi {
+
+    @Operation(summary = "List cities")
     CollectionModel<CityOutput> listAll();
 
-    CityOutput getById(@PathVariable Long cityId);
+    @Operation(summary = "Get a city by ID")
+    CityOutput getById(@Parameter(description = "City ID", example = "1", required = true) Long cityId);
 
-    CityOutput add(@RequestBody @Valid CityInput cityInput);
+    @Operation(summary = "Add a city", description = "To add a city, you must specify the city name and the state ID.")
+    CityOutput add(@RequestBody(description = "New city representation", required = true) CityInput cityInput);
 
-    CityOutput alter(@PathVariable Long cityId, @RequestBody @Valid CityInput cityInput);
+    @Operation(summary = "Update a city")
+    CityOutput alter(@Parameter(description = "City ID", example = "1", required = true) Long cityId,
+                     @RequestBody(description = "City updated representation", required = true) CityInput cityInput);
 
-    void delete(@PathVariable Long cityId);
+    @Operation(summary = "Delete a city")
+    void delete(@Parameter(description = "City ID", example = "1", required = true) Long cityId);
 }
