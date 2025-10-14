@@ -16,7 +16,6 @@ public class CityInput {
     @NotBlank
     private String name;
 
-    @Schema(example = "1")
     @Valid
     @NotNull
     private StateIdInput state;
