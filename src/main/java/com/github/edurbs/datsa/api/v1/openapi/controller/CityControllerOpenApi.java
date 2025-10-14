@@ -4,7 +4,10 @@ import com.github.edurbs.datsa.api.v1.dto.input.CityInput;
 import com.github.edurbs.datsa.api.v1.dto.output.CityOutput;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
@@ -16,7 +19,14 @@ public interface CityControllerOpenApi {
     @Operation(summary = "List cities")
     CollectionModel<CityOutput> listAll();
 
-    @Operation(summary = "Get a city by ID")
+    @Operation(summary = "Get a city by ID",
+        responses = {
+            @ApiResponse(responseCode = "200"),
+            @ApiResponse(responseCode = "400",
+                description = "Invalid City ID",
+                content = @Content(schema = @Schema))
+        }
+    )
     CityOutput getById(@Parameter(description = "City ID", example = "1", required = true) Long cityId);
 
     @Operation(summary = "Add a city", description = "To add a city, you must specify the city name and the state ID.")
