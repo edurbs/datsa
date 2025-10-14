@@ -9,8 +9,13 @@ import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.responses.ApiResponses;
+import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.HashMap;
 
 @Configuration
 @SecurityScheme(name = "security_auth",
@@ -41,4 +46,27 @@ public class SpringDocConfig {
                 .url("http://docs.datsa.com.br")
             );
     }
+
+    @Bean
+    public OpenApiCustomiser openApiCustomiser(){
+        return openApi -> {
+            openApi.getPaths()
+                .values()
+                .stream()
+                .flatMap(pathItem -> pathItem.readOperations().stream())
+                .forEach(operation -> {
+                    ApiResponses responses = operation.getResponses();
+                    responses.putAll(getResponseMap());
+                });
+        };
+    }
+
+    private HashMap<String, ApiResponse> getResponseMap(){
+        HashMap<String, ApiResponse> responseMap = new HashMap<>();
+        responseMap.put("404", new ApiResponse().description("Resource not found"));
+        responseMap.put("406", new ApiResponse().description("No acceptable representation found for the requested resource"));
+        responseMap.put("500", new ApiResponse().description("Server internal error"));
+        return  responseMap;
+    }
+
 }
