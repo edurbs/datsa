@@ -1,14 +1,19 @@
 package com.github.edurbs.datsa.core.springdoc;
 
+import com.github.edurbs.datsa.api.exceptionhandler.Problem;
+import com.github.edurbs.datsa.api.exceptionhandler.ProblemType;
+import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.OAuthFlow;
 import io.swagger.v3.oas.annotations.security.OAuthFlows;
 import io.swagger.v3.oas.annotations.security.OAuthScope;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import org.springdoc.core.customizers.OpenApiCustomiser;
@@ -16,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @SecurityScheme(name = "security_auth",
@@ -46,7 +52,19 @@ public class SpringDocConfig {
             ).externalDocs(new ExternalDocumentation()
                 .description("Datsa docs")
                 .url("http://docs.datsa.com.br")
-            );
+            ).components(new Components().schemas(
+                getSchemas()
+            ))
+            ;
+    }
+
+    private Map<String, Schema> getSchemas(){
+        final Map<String, Schema> schemaMap = new HashMap<>();
+        Map<String, Schema> problemSchema = ModelConverters.getInstance().read(Problem.class);
+        Map<String, Schema> problemTypeSchema = ModelConverters.getInstance().read(ProblemType.class);
+        schemaMap.putAll(problemSchema);
+        schemaMap.putAll(problemTypeSchema);
+        return schemaMap;
     }
 
     @Bean

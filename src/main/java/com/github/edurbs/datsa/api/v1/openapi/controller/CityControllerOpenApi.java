@@ -24,7 +24,7 @@ public interface CityControllerOpenApi {
             @ApiResponse(responseCode = "200"),
             @ApiResponse(responseCode = "400",
                 description = "Invalid City ID",
-                content = @Content(schema = @Schema))
+                content = @Content(schema = @Schema(ref = "Problem")))
         }
     )
     CityOutput getById(@Parameter(description = "City ID", example = "1", required = true) Long cityId);
