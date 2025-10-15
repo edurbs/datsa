@@ -1,7 +1,7 @@
 package com.github.edurbs.datsa.api.v1.controller;
 
 import com.github.edurbs.datsa.api.v1.LinksAdder;
-import com.github.edurbs.datsa.api.v1.openapi.controller.RoorEntryPointControllerOpenApi;
+import com.github.edurbs.datsa.api.v1.openapi.controller.RootEntryPointControllerOpenApi;
 import com.github.edurbs.datsa.core.security.MySecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping
-public class RoorEntryPointController implements RoorEntryPointControllerOpenApi {
+@RequestMapping("/v1")
+public class RootEntryPointController implements RootEntryPointControllerOpenApi {
 
     @Autowired
     private LinksAdder linksAdder;
