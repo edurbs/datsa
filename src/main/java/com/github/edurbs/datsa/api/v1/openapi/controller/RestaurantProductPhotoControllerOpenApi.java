@@ -3,8 +3,10 @@ package com.github.edurbs.datsa.api.v1.openapi.controller;
 import com.github.edurbs.datsa.api.v1.dto.input.ProductPhotoInput;
 import com.github.edurbs.datsa.api.v1.dto.output.ProductPhotoOutput;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,9 +19,15 @@ import java.io.IOException;
 @SecurityRequirement(name="security_auth")
 @Tag(name = "Restaurants")
 public interface RestaurantProductPhotoControllerOpenApi {
-    ProductPhotoOutput updatePhoto(Long restaurantId, Long productId, ProductPhotoInput productPhotoInput) throws IOException;
 
-    ResponseEntity<ResponseStatus> delete(Long restaurantId, Long productId);
+    @Operation(summary = "Update the product photo of a restaurant" )
+    ProductPhotoOutput updatePhoto(@Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
+                                   @Parameter(description = "Product ID", example = "1", required = true) Long productId,
+                                   @RequestBody(required = true) ProductPhotoInput productPhotoInput)
+        throws IOException;
+
+    ResponseEntity<ResponseStatus> delete(@Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
+                                          @Parameter(description = "Product ID", example = "1", required = true) Long productId);
 
     @Operation(summary = "Get a product photo from a restaurant", responses = {
         @ApiResponse(responseCode = "200", content = {
@@ -28,10 +36,14 @@ public interface RestaurantProductPhotoControllerOpenApi {
             @Content(mediaType = "image/png", schema = @Schema(type = "string", format = "binary"))
         })
     })
-    ProductPhotoOutput getPhoto(Long restaurantId, Long productId);
+    ProductPhotoOutput getPhoto(@Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
+                                @Parameter(description = "Product ID", example = "1", required = true) Long productId);
 
     @Operation(hidden = true)
-    ResponseEntity<?> getPhotoData(Long restaurantId, Long productId, String acceptHeader) throws HttpMediaTypeNotAcceptableException;
+    ResponseEntity<?> getPhotoData(@Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
+                                   @Parameter(description = "Product ID", example = "1", required = true) Long productId,
+                                   String acceptHeader)
+        throws HttpMediaTypeNotAcceptableException;
 
 
 }

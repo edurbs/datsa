@@ -2,6 +2,7 @@ package com.github.edurbs.datsa.api.v1.dto.input;
 
 import com.github.edurbs.datsa.core.validation.FileContentType;
 import com.github.edurbs.datsa.core.validation.FileSize;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +23,7 @@ public class ProductPhotoInput {
     @FileContentType(allowed={MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     MultipartFile file;
 
+    @Schema(example = "Some description")
     @NotBlank
     String description;
 }
