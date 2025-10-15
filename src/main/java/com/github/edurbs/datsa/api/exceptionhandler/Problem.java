@@ -32,12 +32,12 @@ public class Problem {
     @Schema(example = "One or more invalid fields. ")
     private String userMessage;
 
-    @Schema(example = "Error object list")
+    @Schema(description = "Error object list")
     private List<Field> fields;
 
     @Getter
     @Builder
-    @Schema(name = "InvalidField")
+    @Schema(name = "Field")
     public static class Field{
 
         @Schema(example = "price")

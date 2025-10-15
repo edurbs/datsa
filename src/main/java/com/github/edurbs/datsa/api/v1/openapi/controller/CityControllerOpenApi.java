@@ -34,7 +34,7 @@ public interface CityControllerOpenApi {
 
     @Operation(summary = "Update a city")
     CityOutput alter(@Parameter(description = "City ID", example = "1", required = true) Long cityId,
-                     @RequestBody(description = "City updated representation", required = true) CityInput cityInput);
+                     @RequestBody(description = "Updated City representation", required = true) CityInput cityInput);
 
     @Operation(summary = "Delete a city")
     void delete(@Parameter(description = "City ID", example = "1", required = true) Long cityId);

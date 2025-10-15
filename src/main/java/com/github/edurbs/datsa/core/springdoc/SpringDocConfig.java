@@ -126,16 +126,13 @@ public class SpringDocConfig {
     }
 
     private ApiResponse createResponse(String description) {
-        Schema<?> problemSchema = new Schema<Problem>()
-            .$ref("Problem");
-        MediaType mediaType = new MediaType()
-            .schema(problemSchema);
+        Schema problemSchema = new Schema<Problem>().$ref("Problem");
+        MediaType problemMediaType = new MediaType().schema(problemSchema);
         Content problemContent = new Content()
-            .addMediaType(APPLICATION_JSON_VALUE, mediaType);
+            .addMediaType(APPLICATION_JSON_VALUE, problemMediaType);
         return new ApiResponse()
             .description(description)
             .content(problemContent);
     }
-
 
 }
