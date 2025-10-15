@@ -2,24 +2,30 @@ package com.github.edurbs.datsa.api.v1.openapi.controller;
 
 import com.github.edurbs.datsa.api.v1.dto.input.StateInput;
 import com.github.edurbs.datsa.api.v1.dto.output.StateOutput;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.validation.Valid;
 
 @SecurityRequirement(name="security_auth")
 @Tag(name = "States", description = "States registry")
 public interface StateControllerOpenApi {
+
+    @Operation(summary = "List states")
     CollectionModel<StateOutput> listAll();
 
-    StateOutput getById(@PathVariable Long stateId);
+    @Operation(summary = "Get a state")
+    StateOutput getById(@Parameter(description = "State ID", example = "1", required = true) Long stateId);
 
-    StateOutput add(@RequestBody @Valid StateInput stateInput);
+    @Operation(summary = "Add a state")
+    StateOutput add(@RequestBody(description = "New state representation", required = true) StateInput stateInput);
 
-    StateOutput alter(@PathVariable Long stateId, @RequestBody @Valid StateInput stateInput);
+    @Operation(summary = "Update a state")
+    StateOutput alter(@Parameter(description = "State ID", example = "1", required = true) Long stateId,
+                      @RequestBody(description = "New state representation", required = true) StateInput stateInput);
 
-    void delete(@PathVariable Long stateId);
+    @Operation(summary = "Delete a state")
+    void delete(@Parameter(description = "State ID", example = "1", required = true) Long stateId);
 }
