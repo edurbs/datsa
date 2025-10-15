@@ -17,6 +17,7 @@ import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
+import org.springdoc.core.SpringDocUtils;
 import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,6 +44,8 @@ public class SpringDocConfig {
 
     @Bean
     public OpenAPI openAPI() {
+        SpringDocUtils.getConfig()
+                .replaceWithClass(org.springframework.hateoas.Links.class, LinksModelOpenApi.class);
         return new OpenAPI()
             .info(new Info()
                 .title("Datsa API")
