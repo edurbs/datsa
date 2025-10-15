@@ -7,6 +7,7 @@ import com.github.edurbs.datsa.api.v1.dto.output.RestaurantSummaryOutput;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
@@ -32,24 +33,34 @@ public interface RestaurantControllerOpenApi {
     @Operation(hidden = true)
     CollectionModel<RestaurantNameOutput> listAllOnlyName();
 
-    RestaurantOutput getById(Long restaurantId);
+    @Operation(summary = "Get a restaurant")
+    RestaurantOutput getById(@Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId);
 
-    ResponseEntity<RestaurantOutput> add(RestaurantInput restaurantInput);
+    @Operation(summary = "Add a restaurant")
+    ResponseEntity<RestaurantOutput> add(@RequestBody(description = "New restaurant representation", required = true) RestaurantInput restaurantInput);
 
-    RestaurantOutput alter(Long restaurantId,
-                           RestaurantInput restaurantInput);
+    @Operation(summary = "Update a restaurant")
+    RestaurantOutput alter(@Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
+                           @RequestBody(description = "Updated restaurant representation", required = true) RestaurantInput restaurantInput);
 
-    void delete(Long restaurantId);
+    @Operation(summary = "Delete a restaurant")
+    void delete(@Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId);
 
-    ResponseEntity<Void> activate(Long restaurantId);
+    @Operation(summary = "Activate a restaurant")
+    ResponseEntity<Void> activate(@Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId);
 
-    ResponseEntity<Void> activations(List<Long> restaurantIds);
+    @Operation(summary = "Activate a list of restaurants")
+    ResponseEntity<Void> activations(@Parameter(description = "List of restaurant ID's", required = true) List<Long> restaurantIds);
 
-    ResponseEntity<Void> inactivate(Long restaurantId);
+    @Operation(summary = "Inactivate a restaurant")
+    ResponseEntity<Void> inactivate(@Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId);
 
-    ResponseEntity<Void> inactivations(List<Long> restaurantIds);
+    @Operation(summary = "Inactivate a list of restaurants")
+    ResponseEntity<Void> inactivations(@Parameter(description = "List of restaurant ID's", required = true) List<Long> restaurantIds);
 
-    ResponseEntity<Void> open(Long restaurantId);
+    @Operation(summary = "Open a restaurants")
+    ResponseEntity<Void> open(@Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId);
 
-    ResponseEntity<Void> close(Long restaurantId);
+    @Operation(summary = "Close a restaurants")
+    ResponseEntity<Void> close(@Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId);
 }

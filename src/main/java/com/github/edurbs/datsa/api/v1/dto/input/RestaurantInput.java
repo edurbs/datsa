@@ -1,5 +1,6 @@
 package com.github.edurbs.datsa.api.v1.dto.input;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,9 +14,11 @@ import java.math.BigDecimal;
 @Setter
 public class RestaurantInput {
 
+    @Schema(example = "Brazilian")
     @NotBlank
     private String name;
 
+    @Schema(example = "1.95")
     @NotNull
     @PositiveOrZero
     private BigDecimal shippingFee;
