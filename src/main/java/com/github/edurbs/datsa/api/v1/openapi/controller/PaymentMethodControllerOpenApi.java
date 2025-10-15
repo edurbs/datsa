@@ -15,18 +15,18 @@ import org.springframework.web.context.request.ServletWebRequest;
 @Tag(name="Payment methods", description = "Payment methods registry")
 public interface PaymentMethodControllerOpenApi {
 
-    @Operation(description = "List Payment Methods")
+    @Operation(summary = "List Payment Methods")
     ResponseEntity<CollectionModel<PaymentMethodOutput>> listAll(ServletWebRequest request);
 
-    @Operation(description = "Get a Payment Methods")
+    @Operation(summary = "Get a Payment Methods")
     ResponseEntity<PaymentMethodOutput> getById(@Parameter(description = "Payment Methods ID", example = "1", required = true) Long id, ServletWebRequest request);
 
-    @Operation(description = "Add a Payment Methods")
+    @Operation(summary = "Add a Payment Methods")
     PaymentMethodOutput add(@RequestBody(description = "New Payment Methods representation") PaymentMethodInput input);
 
-    @Operation(description = "Update a Payment Methods")
+    @Operation(summary = "Update a Payment Methods")
     PaymentMethodOutput alter(@Parameter(description = "Payment Methods ID", example = "1", required = true) Long id, @RequestBody(description = "Updated Payment Methods representation") PaymentMethodInput input);
 
-    @Operation(description = "Delete a Payment Methods")
+    @Operation(summary = "Delete a Payment Methods")
     void delete(@Parameter(description = "Payment Methods ID", example = "1", required = true) Long id);
 }
