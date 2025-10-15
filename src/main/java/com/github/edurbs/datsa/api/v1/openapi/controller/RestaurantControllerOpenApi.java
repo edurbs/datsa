@@ -19,7 +19,8 @@ import java.util.List;
 @Tag(name = "Restaurants", description = "Restaurants registry")
 public interface RestaurantControllerOpenApi {
 
-    @Operation(parameters = {
+    @Operation(summary = "List restaurants",
+        parameters = {
         @Parameter(
             name = "projection",
             description = "Projection name",
