@@ -19,7 +19,7 @@ public class UserNotificationOrderConfirmedListener {
         Order order = event.getOrder();
         var message = EmailSenderService.Message.builder()
                 .subject(order.getRestaurant().getName() + " - Order confirmed")
-                .body("orderConfirmed.html")
+                .body("emails/orderConfirmed.html")
                 .recipient(order.getUser().getEmail())
                 .model("order", order)
                 .build();
