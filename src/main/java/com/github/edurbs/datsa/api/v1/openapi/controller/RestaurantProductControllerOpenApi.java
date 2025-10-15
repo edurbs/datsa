@@ -2,25 +2,40 @@ package com.github.edurbs.datsa.api.v1.openapi.controller;
 
 import com.github.edurbs.datsa.api.v1.dto.input.ProductInput;
 import com.github.edurbs.datsa.api.v1.dto.output.ProductOutput;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.validation.Valid;
 
 @SecurityRequirement(name="security_auth")
-@Tag(name = "Restaurants")
+@Tag(name = "Products")
 public interface RestaurantProductControllerOpenApi {
-    CollectionModel<ProductOutput> getAll(@PathVariable Long restaurantId, @RequestParam(required = false) Boolean inactiveIncluded);
 
-    ProductOutput getOne(@PathVariable Long restaurantId, @PathVariable Long productId);
+    @Operation(summary = "List products of a restaurant")
+    CollectionModel<ProductOutput> getAll(
+            @Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
+            @Parameter(description = "Include the inactives restaurants in the list", example = "true", required = false) Boolean inactiveIncluded);
 
-    ProductOutput add(@PathVariable Long restaurantId, @RequestBody @Valid ProductInput productInput);
+    @Operation(summary = "Get a product of a restaurant")
+    ProductOutput getOne(
+            @Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
+            @Parameter(description = "Product ID", example = "1", required = true)  Long productId);
 
-    ProductOutput alter(@PathVariable Long restaurantId, @PathVariable Long productId, @RequestBody @Valid ProductInput productInput);
+    @Operation(summary = "Add a product to a restaurant")
+    ProductOutput add(
+            @Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
+            @RequestBody(description = "New product representation", required = true) ProductInput productInput);
 
-    void remove(@PathVariable Long restaurantId, @PathVariable Long productId);
+    @Operation(summary = "Update a product of a restaurant")
+    ProductOutput alter(
+            @Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
+            @Parameter(description = "Product ID", example = "1", required = true)  Long productId,
+            @RequestBody(description = "Updated product representation", required = true) ProductInput productInput);
+
+    @Operation(summary = "Remove a product of a restaurant")
+    void remove(
+            @Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
+            @Parameter(description = "Product ID", example = "1", required = true)  Long productId);
 }

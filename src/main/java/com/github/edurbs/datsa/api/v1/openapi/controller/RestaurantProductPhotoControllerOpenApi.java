@@ -16,34 +16,38 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 
-@SecurityRequirement(name="security_auth")
-@Tag(name = "Restaurants")
+@SecurityRequirement(name = "security_auth")
+@Tag(name = "Products")
 public interface RestaurantProductPhotoControllerOpenApi {
 
-    @Operation(summary = "Update the product photo of a restaurant" )
-    ProductPhotoOutput updatePhoto(@Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
-                                   @Parameter(description = "Product ID", example = "1", required = true) Long productId,
-                                   @RequestBody(required = true) ProductPhotoInput productPhotoInput)
-        throws IOException;
+    @Operation(summary = "Update the product photo of a restaurant")
+    ProductPhotoOutput updatePhoto(
+            @Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
+            @Parameter(description = "Product ID", example = "1", required = true) Long productId,
+            @RequestBody(required = true) ProductPhotoInput productPhotoInput)
+            throws IOException;
 
-    ResponseEntity<ResponseStatus> delete(@Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
-                                          @Parameter(description = "Product ID", example = "1", required = true) Long productId);
+    @Operation(summary = "Delete a product photo from a restaurant")
+    ResponseEntity<ResponseStatus> delete(
+            @Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
+            @Parameter(description = "Product ID", example = "1", required = true) Long productId);
 
     @Operation(summary = "Get a product photo from a restaurant", responses = {
-        @ApiResponse(responseCode = "200", content = {
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductPhotoOutput.class)),
-            @Content(mediaType = "image/jpeg", schema = @Schema(type = "string", format = "binary")),
-            @Content(mediaType = "image/png", schema = @Schema(type = "string", format = "binary"))
-        })
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ProductPhotoOutput.class)),
+                    @Content(mediaType = "image/jpeg", schema = @Schema(type = "string", format = "binary")),
+                    @Content(mediaType = "image/png", schema = @Schema(type = "string", format = "binary"))
+            })
     })
-    ProductPhotoOutput getPhoto(@Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
-                                @Parameter(description = "Product ID", example = "1", required = true) Long productId);
+    ProductPhotoOutput getPhoto(
+            @Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
+            @Parameter(description = "Product ID", example = "1", required = true) Long productId);
 
     @Operation(hidden = true)
-    ResponseEntity<?> getPhotoData(@Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
-                                   @Parameter(description = "Product ID", example = "1", required = true) Long productId,
-                                   String acceptHeader)
-        throws HttpMediaTypeNotAcceptableException;
-
+    ResponseEntity<?> getPhotoData(
+            @Parameter(description = "Restaurant ID", example = "1", required = true) Long restaurantId,
+            @Parameter(description = "Product ID", example = "1", required = true) Long productId,
+            String acceptHeader)
+            throws HttpMediaTypeNotAcceptableException;
 
 }
