@@ -54,21 +54,21 @@ public class UserController implements UserControllerOpenApi {
     }
 
     @CheckSecurity.UsersGroupsPermissions.CanEditUser
-    @PutMapping("/{id}")
+    @PutMapping("/{userId}")
     @Override
-    public UserOutput alter(@PathVariable Long id, @RequestBody @Valid UserUpdateInput userUpdateInput) {
-        MyUser domainUser = service.getById(id);
+    public UserOutput alter(@PathVariable Long userId, @RequestBody @Valid UserUpdateInput userUpdateInput) {
+        MyUser domainUser = service.getById(userId);
         mapper.copyToDomain(userUpdateInput, domainUser);
         MyUser alteredUser = service.save(domainUser);
         return mapper.toModel(alteredUser);
     }
 
     @CheckSecurity.UsersGroupsPermissions.CanEdit
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Override
-    public void remove(@PathVariable Long id){
-        service.remove(id);
+    public void remove(@PathVariable Long userId){
+        service.remove(userId);
     }
 
     @CheckSecurity.UsersGroupsPermissions.CanEditOwnPassword

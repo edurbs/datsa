@@ -4,26 +4,36 @@ import com.github.edurbs.datsa.api.v1.dto.input.UserInput;
 import com.github.edurbs.datsa.api.v1.dto.input.UserPasswordInput;
 import com.github.edurbs.datsa.api.v1.dto.input.UserUpdateInput;
 import com.github.edurbs.datsa.api.v1.dto.output.UserOutput;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.validation.Valid;
 
 @SecurityRequirement(name="security_auth")
 @Tag(name = "Users", description = "Users registry")
 public interface UserControllerOpenApi {
+
+    @Operation(summary = "List users")
     CollectionModel<UserOutput> getAll();
 
-    UserOutput getOne(@PathVariable Long id);
+    @Operation(summary = "Get an user")
+    UserOutput getOne(@Parameter(description = "User ID", example = "1", required = true) Long userId);
 
-    UserOutput add(@RequestBody @Valid UserInput userInput);
+    @Operation(summary = "Add an user")
+    UserOutput add(@RequestBody(description = "New user representation", required = true) UserInput userInput);
 
-    UserOutput alter(@PathVariable Long id, @RequestBody @Valid UserUpdateInput userUpdateInput);
+    @Operation(summary = "Update an user")
+    UserOutput alter(
+            @Parameter(description = "User ID", example = "1", required = true) Long userId,
+            @RequestBody(description = "Updated user representation", required = true) UserUpdateInput userUpdateInput);
 
-    void remove(@PathVariable Long id);
+    @Operation(summary = "Delete an user")
+    void remove(@Parameter(description = "User ID", example = "1", required = true) Long userId);
 
-    UserOutput alterPassword(@PathVariable Long userId, @RequestBody @Valid UserPasswordInput userPasswordInput);
+    @Operation(summary = "Update an user password")
+    UserOutput alterPassword(
+            @Parameter(description = "User ID", example = "1", required = true) Long userId,
+            @RequestBody(description = "New user password representation", required = true) UserPasswordInput userPasswordInput);
 }

@@ -1,18 +1,28 @@
 package com.github.edurbs.datsa.api.v1.openapi.controller;
 
 import com.github.edurbs.datsa.api.v1.dto.output.PermissionOutput;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @SecurityRequirement(name="security_auth")
 @Tag(name = "Groups")
 public interface GroupPermissionControllerOpenApi {
-    CollectionModel<PermissionOutput> getAll(@PathVariable Long groupId);
 
-    ResponseEntity<Void> associatePermission(@PathVariable Long groupId, @PathVariable Long permissionId);
+    @Operation(summary = "List group permissions")
+    CollectionModel<PermissionOutput> getAll(
+            @Parameter(description = "Group ID", example = "1", required = true) Long groupId);
 
-    ResponseEntity<Void> dissociatePermission(@PathVariable Long groupId, @PathVariable Long permissionId);
+    @Operation(summary = "Associate a permission to a group")
+    ResponseEntity<Void> associatePermission(
+            @Parameter(description = "Group ID", example = "1", required = true) Long groupId,
+            @Parameter(description = "Permission ID", example = "1", required = true) Long permissionId);
+
+    @Operation(summary = "Dissociate a permission from a group")
+    ResponseEntity<Void> dissociatePermission(
+            @Parameter(description = "Group ID", example = "1", required = true) Long groupId,
+            @Parameter(description = "Permission ID", example = "1", required = true) Long permissionId);
 }
