@@ -24,7 +24,6 @@ public class OrderInput {
     @NotNull
     private PaymentMethodIdInput paymentMethod;
 
-
     @Valid
     @NotNull
     @Size(min = 1)

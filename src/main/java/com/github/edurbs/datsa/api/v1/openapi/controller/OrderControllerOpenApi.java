@@ -20,6 +20,7 @@ public interface OrderControllerOpenApi {
     @Operation(summary = "Get an order" )
     OrderOutput getById(@Parameter(description = "Order UUID", example = "eb1b17c8-5f0d-464e-8384-bd38f60b9784", required = true) String uuid);
 
+    @Operation(summary = "Get orders")
     @PageableParameter
     @OrderFilterParameter
     PagedModel<OrderSummaryOutput> search(@Parameter(hidden = true) OrderFilter orderFilter, @Parameter(hidden = true) Pageable pageable);
