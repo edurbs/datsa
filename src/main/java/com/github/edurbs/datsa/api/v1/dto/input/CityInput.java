@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@Schema(description = "City input representation")
 @Getter
 @Setter
 public class CityInput {

@@ -30,7 +30,11 @@ public interface CityControllerOpenApi {
     CityOutput getById(@Parameter(description = "City ID", example = "1", required = true) Long cityId);
 
     @Operation(summary = "Add a city", description = "To add a city, you must specify the city name and the state ID.")
-    CityOutput add(@RequestBody(description = "New city representation", required = true) CityInput cityInput);
+    CityOutput add( @RequestBody(
+            description = "New city representation",
+            required = true,
+            content = @Content(schema = @Schema(implementation = CityInput.class))
+    ) CityInput cityInput);
 
     @Operation(summary = "Update a city")
     CityOutput alter(@Parameter(description = "City ID", example = "1", required = true) Long cityId,

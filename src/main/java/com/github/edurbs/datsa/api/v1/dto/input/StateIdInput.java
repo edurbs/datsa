@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 
+@Schema(description = "State input representation")
 @Getter
 @Setter
 public class StateIdInput {
