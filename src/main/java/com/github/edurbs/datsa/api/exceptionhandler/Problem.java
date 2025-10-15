@@ -17,7 +17,7 @@ public class Problem {
     @Schema(example = "400")
     private Integer status;
 
-    @Schema(example = "2025-10-15T20:19:50.902245498Z")
+    @Schema(example = "2025-10-15T20:19:50Z")
     private OffsetDateTime timestamp;
 
     @Schema(example = "http://datsa.com.br/invalid-data")
