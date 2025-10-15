@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
 )
 @Parameter(
     in = ParameterIn.QUERY,
-    name = "emdCreationDate",
+    name = "endCreationDate",
     description = "End date",
     example = "2025-10-01T01:30:00Z"
 )
