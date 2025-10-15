@@ -19,7 +19,7 @@ public interface CityControllerOpenApi {
     @Operation(summary = "List cities")
     CollectionModel<CityOutput> listAll();
 
-    @Operation(summary = "Get a city by ID",
+    @Operation(summary = "Get a city",
         responses = {
             @ApiResponse(responseCode = "200"),
             @ApiResponse(responseCode = "400",
