@@ -2,26 +2,31 @@ package com.github.edurbs.datsa.api.v1.openapi.controller;
 
 import com.github.edurbs.datsa.api.v1.dto.input.PaymentMethodInput;
 import com.github.edurbs.datsa.api.v1.dto.output.PaymentMethodOutput;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.context.request.ServletWebRequest;
-
-import javax.validation.Valid;
 
 @SecurityRequirement(name="security_auth")
 @Tag(name="Payment methods", description = "Payment methods registry")
 public interface PaymentMethodControllerOpenApi {
+
+    @Operation(description = "List Payment Methods")
     ResponseEntity<CollectionModel<PaymentMethodOutput>> listAll(ServletWebRequest request);
 
-    ResponseEntity<PaymentMethodOutput> getById(@PathVariable Long id, ServletWebRequest request);
+    @Operation(description = "Get a Payment Methods")
+    ResponseEntity<PaymentMethodOutput> getById(@Parameter(description = "Payment Methods ID", example = "1", required = true) Long id, ServletWebRequest request);
 
-    PaymentMethodOutput add(@RequestBody @Valid PaymentMethodInput input);
+    @Operation(description = "Add a Payment Methods")
+    PaymentMethodOutput add(@RequestBody(description = "New Payment Methods representation") PaymentMethodInput input);
 
-    PaymentMethodOutput alter(@PathVariable Long id, @RequestBody @Valid PaymentMethodInput input);
+    @Operation(description = "Update a Payment Methods")
+    PaymentMethodOutput alter(@Parameter(description = "Payment Methods ID", example = "1", required = true) Long id, @RequestBody(description = "Updated Payment Methods representation") PaymentMethodInput input);
 
-    void delete(@PathVariable Long id);
+    @Operation(description = "Delete a Payment Methods")
+    void delete(@Parameter(description = "Payment Methods ID", example = "1", required = true) Long id);
 }
