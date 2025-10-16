@@ -25,11 +25,7 @@
         <jasperreports.version>7.0.3</jasperreports.version>
         <aws-java-sdk-s3.version>1.12.791</aws-java-sdk-s3.version>
         <logback-ext-loggly.version>0.1.5</logback-ext-loggly.version>
-        <spring-security-jwt.version>1.1.1.RELEASE</spring-security-jwt.version>
-        <spring-security-oauth2.version>2.5.2.RELEASE</spring-security-oauth2.version>
     </properties>
-
-
 
     <dependencies>
 
@@ -162,19 +158,6 @@
             <artifactId>logback-ext-loggly</artifactId>
             <version>${logback-ext-loggly.version}</version>
         </dependency>
-
-        <dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-jwt</artifactId>
-			<version>${spring-security-jwt.version}</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.springframework.security.oauth/spring-security-oauth2 -->
-		<dependency>
-			<groupId>org.springframework.security.oauth</groupId>
-			<artifactId>spring-security-oauth2</artifactId>
-			<version>${spring-security-oauth2.version}</version>
-		</dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
