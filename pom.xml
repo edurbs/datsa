@@ -25,6 +25,7 @@
         <jasperreports.version>7.0.3</jasperreports.version>
         <aws-java-sdk-s3.version>1.12.791</aws-java-sdk-s3.version>
         <logback-ext-loggly.version>0.1.5</logback-ext-loggly.version>
+        <spring-security-oauth2-authorization-server.version>0.3.1</spring-security-oauth2-authorization-server.version>
     </properties>
 
     <dependencies>
@@ -146,6 +147,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-authorization-server</artifactId>
+            <version>${spring-security-oauth2-authorization-server.version}</version>
         </dependency>
 
         <dependency>
