@@ -3,7 +3,7 @@ lock tables city write, kitchen write, `state` write, payment_method write,
 	group_system write, group_permission write, permission write,
 	product write, restaurant write, restaurant_payment_method write,
 	restaurant_user write, `user` write, user_group write,
-	`order` write, order_item write, product_photo write, oauth_client_details write;
+	`order` write, order_item write, product_photo write, oauth2_registered_client write;
 delete from city;
 delete from kitchen;
 delete from `state`;
@@ -20,7 +20,7 @@ delete from user_group;
 delete from `order`;
 delete from order_item;
 delete from product_photo;
-delete from oauth_client_details;
+delete from oauth2_registered_client;
 
 set foreign_key_checks = 1;
 alter table city auto_increment = 1;
@@ -446,37 +446,16 @@ values (5, 'c3d4e5f6-a1b2-9012-cdab-3456789012cd', 6, 2, 1, 5, '38400-444', 'Rua
 insert into order_item (id, order_id, product_id, quantity, unit_price, total_price, note)
 values (7, 5, 9, 2, 8.00, 16.00, 'Bem passado');
 
-insert into oauth_client_details (
-  client_id, resource_ids, client_secret,
-  scope, authorized_grant_types, web_server_redirect_uri, authorities,
-  access_token_validity, refresh_token_validity, autoapprove
-)
-values (
-  'datsa-web', null, '$2a$12$qHf0PrTy5bFPfbhuK85j9utw4kyq3HBNDPmihb1sMjPcqQ42Zta/C',
-  'READ,WRITE', 'password,authorization_code', 'http://localhost:8080,http://localhost:8080/swagger-ui/oauth2-redirect.html', null,
-  60 * 60 * 6, 60 * 24 * 60 * 60, null
-);
+INSERT INTO oauth2_registered_client
+(id, client_id, client_id_issued_at, client_secret, client_secret_expires_at, client_name, client_authentication_methods, authorization_grant_types, redirect_uris, post_logout_redirect_uris, scopes, client_settings, token_settings)
+VALUES('1', 'datsa-backend', '2025-10-16 16:51:29', '$2a$10$aSeBs1Orx0nsZJfhqZdRdeSIRCUIK6V4mvT8KrNYJL4Bu/IEW0Uw.', NULL, '1', 'client_secret_basic', 'client_credentials', '', NULL, 'READ', '{"@class":"java.util.Collections$UnmodifiableMap","settings.client.require-proof-key":false,"settings.client.require-authorization-consent":false}', '{"@class":"java.util.Collections$UnmodifiableMap","settings.token.reuse-refresh-tokens":true,"settings.token.id-token-signature-algorithm":["org.springframework.security.oauth2.jose.jws.SignatureAlgorithm","RS256"],"settings.token.access-token-time-to-live":["java.time.Duration",1800.000000000],"settings.token.access-token-format":{"@class":"org.springframework.security.oauth2.core.OAuth2TokenFormat","value":"self-contained"},"settings.token.refresh-token-time-to-live":["java.time.Duration",3600.000000000]}');
 
-insert into oauth_client_details (
-  client_id, resource_ids, client_secret,
-  scope, authorized_grant_types, web_server_redirect_uri, authorities,
-  access_token_validity, refresh_token_validity, autoapprove
-)
-values (
-  'datsa-analytics', null, '$2a$12$qHf0PrTy5bFPfbhuK85j9utw4kyq3HBNDPmihb1sMjPcqQ42Zta/C',
-  'READ,WRITE', 'authorization_code', 'http://localhost:8080', null,
-  null, null, null
-);
+INSERT INTO oauth2_registered_client
+(id, client_id, client_id_issued_at, client_secret, client_secret_expires_at, client_name, client_authentication_methods, authorization_grant_types, redirect_uris, post_logout_redirect_uris, scopes, client_settings, token_settings)
+VALUES('2', 'datsa-web', '2025-10-16 16:51:29', '$2a$10$AjhJiqK3UfNSxQ/XmErlS.q/YGk2Nn5d6iY32V2BX0aOvxWlbvwla', NULL, '2', 'client_secret_basic', 'refresh_token,authorization_code', 'http://127.0.0.1:8080/swagger-ui/oauth2-redirect.html,http://127.0.0.1:8080/authorized', NULL, 'READ,WRITE', '{"@class":"java.util.Collections$UnmodifiableMap","settings.client.require-proof-key":false,"settings.client.require-authorization-consent":true}', '{"@class":"java.util.Collections$UnmodifiableMap","settings.token.reuse-refresh-tokens":false,"settings.token.id-token-signature-algorithm":["org.springframework.security.oauth2.jose.jws.SignatureAlgorithm","RS256"],"settings.token.access-token-time-to-live":["java.time.Duration",900.000000000],"settings.token.access-token-format":{"@class":"org.springframework.security.oauth2.core.OAuth2TokenFormat","value":"self-contained"},"settings.token.refresh-token-time-to-live":["java.time.Duration",86400.000000000]}');
 
-insert into oauth_client_details (
-  client_id, resource_ids, client_secret,
-  scope, authorized_grant_types, web_server_redirect_uri, authorities,
-  access_token_validity, refresh_token_validity, autoapprove
-)
-values (
-  'faturamento', null, '$2a$12$qHf0PrTy5bFPfbhuK85j9utw4kyq3HBNDPmihb1sMjPcqQ42Zta/C',
-  'READ,WRITE', 'client_credentials', null, 'CONSULTAR_PEDIDOS,GERAR_RELATORIOS',
-  null, null, null
-);
+INSERT INTO oauth2_registered_client
+(id, client_id, client_id_issued_at, client_secret, client_secret_expires_at, client_name, client_authentication_methods, authorization_grant_types, redirect_uris, post_logout_redirect_uris, scopes, client_settings, token_settings)
+VALUES('3', 'datsaAnalytics', '2025-10-16 16:51:29', '$2a$10$RbpHEX8bMmvwucuKT8gKNu1ZN3zChon.eTQHWuNdRSroCfRVLY/fy', NULL, '3', 'client_secret_basic', 'authorization_code', 'http://localhost:8080', NULL, 'READ,WRITE', '{"@class":"java.util.Collections$UnmodifiableMap","settings.client.require-proof-key":false,"settings.client.require-authorization-consent":true}', '{"@class":"java.util.Collections$UnmodifiableMap","settings.token.reuse-refresh-tokens":true,"settings.token.id-token-signature-algorithm":["org.springframework.security.oauth2.jose.jws.SignatureAlgorithm","RS256"],"settings.token.access-token-time-to-live":["java.time.Duration",1800.000000000],"settings.token.access-token-format":{"@class":"org.springframework.security.oauth2.core.OAuth2TokenFormat","value":"self-contained"},"settings.token.refresh-token-time-to-live":["java.time.Duration",3600.000000000]}');
 
 unlock tables;

@@ -1,0 +1,1 @@
+DROP TABLE datsa.oauth_client_details;
