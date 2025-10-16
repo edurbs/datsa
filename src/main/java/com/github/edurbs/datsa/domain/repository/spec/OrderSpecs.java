@@ -1,18 +1,16 @@
 package com.github.edurbs.datsa.domain.repository.spec;
 
-import java.util.ArrayList;
-
-import javax.persistence.criteria.Predicate;
-
-import org.springframework.data.jpa.domain.Specification;
-
 import com.github.edurbs.datsa.domain.filter.OrderFilter;
 import com.github.edurbs.datsa.domain.model.Order;
+import jakarta.persistence.criteria.Predicate;
+import org.springframework.data.jpa.domain.Specification;
+
+import java.util.ArrayList;
 
 public class OrderSpecs {
     public static Specification<Order> withFilter(OrderFilter filter){
         return (root, query, builder) -> {
-            if(Order.class.equals(query.getResultType())){ // to fix exception when sql count
+            if (query != null && Order.class.equals(query.getResultType())) { // to fix exception when sql count
                 root.fetch("restaurant"); // to fix N+1 problem
                 root.fetch("user");
             }

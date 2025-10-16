@@ -11,7 +11,7 @@ public class ValidationConfig {
     @Bean
     public LocalValidatorFactoryBean validatorFactoryBean(MessageSource messageSource){
         LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-        // Spring must use the same messages com javax validation
+        // Spring must use the same messages com jakarta validation
         bean.setValidationMessageSource(messageSource);
         return bean;
     }

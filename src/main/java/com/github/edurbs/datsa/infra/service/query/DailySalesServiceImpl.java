@@ -1,20 +1,18 @@
 package com.github.edurbs.datsa.infra.service.query;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.Predicate;
-
-import org.springframework.stereotype.Repository;
-
 import com.github.edurbs.datsa.api.v1.dto.DailySales;
 import com.github.edurbs.datsa.domain.filter.DailySalesFilter;
 import com.github.edurbs.datsa.domain.model.Order;
 import com.github.edurbs.datsa.domain.model.OrderStatus;
 import com.github.edurbs.datsa.domain.service.DailySalesService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.Predicate;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Repository
 public class DailySalesServiceImpl implements DailySalesService {

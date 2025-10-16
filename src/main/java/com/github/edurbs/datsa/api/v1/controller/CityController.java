@@ -1,6 +1,6 @@
 package com.github.edurbs.datsa.api.v1.controller;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import com.github.edurbs.datsa.api.v1.openapi.controller.CityControllerOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;

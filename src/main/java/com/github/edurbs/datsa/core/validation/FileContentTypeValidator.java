@@ -2,8 +2,8 @@ package com.github.edurbs.datsa.core.validation;
 
 import java.util.Arrays;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
