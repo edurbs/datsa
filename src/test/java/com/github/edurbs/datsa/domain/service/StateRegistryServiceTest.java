@@ -1,22 +1,21 @@
 package com.github.edurbs.datsa.domain.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
-import java.util.List;
-import java.util.Optional;
-
+import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
+import com.github.edurbs.datsa.domain.model.State;
+import com.github.edurbs.datsa.domain.repository.StateRepository;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
-import com.github.edurbs.datsa.domain.model.State;
-import com.github.edurbs.datsa.domain.repository.StateRepository;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
 class StateRegistryServiceTest {
@@ -24,7 +23,7 @@ class StateRegistryServiceTest {
     @Autowired
     private StateRegistryService sut;
 
-    @MockBean
+    @MockitoBean
     private StateRepository stateRepository;
 
     @Test

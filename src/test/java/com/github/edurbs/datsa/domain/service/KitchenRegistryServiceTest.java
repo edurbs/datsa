@@ -1,25 +1,24 @@
 package com.github.edurbs.datsa.domain.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.Optional;
-
+import com.github.edurbs.datsa.domain.exception.ModelInUseException;
+import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
+import com.github.edurbs.datsa.domain.model.Kitchen;
+import com.github.edurbs.datsa.domain.repository.KitchenRepository;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import com.github.edurbs.datsa.domain.exception.ModelInUseException;
-import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
-import com.github.edurbs.datsa.domain.model.Kitchen;
-import com.github.edurbs.datsa.domain.repository.KitchenRepository;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class KitchenRegistryServiceTest {
@@ -27,7 +26,7 @@ class KitchenRegistryServiceTest {
     @Autowired
     private KitchenRegistryService sut;
 
-    @MockBean
+    @MockitoBean
     private KitchenRepository kitchenRepository;
 
     @Mock

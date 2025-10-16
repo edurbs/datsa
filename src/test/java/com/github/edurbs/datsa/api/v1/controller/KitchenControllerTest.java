@@ -1,23 +1,22 @@
 package com.github.edurbs.datsa.api.v1.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import com.github.edurbs.datsa.api.v1.mapper.KitchenMapper;
+import com.github.edurbs.datsa.domain.exception.ModelInUseException;
+import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
+import com.github.edurbs.datsa.domain.model.Kitchen;
+import com.github.edurbs.datsa.domain.service.KitchenRegistryService;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.github.edurbs.datsa.api.v1.mapper.KitchenMapper;
-import com.github.edurbs.datsa.domain.exception.ModelInUseException;
-import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
-import com.github.edurbs.datsa.domain.model.Kitchen;
-import com.github.edurbs.datsa.domain.service.KitchenRegistryService;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @WebMvcTest(KitchenController.class)
 class KitchenControllerTest {
@@ -27,10 +26,10 @@ class KitchenControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private KitchenRegistryService kitchenRegistryService;
 
-    @MockBean
+    @MockitoBean
     private KitchenMapper kitchenMapper;
 
     @Test

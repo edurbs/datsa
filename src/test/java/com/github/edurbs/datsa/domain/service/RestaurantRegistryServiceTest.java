@@ -1,26 +1,25 @@
 package com.github.edurbs.datsa.domain.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.List;
-import java.util.Optional;
-
+import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
+import com.github.edurbs.datsa.domain.exception.ModelValidationException;
+import com.github.edurbs.datsa.domain.model.Kitchen;
+import com.github.edurbs.datsa.domain.model.Restaurant;
+import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
-import com.github.edurbs.datsa.domain.exception.ModelValidationException;
-import com.github.edurbs.datsa.domain.model.Kitchen;
-import com.github.edurbs.datsa.domain.model.Restaurant;
-import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class RestaurantRegistryServiceTest {
@@ -28,10 +27,10 @@ class RestaurantRegistryServiceTest {
     @Autowired
     private RestaurantRegistryService sut;
 
-    @MockBean
+    @MockitoBean
     private RestaurantRepository restaurantRepository;
 
-    @MockBean
+    @MockitoBean
     private KitchenRegistryService kitchenRegistryServiceMock;
 
     @Mock

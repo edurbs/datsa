@@ -1,25 +1,24 @@
 package com.github.edurbs.datsa.domain.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
-import java.util.List;
-import java.util.Optional;
-
+import com.github.edurbs.datsa.domain.exception.ModelInUseException;
+import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
+import com.github.edurbs.datsa.domain.model.City;
+import com.github.edurbs.datsa.domain.model.State;
+import com.github.edurbs.datsa.domain.repository.CityRepository;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import com.github.edurbs.datsa.domain.exception.ModelInUseException;
-import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
-import com.github.edurbs.datsa.domain.model.City;
-import com.github.edurbs.datsa.domain.model.State;
-import com.github.edurbs.datsa.domain.repository.CityRepository;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
 class CityRegistryServiceTest {
@@ -27,10 +26,10 @@ class CityRegistryServiceTest {
     @Autowired
     private CityRegistryService sut;
 
-    @MockBean
+    @MockitoBean
     private CityRepository cityRepository;
 
-    @MockBean
+    @MockitoBean
     private StateRegistryService stateRegistryService;
 
     @Mock
