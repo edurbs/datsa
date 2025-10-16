@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.18</version>
+        <version>3.5.6</version>
         <relativePath />
     </parent>
 
@@ -25,7 +25,7 @@
         <jasperreports.version>7.0.3</jasperreports.version>
         <aws-java-sdk-s3.version>1.12.791</aws-java-sdk-s3.version>
         <logback-ext-loggly.version>0.1.5</logback-ext-loggly.version>
-        <spring-security-oauth2-authorization-server.version>0.3.1</spring-security-oauth2-authorization-server.version>
+        <spring-authorization-server.version>0.3.1</spring-authorization-server.version>
     </properties>
 
     <dependencies>
@@ -152,7 +152,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-authorization-server</artifactId>
-            <version>${spring-security-oauth2-authorization-server.version}</version>
+            <version>${spring-authorization-server.version}</version>
         </dependency>
 
         <dependency>
