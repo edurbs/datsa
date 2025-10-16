@@ -18,7 +18,6 @@
 
     <properties>
         <java.version>17</java.version>
-        <springdoc-openapi-ui.version>1.8.0</springdoc-openapi-ui.version>
         <mysql-connector-j.version>8.4.0</mysql-connector-j.version>
         <lombok.version>1.18.42</lombok.version>
         <modelmapper.version>3.2.2</modelmapper.version>
@@ -26,6 +25,7 @@
         <aws-java-sdk-s3.version>1.12.791</aws-java-sdk-s3.version>
         <logback-ext-loggly.version>0.1.5</logback-ext-loggly.version>
         <spring-authorization-server.version>0.3.1</spring-authorization-server.version>
+        <springdoc-version>2.8.13</springdoc-version>
     </properties>
 
     <dependencies>
@@ -181,22 +181,20 @@
             <artifactId>spring-session-data-redis</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui -->
+        <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-common -->
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <version>${springdoc-openapi-ui.version}</version>
+            <artifactId>springdoc-openapi-starter-common</artifactId>
+            <version>${springdoc-version}</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-hateoas</artifactId>
-            <version>${springdoc-openapi-ui.version}</version>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc-version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-security</artifactId>
-            <version>${springdoc-openapi-ui.version}</version>
-        </dependency>
+
 
 
     </dependencies>
