@@ -1,10 +1,12 @@
 package com.github.edurbs.datsa.api.exceptionhandler;
 
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.databind.JsonMappingException.Reference;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import com.github.edurbs.datsa.domain.exception.ModelInUseException;
+import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
+import com.github.edurbs.datsa.domain.exception.ModelValidationException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +14,12 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,14 +30,10 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.fasterxml.jackson.databind.JsonMappingException.Reference;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.fasterxml.jackson.databind.exc.PropertyBindingException;
-import com.github.edurbs.datsa.domain.exception.ModelInUseException;
-import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
-import com.github.edurbs.datsa.domain.exception.ModelValidationException;
-
-import lombok.extern.slf4j.Slf4j;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @ControllerAdvice
@@ -50,18 +48,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     protected @NonNull ResponseEntity<Object> handleMethodArgumentNotValid(
             @NonNull MethodArgumentNotValidException exception,
             @NonNull HttpHeaders headers,
-            @NonNull HttpStatus status,
+            @NonNull HttpStatusCode status,
             @NonNull WebRequest request) {
         Problem problem = handleValidationInternal(status, exception.getBindingResult());
         return handleExceptionInternal(exception, problem, headers, status, request);
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         return ResponseEntity.status(status).headers(headers).build();
     }
 
-    private Problem handleValidationInternal(HttpStatus status, BindingResult bindingResult) {
+    private Problem handleValidationInternal(HttpStatusCode status, BindingResult bindingResult) {
         ProblemType problemType = ProblemType.VALIDATION_ERROR;
         String detail = "Validation error";
         List<Problem.Field> fields = bindingResult.getFieldErrors().stream()
@@ -93,7 +91,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     protected @NonNull ResponseEntity<Object> handleNoHandlerFoundException(
             @NonNull NoHandlerFoundException ex,
             @NonNull HttpHeaders headers,
-            @NonNull HttpStatus status,
+            @NonNull HttpStatusCode status,
             @NonNull WebRequest request) {
         ProblemType problemType = ProblemType.RESOURCE_NOT_FOUND;
         String detail = "Resource %s does not exists.".formatted(ex.getRequestURL());
@@ -105,7 +103,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     protected @NonNull ResponseEntity<Object> handleTypeMismatch(
             @NonNull TypeMismatchException ex,
             @NonNull HttpHeaders headers,
-            @NonNull HttpStatus status,
+            @NonNull HttpStatusCode status,
             @NonNull WebRequest request) {
         if (ex instanceof MethodArgumentTypeMismatchException methodArgumentTypeMismatchException) {
             return handleMethodArgumentTypeMismatchException(
@@ -117,7 +115,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<Object> handleMethodArgumentTypeMismatchException(
             MethodArgumentTypeMismatchException ex,
             HttpHeaders headers,
-            HttpStatus status,
+            HttpStatusCode status,
             WebRequest request) {
         ProblemType problemType = ProblemType.INVALID_PARAMETER;
         String typeName = Optional.ofNullable(ex.getRequiredType())
@@ -134,7 +132,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     protected @NonNull ResponseEntity<Object> handleHttpMessageNotReadable(
             @NonNull HttpMessageNotReadableException ex,
             @NonNull HttpHeaders headers,
-            @NonNull HttpStatus status,
+            @NonNull HttpStatusCode status,
             @NonNull WebRequest request) {
 
         Throwable rootCause = ExceptionUtils.getRootCause(ex);
@@ -153,7 +151,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<Object> handlePropertyBinding(
             PropertyBindingException ex,
             HttpHeaders headers,
-            HttpStatus status,
+            HttpStatusCode status,
             WebRequest request) {
         String path = joinPath(ex.getPath());
         ProblemType problemType = ProblemType.JSON_ERROR;
@@ -166,7 +164,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<Object> handleInvalidFormat(
             InvalidFormatException ex,
             HttpHeaders headers,
-            HttpStatus status,
+            HttpStatusCode status,
             WebRequest request) {
         String path = joinPath(ex.getPath());
         ProblemType problemType = ProblemType.JSON_ERROR;
@@ -226,12 +224,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             @NonNull Exception ex,
             @Nullable Object body,
             @NonNull HttpHeaders headers,
-            @NonNull HttpStatus status,
+            @NonNull HttpStatusCode status,
             @NonNull WebRequest request) {
         if (body == null) {
             body = Problem.builder()
                     .timestamp(null)
-                    .title(status.getReasonPhrase())
+                    .title(HttpStatus.valueOf(status.value()).getReasonPhrase())
                     .status(status.value())
                     .userMessage(GENERIC_USER_ERROR_MESSAGE+ " "+ex.getMessage())
                     .build();
@@ -246,7 +244,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(ex, body, headers, status, request);
     }
 
-    private Problem.ProblemBuilder createProblemBuilder(HttpStatus status, ProblemType problemType, String detail) {
+    private Problem.ProblemBuilder createProblemBuilder(HttpStatusCode status, ProblemType problemType, String detail) {
         return Problem.builder()
                 .timestamp(OffsetDateTime.now())
                 .status(status.value())
@@ -260,13 +258,5 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return references.stream()
                 .map(Reference::getFieldName)
                 .collect(Collectors.joining("."));
-    }
-
-    @Override
-    protected @NonNull ResponseEntity<Object> handleBindException(@NonNull BindException exception, @NonNull HttpHeaders headers, @NonNull HttpStatus status,
-            @NonNull WebRequest request) {
-        Problem problem = handleValidationInternal(status, exception.getBindingResult());
-        return handleExceptionInternal(exception, problem, headers, status, request);
-
     }
 }
