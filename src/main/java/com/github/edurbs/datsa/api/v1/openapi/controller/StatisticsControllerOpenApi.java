@@ -27,7 +27,7 @@ public interface StatisticsControllerOpenApi {
     @Operation(summary = "Get a daily sales report", responses = {
             @ApiResponse(responseCode = "200",
             content = {
-                @Content(mediaType = "image/json", array = @ArraySchema(schema = @Schema(implementation = DailySales.class))),
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = DailySales.class))),
                 @Content(mediaType = "image/pdf", schema = @Schema(type = "string", format = "binary"))
             })
     })
