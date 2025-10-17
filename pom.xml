@@ -24,7 +24,7 @@
         <jasperreports.version>7.0.3</jasperreports.version>
         <aws-java-sdk-s3.version>1.12.791</aws-java-sdk-s3.version>
         <logback-ext-loggly.version>0.1.5</logback-ext-loggly.version>
-        <spring-authorization-server.version>0.3.1</spring-authorization-server.version>
+        <spring-authorization-server.version>1.5.2</spring-authorization-server.version>
         <springdoc-version>2.8.13</springdoc-version>
     </properties>
 
