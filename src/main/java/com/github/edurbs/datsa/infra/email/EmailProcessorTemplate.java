@@ -1,18 +1,17 @@
 package com.github.edurbs.datsa.infra.email;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.edurbs.datsa.domain.service.EmailSenderService.Message;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import com.github.edurbs.datsa.domain.service.EmailSenderService.Message;
-
 @Component
+@RequiredArgsConstructor
 public class EmailProcessorTemplate {
 
-    @Autowired
-    private Configuration freemarkerConfig;
+    private final Configuration freemarkerConfig;
 
     protected String processTemplate(Message message){
         try {
