@@ -34,6 +34,7 @@
         <java-version.target>17</java-version.target>
         <logcaptor.version>2.12.1</logcaptor.version>
         <sonar.organization>edurbsedurbs</sonar.organization>
+        <sonar.projectKey>com.github.edurbs:datsa</sonar.projectKey>
     </properties>
 
     <dependencies>
