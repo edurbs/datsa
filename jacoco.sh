@@ -1,0 +1,1 @@
+mvn clean install jacoco:prepare-agent jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage
