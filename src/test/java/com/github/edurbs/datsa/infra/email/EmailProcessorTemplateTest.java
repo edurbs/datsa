@@ -3,7 +3,6 @@ package com.github.edurbs.datsa.infra.email;
 import com.github.edurbs.datsa.domain.service.EmailSenderService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +37,7 @@ class EmailProcessorTemplateTest {
 
     @Test
     @DisplayName("Should process Template")
-    void shouldProcessTemplate() throws TemplateException, IOException {
+    void shouldProcessTemplate() throws IOException {
 
         // arrange
         when(message.getBody()).thenReturn("body");
@@ -82,9 +81,7 @@ class EmailProcessorTemplateTest {
         when(freemarkerConfig.getTemplate(any(String.class))).thenReturn(template);
         try(MockedStatic<FreeMarkerTemplateUtils> mockedStatic = mockStatic(FreeMarkerTemplateUtils.class)){
             mockedStatic.when(
-                    () -> {
-                        FreeMarkerTemplateUtils.processTemplateIntoString(any(Template.class), any(Map.class));
-                    }
+                    () -> FreeMarkerTemplateUtils.processTemplateIntoString(any(Template.class), any(Map.class))
             ).thenThrow(new RuntimeException());
 
             // Act & Assert
