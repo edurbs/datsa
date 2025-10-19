@@ -5,6 +5,7 @@ import com.github.edurbs.datsa.domain.service.EmailSenderService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class SmtpSenderService implements EmailSenderService {
         try {
             MimeMessage mimeMessage = createMimeMessage(message);
             javaMailSender.send(mimeMessage);
-        } catch (MessagingException e) {
+        } catch (MailException | MessagingException e) {
             throw new EmailException("Can't send email: "+e.getMessage(), e);
         }
     }
@@ -32,7 +33,7 @@ public class SmtpSenderService implements EmailSenderService {
     protected MimeMessage createMimeMessage(Message message) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         String body = emailProcessorTemplate.processTemplate(message);
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+        MimeMessageHelper helper = createMimeMessageHelper(mimeMessage);
         helper.setFrom(emailProperties.getSender());
         helper.setTo(message.getRecipients().toArray(new String[0]));
         helper.setSubject(message.getSubject());
@@ -40,7 +41,7 @@ public class SmtpSenderService implements EmailSenderService {
         return mimeMessage;
     }
 
-    protected MimeMessageHelper createMimeMessageHelper(MimeMessage mimeMessage) {
+    protected MimeMessageHelper createMimeMessageHelper(MimeMessage mimeMessage)   {
         return new MimeMessageHelper(mimeMessage, "UTF-8");
     }
 
