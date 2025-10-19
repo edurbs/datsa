@@ -7,18 +7,15 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.github.edurbs.datsa.core.storage.StorageProperties;
 import com.github.edurbs.datsa.domain.service.PhotoStorageService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import lombok.AllArgsConstructor;
 
 import java.net.URL;
 
-@Service
+@AllArgsConstructor
 public class S3PhotoStorageService implements PhotoStorageService {
 
-    @Autowired
     private AmazonS3 amazonS3;
 
-    @Autowired
     private StorageProperties storageProperties;
 
     @Override
