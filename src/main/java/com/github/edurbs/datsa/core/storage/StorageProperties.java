@@ -1,6 +1,7 @@
 package com.github.edurbs.datsa.core.storage;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -13,31 +14,31 @@ import java.nio.file.Path;
 @Setter
 @Component
 @ConfigurationProperties("datsa.storage")
+@AllArgsConstructor
 public class StorageProperties {
-    private Local local = new Local();
-    private S3 s3 = new S3();
-    private StorageType storageType = StorageType.S3;
+
+    private Local local;
+    private S3 s3;
+    private StorageType storageType;
 
     public enum StorageType {
         LOCAL, S3
     }
+
     @Getter
     @Setter
-    public class Local {
+    public static class Local {
         private Path photoFolder;
     }
 
     @Getter
     @Setter
     @FieldDefaults(level = AccessLevel.PRIVATE)
-    public class S3 {
+    public static class S3 {
         String idAccessKey;
         String secretKey;
         String bucket;
         String region;
         String photosProductFolder;
-
     }
-
-
 }

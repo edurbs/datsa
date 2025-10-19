@@ -28,10 +28,10 @@ public class S3PhotoStorageService implements PhotoStorageService {
             var objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(newPhoto.getContentType());
             var putObjectRequest = new PutObjectRequest(
-                storageProperties.getS3().getBucket(),
-                filePath,
-                newPhoto.getInputStream(),
-                objectMetadata
+                    storageProperties.getS3().getBucket(),
+                    filePath,
+                    newPhoto.getInputStream(),
+                    objectMetadata
             ).withCannedAcl(CannedAccessControlList.PublicRead);
             amazonS3.putObject(putObjectRequest);
         } catch (Exception e) {
@@ -47,8 +47,8 @@ public class S3PhotoStorageService implements PhotoStorageService {
     @Override
     public void delete(String fileName) {
         DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(
-            storageProperties.getS3().getBucket(),
-            getFilePath(fileName)
+                storageProperties.getS3().getBucket(),
+                getFilePath(fileName)
         );
         amazonS3.deleteObject(deleteObjectRequest);
     }
@@ -57,8 +57,8 @@ public class S3PhotoStorageService implements PhotoStorageService {
     public FetchedPhoto get(String fileName) {
         String filePath = getFilePath(fileName);
         URL url = amazonS3.getUrl(storageProperties.getS3().getBucket(), filePath);
-        return  FetchedPhoto.builder()
-            .url(url.toString())
-            .build();
+        return FetchedPhoto.builder()
+                .url(url.toString())
+                .build();
     }
 }

@@ -19,24 +19,24 @@ public class StorageConfig {
     private StorageProperties storageProperties;
 
     @Bean
-    @ConditionalOnProperty(name="datsa.storage.storage-type", havingValue = "s3")
-    public AmazonS3 amazonS3(){
+    @ConditionalOnProperty(name = "datsa.storage.storage-type", havingValue = "s3")
+    public AmazonS3 amazonS3() {
         var credentials = new BasicAWSCredentials(
-            storageProperties.getS3().getIdAccessKey(),
-            storageProperties.getS3().getSecretKey());
+                storageProperties.getS3().getIdAccessKey(),
+                storageProperties.getS3().getSecretKey());
 
         return AmazonS3ClientBuilder.standard()
-            .withCredentials(new AWSStaticCredentialsProvider(credentials))
-            .withRegion(storageProperties.getS3().getRegion())
-            .build();
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withRegion(storageProperties.getS3().getRegion())
+                .build();
     }
 
     @Bean
-    public PhotoStorageService photoStorageService(){
-        if(StorageProperties.StorageType.S3.equals(storageProperties.getStorageType())){
-            return new S3PhotoStorageService();
-        }else{
-            return new LocalPhotoStorageService();
+    public PhotoStorageService photoStorageService(S3PhotoStorageService s3, LocalPhotoStorageService local) {
+        if (StorageProperties.StorageType.S3.equals(storageProperties.getStorageType())) {
+            return s3;
+        } else {
+            return local;
         }
     }
 

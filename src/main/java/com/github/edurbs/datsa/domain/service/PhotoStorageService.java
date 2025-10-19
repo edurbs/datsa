@@ -16,7 +16,6 @@ public interface PhotoStorageService {
 
     FetchedPhoto get(String fileName);
 
-
     default String generateFileName(String originalName) {
         return UUID.randomUUID() + "_" + originalName;
     }
@@ -31,7 +30,7 @@ public interface PhotoStorageService {
     @Getter
     @Builder
     @FieldDefaults(level = AccessLevel.PRIVATE)
-    class NewPhoto {
+    public class NewPhoto {
         String fileName;
         InputStream inputStream;
         String contentType;
@@ -42,10 +41,12 @@ public interface PhotoStorageService {
     class FetchedPhoto {
         private InputStream inputStream;
         private String url;
-        public boolean hasUrl(){
+
+        public boolean hasUrl() {
             return url != null;
         }
-        public boolean hasInputStream(){
+
+        public boolean hasInputStream() {
             return inputStream != null;
         }
     }

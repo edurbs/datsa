@@ -1,27 +1,28 @@
 package com.github.edurbs.datsa.infra.service.storage;
 
+import com.github.edurbs.datsa.core.storage.StorageProperties;
+import com.github.edurbs.datsa.domain.service.PhotoStorageService;
+import lombok.AllArgsConstructor;
+import org.springframework.util.FileCopyUtils;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.FileCopyUtils;
-
-import com.github.edurbs.datsa.core.storage.StorageProperties;
-import com.github.edurbs.datsa.domain.service.PhotoStorageService;
-
+@AllArgsConstructor
 public class LocalPhotoStorageService implements PhotoStorageService {
 
-    @Autowired
     private StorageProperties properties;
 
     @Override
     public void save(NewPhoto newPhoto) {
-        try {
-            Path filePath = getFilePath(newPhoto.getFileName());
-            FileCopyUtils.copy(newPhoto.getInputStream(), Files.newOutputStream(filePath));
+        Path filePath = getFilePath(newPhoto.getFileName());
+        try (InputStream in = newPhoto.getInputStream(); OutputStream out = Files.newOutputStream(filePath)) {
+            FileCopyUtils.copy(in, out);
         } catch (IOException e) {
-            throw new StorageException("Can't storage the file", e);
+            throw new StorageException("Can't save the file", e);
         }
     }
 
@@ -31,7 +32,7 @@ public class LocalPhotoStorageService implements PhotoStorageService {
             Path filePath = getFilePath(fileName);
             Files.deleteIfExists(filePath);
         } catch (IOException e) {
-            throw new StorageException("Cant delete the file.", e);
+            throw new StorageException("Can't delete the file.", e);
         }
     }
 
@@ -40,8 +41,8 @@ public class LocalPhotoStorageService implements PhotoStorageService {
         try {
             Path fileNamePath = getFilePath(fileName);
             return FetchedPhoto.builder()
-                .inputStream(Files.newInputStream(fileNamePath))
-                .build();
+                    .inputStream(Files.newInputStream(fileNamePath))
+                    .build();
         } catch (IOException e) {
             throw new StorageException("Can't read the file", e);
         }
@@ -49,7 +50,7 @@ public class LocalPhotoStorageService implements PhotoStorageService {
 
     private Path getFilePath(String fileName) {
         return properties.getLocal().getPhotoFolder()
-            .resolve(Path.of(fileName));
+                .resolve(Path.of(fileName));
 
     }
 
