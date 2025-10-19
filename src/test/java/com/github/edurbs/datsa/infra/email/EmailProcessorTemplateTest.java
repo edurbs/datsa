@@ -3,7 +3,6 @@ package com.github.edurbs.datsa.infra.email;
 import com.github.edurbs.datsa.domain.service.EmailSenderService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,7 +19,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("EmailProcessosTemplate tests")
 class EmailProcessorTemplateTest {
 
     @Mock
@@ -36,8 +34,7 @@ class EmailProcessorTemplateTest {
     EmailProcessorTemplate emailProcessorTemplate;
 
     @Test
-    @DisplayName("Should process Template")
-    void shouldProcessTemplate() throws IOException {
+    void givenMessage_whenOk_thenProcessTemplate() throws IOException {
 
         // arrange
         when(message.getBody()).thenReturn("body");
@@ -62,8 +59,7 @@ class EmailProcessorTemplateTest {
     }
 
     @Test
-    @DisplayName("Should throws Exception When Get Template Fails")
-    void shouldThrowsExceptionWhenGetTemplateFails(){
+    void givenMessage_whenEmailProcessorThrowsException_thenThrowsEmailException(){
         // Arrange
 
         // Act & Assert
@@ -74,8 +70,7 @@ class EmailProcessorTemplateTest {
     }
 
     @Test
-    @DisplayName("Should throws Exception then process template fails")
-    void shouldThrowsExceptionWhenProcessTemplateFails() throws IOException {
+    void givenMessage_whenFreeMarkerThrowsException_thenThrowsEmailException() throws IOException {
         // Arrange
         when(message.getBody()).thenReturn("body");
         when(freemarkerConfig.getTemplate(any(String.class))).thenReturn(template);
