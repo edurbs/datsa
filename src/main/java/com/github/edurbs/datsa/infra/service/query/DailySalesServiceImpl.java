@@ -28,41 +28,41 @@ public class DailySalesServiceImpl implements DailySalesService {
         var query = builder.createQuery(DailySales.class);
         var root = query.from(Order.class);
         var functionConvertTzCreationDate = builder.function(
-            "convert_tz",
-            Date.class,
-            root.get(CREATION_DATE),
-            builder.literal("+00:00"),
-            builder.literal(timeOffset)
+                "convert_tz",
+                Date.class,
+                root.get(CREATION_DATE),
+                builder.literal("+00:00"),
+                builder.literal(timeOffset)
         );
         var functionDateForCreationDate = builder.function(
                 "date",
                 Date.class,
                 functionConvertTzCreationDate);
         var selection = builder.construct(DailySales.class,
-            functionDateForCreationDate,
-            builder.count(root.get("id")),
-            builder.sum(root.get("totalAmount"))
+                functionDateForCreationDate,
+                builder.count(root.get("id")),
+                builder.sum(root.get("totalAmount"))
         );
         var predicates = new ArrayList<Predicate>();
-        if(filter.getRestaurantId()!=null){
+        if (filter.getRestaurantId() != null) {
             predicates.add(
-                builder.equal(
-                    root.get("restaurant").get("id"),
-                    filter.getRestaurantId())
+                    builder.equal(
+                            root.get("restaurant").get("id"),
+                            filter.getRestaurantId())
             );
         }
-        if(filter.getBeginCreationDate()!=null){
+        if (filter.getCreationDateFrom() != null) {
             predicates.add(
-                builder.greaterThanOrEqualTo(
-                    root.get(CREATION_DATE),
-                    filter.getBeginCreationDate())
+                    builder.greaterThanOrEqualTo(
+                            root.get(CREATION_DATE),
+                            filter.getCreationDateFrom())
             );
         }
-        if(filter.getEndCreationDate()!=null){
+        if (filter.getCreationDateTo() != null) {
             predicates.add(
-                builder.lessThanOrEqualTo(
-                    root.get(CREATION_DATE),
-                    filter.getEndCreationDate())
+                    builder.lessThanOrEqualTo(
+                            root.get(CREATION_DATE),
+                            filter.getCreationDateTo())
             );
         }
         predicates.add(root.get("status").in(OrderStatus.CONFIRMED, OrderStatus.DELIVERED));
