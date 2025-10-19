@@ -1,29 +1,23 @@
 package com.github.edurbs.datsa.infra.email;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-
 import com.github.edurbs.datsa.core.email.EmailProperties;
 import com.github.edurbs.datsa.domain.service.EmailSenderService;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Component;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-
+@Component
+@RequiredArgsConstructor
 public class SmtpSenderService implements EmailSenderService {
 
-    @Autowired
-    protected EmailProperties emailProperties;
+    protected final EmailProperties emailProperties;
 
-    @Autowired
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
-    @Autowired
-    private EmailProcessorTemplate emailProcessorTemplate;
+    private final EmailProcessorTemplate emailProcessorTemplate;
 
     @Override
     public void send(Message message) {
@@ -44,6 +38,10 @@ public class SmtpSenderService implements EmailSenderService {
         helper.setSubject(message.getSubject());
         helper.setText(body, true);
         return mimeMessage;
+    }
+
+    protected MimeMessageHelper createMimeMessageHelper(MimeMessage mimeMessage) {
+        return new MimeMessageHelper(mimeMessage, "UTF-8");
     }
 
 

@@ -2,13 +2,15 @@ package com.github.edurbs.datsa.infra.email;
 
 import com.github.edurbs.datsa.core.email.EmailProperties;
 import com.github.edurbs.datsa.domain.service.EmailSenderService;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
 @Slf4j
-@RequiredArgsConstructor
+@Component
+@AllArgsConstructor
 public class FakeEmailService implements EmailSenderService {
 
     private EmailProperties emailProperties;

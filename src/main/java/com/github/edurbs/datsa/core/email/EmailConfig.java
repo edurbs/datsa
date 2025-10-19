@@ -1,31 +1,29 @@
 package com.github.edurbs.datsa.core.email;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 import com.github.edurbs.datsa.domain.service.EmailSenderService;
 import com.github.edurbs.datsa.infra.email.FakeEmailService;
 import com.github.edurbs.datsa.infra.email.SandBoxEmailService;
 import com.github.edurbs.datsa.infra.email.SmtpSenderService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@RequiredArgsConstructor
 public class EmailConfig {
 
-    @Autowired
-    EmailProperties emailProperties;
+    private final EmailProperties emailProperties;
+    private final SmtpSenderService smtpSenderService;
+    private final SandBoxEmailService sandBoxEmailService;
+    private final FakeEmailService fakeEmailService;
 
     @Bean
     public EmailSenderService emailSenderService(){
-        switch (emailProperties.getImpl()) {
-            case FAKE:
-                return new FakeEmailService();
-            case SMTP:
-                return new SmtpSenderService();
-            case SANDBOX:
-                return new SandBoxEmailService();
-            default:
-                return null;
-        }
+        return switch (emailProperties.getImpl()) {
+            case FAKE -> fakeEmailService;
+            case SMTP -> smtpSenderService;
+            case SANDBOX -> sandBoxEmailService;
+            default -> throw new UnsupportedOperationException("Email implementation not supported");
+        };
     }
 }
