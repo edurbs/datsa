@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@SecurityRequirement(name="security_auth")
+@SecurityRequirement(name = "security_auth")
 @Tag(name = "Statistics", description = "Statistics report")
 public interface StatisticsControllerOpenApi {
 
@@ -26,15 +26,15 @@ public interface StatisticsControllerOpenApi {
 
     @Operation(summary = "Get a daily sales report", responses = {
             @ApiResponse(responseCode = "200",
-            content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = DailySales.class))),
-                @Content(mediaType = "image/pdf", schema = @Schema(type = "string", format = "binary"))
-            })
+                    content = {
+                            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = DailySales.class))),
+                            @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary"))
+                    })
     })
     @DailySalesFilterParameter
     List<DailySales> getDailySales(
             @Parameter(hidden = true) DailySalesFilter filter,
-            @Parameter(description = "Time Offset",  example = "-03:00", required = false) String timeOffset);
+            @Parameter(description = "Time Offset", example = "-03:00", required = false) String timeOffset);
 
     @Operation(hidden = true)
     ResponseEntity<byte[]> getDailySalesPdf(DailySalesFilter filter, @RequestParam(required = false, defaultValue = "+00:00") String timeOffset);
