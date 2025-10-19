@@ -4,7 +4,6 @@ import com.github.edurbs.datsa.core.email.EmailProperties;
 import com.github.edurbs.datsa.domain.service.EmailSenderService;
 import nl.altindag.log.LogCaptor;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +18,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("FakeEmailService tests")
 class FakeEmailServiceTest {
 
     @Mock
@@ -43,8 +41,7 @@ class FakeEmailServiceTest {
     }
 
     @Test
-    @DisplayName("Log.info should be called")
-    void logInfoShouldBeCalled() {
+    void givenMessage_whenProcessTemplate_thenLogInfoShouldBeCalled() {
         // Arrange
         when(emailProperties.getSender()).thenReturn("sender@example.com");
         when(emailProcessorTemplate.processTemplate(any(EmailSenderService.Message.class)))
@@ -70,8 +67,7 @@ class FakeEmailServiceTest {
     }
 
     @Test
-    @DisplayName("Should send the email with success")
-    void shouldSendEmailWithSuccess() {
+    void givenMessage_whenProcessTemplate_thenSendEmailWithSuccess() {
         // Arrange
         when(emailProperties.getSender()).thenReturn("from@example.com");
         when(emailProcessorTemplate.processTemplate(any(EmailSenderService.Message.class)))
@@ -85,8 +81,7 @@ class FakeEmailServiceTest {
     }
 
     @Test
-    @DisplayName("Should throws EmailException when processTemplate fails")
-    void shouldThrowsEmailExceptionWhenProcessTemplateFails() {
+    void givenMessage_whenProcessTemplateThrowsException_thenThrowsEmailException() {
         // Arrange
         when(emailProperties.getSender()).thenReturn("from@example.com");
         when(emailProcessorTemplate.processTemplate(any(EmailSenderService.Message.class)))
@@ -101,30 +96,35 @@ class FakeEmailServiceTest {
     }
 
     @Test
-    @DisplayName("Should send email with multiple recipients")
-    void shouldSendEmailWithMultipleRecipients() {
+    void givenMessageWithMultiRecipients_whenSendEmail_thenSendToMultiRecipients() {
         // Arrange
+        Set<String> recipients = Set.of("recipient1@example.com", "recipient2@example.com", "recipient3@example.com");
         EmailSenderService.Message multiRecipients =
                 EmailSenderService.Message.builder()
                         .body("Email body")
                         .subject("Email subject")
-                        .recipients(Set.of("recipient1@example.com", "recipient2@example.com", "recipient3@example.com"))
+                        .recipients(recipients)
                         .build();
 
         when(emailProperties.getSender()).thenReturn("recipient@example.com");
-        when(emailProcessorTemplate.processTemplate(any(EmailSenderService.Message.class)))
+        when(emailProcessorTemplate.processTemplate(multiRecipients))
                 .thenReturn("Processed body");
 
-        // Act & Assert
-        assertDoesNotThrow(() -> fakeEmailService.send(multiRecipients));
+        try (LogCaptor logCaptor = LogCaptor.forClass(FakeEmailService.class)) {
 
-        verify(emailProperties, times(1)).getSender();
-        verify(emailProcessorTemplate, times(1)).processTemplate(multiRecipients);
+            // Act
+            fakeEmailService.send(multiRecipients);
+
+            // Assert
+            List<String> infoLogs = logCaptor.getInfoLogs();
+            assertTrue(recipients
+                    .stream().allMatch(recipient -> infoLogs
+                            .stream().anyMatch(log -> log.contains(recipient))));
+        }
     }
 
     @Test
-    @DisplayName("Should throws EmailException when emailProperties.getSender() fails")
-    void shouldThrowsEmailExceptionWhenGetSenderFails() {
+    void givenMessage_whenSendThrowsException_thenThrowsEmailException() {
         // Arrange
         when(emailProperties.getSender()).thenThrow(new RuntimeException("Can't get the sender"));
 
