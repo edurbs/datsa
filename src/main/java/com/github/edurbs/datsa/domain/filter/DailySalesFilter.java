@@ -1,14 +1,13 @@
 package com.github.edurbs.datsa.domain.filter;
 
-import java.time.OffsetDateTime;
-
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import java.time.OffsetDateTime;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
@@ -17,8 +16,8 @@ public class DailySalesFilter {
     Long restaurantId;
 
     @DateTimeFormat(iso = ISO.DATE_TIME)
-    OffsetDateTime beginCreationDate;
+    OffsetDateTime creationDateFrom;
 
     @DateTimeFormat(iso = ISO.DATE_TIME)
-    OffsetDateTime endCreationDate;
+    OffsetDateTime creationDateTo;
 }
