@@ -16,9 +16,13 @@ public class SandBoxEmailService extends SmtpSenderService {
     @Override
     protected MimeMessage createMimeMessage(Message message) throws MessagingException {
         MimeMessage mimeMessage = super.createMimeMessage(message);
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+        MimeMessageHelper helper = createMimeMessageHelper(mimeMessage);
         helper.addTo(emailProperties.getSandbox().getRecipient());
         return mimeMessage;
+    }
+
+    protected MimeMessageHelper createMimeMessageHelper(MimeMessage mimeMessage) {
+        return new MimeMessageHelper(mimeMessage, "UTF-8");
     }
 
 }

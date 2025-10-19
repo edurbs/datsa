@@ -31,7 +31,7 @@ public class EmailProperties {
 
     @Getter
     @Setter
-    public class Sandbox {
+    public static class Sandbox {
         private String recipient;
     }
 
