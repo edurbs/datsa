@@ -40,7 +40,7 @@ class SandBoxEmailServiceTest {
     SandBoxEmailService sut;
 
     @Test
-    void test() throws MessagingException {
+    void giveMessage_whenOk_thenHelperIsConfigured() throws MessagingException {
         // Arrange
         EmailSenderService.Message message = EmailSenderService.Message.builder()
                 .body("body")
