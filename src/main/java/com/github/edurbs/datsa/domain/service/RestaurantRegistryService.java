@@ -1,25 +1,23 @@
 package com.github.edurbs.datsa.domain.service;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.github.edurbs.datsa.domain.exception.ModelInUseException;
+import com.github.edurbs.datsa.domain.exception.ModelValidationException;
+import com.github.edurbs.datsa.domain.exception.RestaurantNotFoundException;
+import com.github.edurbs.datsa.domain.model.MyUser;
+import com.github.edurbs.datsa.domain.model.Product;
+import com.github.edurbs.datsa.domain.model.Restaurant;
+import com.github.edurbs.datsa.domain.repository.ProductRepository;
+import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.edurbs.datsa.domain.exception.ModelInUseException;
-import com.github.edurbs.datsa.domain.exception.ModelValidationException;
-import com.github.edurbs.datsa.domain.exception.RestaurantNotFoundException;
-import com.github.edurbs.datsa.domain.model.Product;
-import com.github.edurbs.datsa.domain.model.Restaurant;
-import com.github.edurbs.datsa.domain.model.MyUser;
-import com.github.edurbs.datsa.domain.repository.ProductRepository;
-import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
-
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -128,9 +126,7 @@ public class RestaurantRegistryService {
     }
 
     public Set<Product> getAllActiveProducts(Long restaurantId){
-        return productRepository.findByActiveTrueAndRestaurantId(restaurantId)
-            .stream()
-            .collect(Collectors.toSet());
+        return new HashSet<>(productRepository.findByActiveTrueAndRestaurantId(restaurantId));
     }
 
     public Product getProduct(Long restaurantId, Long productId){
