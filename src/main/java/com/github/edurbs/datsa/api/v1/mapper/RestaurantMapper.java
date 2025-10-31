@@ -1,12 +1,5 @@
 package com.github.edurbs.datsa.api.v1.mapper;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
-
 import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.controller.RestaurantController;
 import com.github.edurbs.datsa.api.v1.dto.input.RestaurantInput;
@@ -17,21 +10,24 @@ import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.City;
 import com.github.edurbs.datsa.domain.model.Kitchen;
 import com.github.edurbs.datsa.domain.model.Restaurant;
+import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 @Component
 public class RestaurantMapper extends RepresentationModelAssemblerSupport<Restaurant, RestaurantOutput> {
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+    private final LinksAdder linksAdder;
+    private final MySecurity mySecurity;
 
-    @Autowired
-    private LinksAdder linksAdder;
-
-    @Autowired
-    private MySecurity mySecurity;
-
-    public RestaurantMapper(){
+    public RestaurantMapper(ModelMapper modelMapper, LinksAdder linksAdder, MySecurity mySecurity) {
         super(RestaurantController.class, RestaurantOutput.class);
+        this.modelMapper = modelMapper;
+        this.linksAdder = linksAdder;
+        this.mySecurity = mySecurity;
     }
 
     public Restaurant toDomain(RestaurantInput restaurantInput) {
