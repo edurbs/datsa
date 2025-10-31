@@ -14,14 +14,6 @@ public class JdbcOAuth2AuthorizationQueryService implements OAuth2AuthorizationQ
     private final JdbcOperations jdbcOperations;
     private final RowMapper<RegisteredClient> registeredClientRowMapper;
     private final RowMapper<OAuth2Authorization> oAuth2AuthorizationRowMapper;
-    private final String LIST_AUTHORIZED_CLIENTS = "SELECT rc.*" +
-            "FROM datsa.oauth2_authorization_consent c " +
-            "inner join oauth2_registered_client rc on rc.id = c.registered_client_id " +
-            "where c.principal_name = ? ";
-    private final String LIST_AUTHORIZATIONS_QUERY = "SELECT a.* FROM oauth2_authorization a " +
-            "INNER JOIN oauth2_registered_client c on c.id = a.registered_client_id " +
-            "WHERE a.principal_name = ? " +
-            "AND a.registered_client_id = ? ";
 
     public JdbcOAuth2AuthorizationQueryService(JdbcOperations jdbcOperations, RegisteredClientRepository repository) {
         this.jdbcOperations = jdbcOperations;
@@ -31,11 +23,19 @@ public class JdbcOAuth2AuthorizationQueryService implements OAuth2AuthorizationQ
 
     @Override
     public List<RegisteredClient> listClientsWithConsent(String principalName) {
-        return this.jdbcOperations.query(LIST_AUTHORIZED_CLIENTS, registeredClientRowMapper, principalName);
+        String listAutorizedClients = "SELECT rc.*" +
+            "FROM datsa.oauth2_authorization_consent c " +
+            "inner join oauth2_registered_client rc on rc.id = c.registered_client_id " +
+            "where c.principal_name = ? ";
+        return this.jdbcOperations.query(listAutorizedClients, registeredClientRowMapper, principalName);
     }
 
     @Override
     public List<OAuth2Authorization> listAuthorizations(String principalName, String clientId) {
-        return this.jdbcOperations.query(LIST_AUTHORIZATIONS_QUERY, oAuth2AuthorizationRowMapper, principalName, clientId);
+        String listAuthorizationsQuery = "SELECT a.* FROM oauth2_authorization a " +
+            "INNER JOIN oauth2_registered_client c on c.id = a.registered_client_id " +
+            "WHERE a.principal_name = ? " +
+            "AND a.registered_client_id = ? ";
+        return this.jdbcOperations.query(listAuthorizationsQuery, oAuth2AuthorizationRowMapper, principalName, clientId);
     }
 }
