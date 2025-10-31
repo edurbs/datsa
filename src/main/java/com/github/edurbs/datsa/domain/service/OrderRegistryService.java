@@ -1,44 +1,34 @@
 package com.github.edurbs.datsa.domain.service;
 
+import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
+import com.github.edurbs.datsa.domain.exception.ModelValidationException;
+import com.github.edurbs.datsa.domain.filter.OrderFilter;
+import com.github.edurbs.datsa.domain.model.*;
+import com.github.edurbs.datsa.domain.repository.OrderRepository;
+import com.github.edurbs.datsa.domain.repository.spec.OrderSpecs;
 import jakarta.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
-import com.github.edurbs.datsa.domain.exception.ModelValidationException;
-import com.github.edurbs.datsa.domain.filter.OrderFilter;
-import com.github.edurbs.datsa.domain.model.City;
-import com.github.edurbs.datsa.domain.model.Order;
-import com.github.edurbs.datsa.domain.model.PaymentMethod;
-import com.github.edurbs.datsa.domain.model.Product;
-import com.github.edurbs.datsa.domain.model.Restaurant;
-import com.github.edurbs.datsa.domain.model.MyUser;
-import com.github.edurbs.datsa.domain.repository.OrderRepository;
-import com.github.edurbs.datsa.domain.repository.spec.OrderSpecs;
-
 @Service
 public class OrderRegistryService {
 
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+    private final ProductRegistryService productRegistryService;
+    private final CityRegistryService cityRegistryService;
+    private final UserRegistryService userRegistryService;
+    private final RestaurantRegistryService restaurantRegistryService;
+    private final PaymentMethodRegistryService paymentMethodRegistryService;
 
-    @Autowired
-    private ProductRegistryService productRegistryService;
-
-    @Autowired
-    private CityRegistryService cityRegistryService;
-
-    @Autowired
-    private UserRegistryService userRegistryService;
-
-    @Autowired
-    private RestaurantRegistryService restaurantRegistryService;
-
-    @Autowired
-    private PaymentMethodRegistryService paymentMethodRegistryService;
+    public OrderRegistryService(OrderRepository orderRepository, ProductRegistryService productRegistryService, CityRegistryService cityRegistryService, UserRegistryService userRegistryService, RestaurantRegistryService restaurantRegistryService, PaymentMethodRegistryService paymentMethodRegistryService) {
+        this.orderRepository = orderRepository;
+        this.productRegistryService = productRegistryService;
+        this.cityRegistryService = cityRegistryService;
+        this.userRegistryService = userRegistryService;
+        this.restaurantRegistryService = restaurantRegistryService;
+        this.paymentMethodRegistryService = paymentMethodRegistryService;
+    }
 
     public Order getById(String uuid) {
         return orderRepository.findByUuid(uuid)
