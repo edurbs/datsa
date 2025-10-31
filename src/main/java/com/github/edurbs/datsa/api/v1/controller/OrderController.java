@@ -15,7 +15,7 @@ import com.github.edurbs.datsa.domain.filter.OrderFilter;
 import com.github.edurbs.datsa.domain.model.MyUser;
 import com.github.edurbs.datsa.domain.model.Order;
 import com.github.edurbs.datsa.domain.service.OrderRegistryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -23,27 +23,25 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/v1/orders")
 public class OrderController implements OrderControllerOpenApi {
 
-    @Autowired
-    OrderRegistryService orderRegistryService;
+    private final OrderRegistryService orderRegistryService;
+    private final OrderSummaryMapper orderSummaryMapper;
+    private final OrderMapper orderMapper;
+    private final PagedResourcesAssembler<Order> pagedResourcesAssembler;
+    private final MySecurity mySecurity;
 
-    @Autowired
-    OrderSummaryMapper orderSummaryMapper;
-
-    @Autowired
-    OrderMapper orderMapper;
-
-    @Autowired
-    private PagedResourcesAssembler<Order> pagedResourcesAssembler;
-
-    @Autowired
-    private MySecurity mySecurity;
+    public OrderController(OrderRegistryService orderRegistryService, OrderSummaryMapper orderSummaryMapper, OrderMapper orderMapper, PagedResourcesAssembler<Order> pagedResourcesAssembler, MySecurity mySecurity) {
+        this.orderRegistryService = orderRegistryService;
+        this.orderSummaryMapper = orderSummaryMapper;
+        this.orderMapper = orderMapper;
+        this.pagedResourcesAssembler = pagedResourcesAssembler;
+        this.mySecurity = mySecurity;
+    }
 
     @CheckSecurity.Orders.CanFindById
     @GetMapping("/{uuid}")
