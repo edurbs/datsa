@@ -1,22 +1,23 @@
 package com.github.edurbs.datsa.domain.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.edurbs.datsa.domain.exception.ModelInUseException;
+import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
+import com.github.edurbs.datsa.domain.model.Kitchen;
+import com.github.edurbs.datsa.domain.repository.KitchenRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.edurbs.datsa.domain.exception.ModelInUseException;
-import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
-import com.github.edurbs.datsa.domain.model.Kitchen;
-import com.github.edurbs.datsa.domain.repository.KitchenRepository;
-
 @Service
 public class KitchenRegistryService {
 
-    @Autowired
-    private KitchenRepository kitchenRepository;
+    private final KitchenRepository kitchenRepository;
+
+    public KitchenRegistryService(KitchenRepository kitchenRepository) {
+        this.kitchenRepository = kitchenRepository;
+    }
 
     @Transactional
     public Kitchen save(Kitchen kitchen) {
