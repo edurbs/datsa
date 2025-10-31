@@ -1,32 +1,28 @@
 package com.github.edurbs.datsa.api.v1.mapper;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
-
 import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.controller.RestaurantController;
 import com.github.edurbs.datsa.api.v1.dto.output.RestaurantSummaryOutput;
 import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.Restaurant;
+import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 @Component
 public class RestaurantSummaryMapper extends RepresentationModelAssemblerSupport<Restaurant, RestaurantSummaryOutput> {
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+    private final LinksAdder linksAdder;
+    private final MySecurity mySecurity;
 
-    @Autowired
-    private LinksAdder linksAdder;
-
-    @Autowired
-    private MySecurity mySecurity;
-
-    public RestaurantSummaryMapper() {
+    public RestaurantSummaryMapper(ModelMapper modelMapper, LinksAdder linksAdder, MySecurity mySecurity) {
         super(RestaurantController.class, RestaurantSummaryOutput.class);
+        this.modelMapper = modelMapper;
+        this.linksAdder = linksAdder;
+        this.mySecurity = mySecurity;
     }
 
     @Override
