@@ -9,22 +9,23 @@ import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.exception.StateNotFoundException;
 import com.github.edurbs.datsa.domain.service.CityRegistryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/v2/cities")
 public class CityControllerV2 {
 
-    @Autowired
-    private CityRegistryService cityRegistryService;
+    private final CityRegistryService cityRegistryService;
 
-    @Autowired
-    private CityMapperV2 cityMapper;
+    private final CityMapperV2 cityMapper;
+
+    public CityControllerV2(CityRegistryService cityRegistryService, CityMapperV2 cityMapper) {
+        this.cityRegistryService = cityRegistryService;
+        this.cityMapper = cityMapper;
+    }
 
     @GetMapping()
     public CollectionModel<CityOutputV2> listAll() {

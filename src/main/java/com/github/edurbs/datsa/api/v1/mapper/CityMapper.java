@@ -1,12 +1,5 @@
 package com.github.edurbs.datsa.api.v1.mapper;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
-
 import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.controller.CityController;
 import com.github.edurbs.datsa.api.v1.dto.input.CityInput;
@@ -14,21 +7,26 @@ import com.github.edurbs.datsa.api.v1.dto.output.CityOutput;
 import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.City;
 import com.github.edurbs.datsa.domain.model.State;
+import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 @Component
 public class CityMapper extends RepresentationModelAssemblerSupport<City, CityOutput> {
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private LinksAdder linksAdder;
+    private final LinksAdder linksAdder;
 
-    @Autowired
-    private MySecurity mySecurity;
+    private final MySecurity mySecurity;
 
-    public CityMapper() {
+    public CityMapper(ModelMapper modelMapper, LinksAdder linksAdder, MySecurity mySecurity) {
         super(CityController.class, CityOutput.class);
+        this.modelMapper = modelMapper;
+        this.linksAdder = linksAdder;
+        this.mySecurity = mySecurity;
     }
 
     public City toDomain(CityInput cityInput) {

@@ -1,41 +1,33 @@
 package com.github.edurbs.datsa.api.v1.controller;
 
-import jakarta.validation.Valid;
-
-import com.github.edurbs.datsa.api.v1.openapi.controller.CityControllerOpenApi;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.github.edurbs.datsa.api.ResourceUriHelper;
 import com.github.edurbs.datsa.api.v1.dto.input.CityInput;
 import com.github.edurbs.datsa.api.v1.dto.output.CityOutput;
 import com.github.edurbs.datsa.api.v1.mapper.CityMapper;
+import com.github.edurbs.datsa.api.v1.openapi.controller.CityControllerOpenApi;
 import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.exception.CityNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.exception.StateNotFoundException;
 import com.github.edurbs.datsa.domain.service.CityRegistryService;
+import jakarta.validation.Valid;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/cities")
 public class CityController implements CityControllerOpenApi {
 
-    @Autowired
-    private CityRegistryService cityRegistryService;
+    private final CityRegistryService cityRegistryService;
 
-    @Autowired
-    private CityMapper cityMapper;
+    private final CityMapper cityMapper;
+
+    public CityController(CityRegistryService cityRegistryService, CityMapper cityMapper) {
+        this.cityRegistryService = cityRegistryService;
+        this.cityMapper = cityMapper;
+    }
 
     @CheckSecurity.City.CanConsult
     @GetMapping

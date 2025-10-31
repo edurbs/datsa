@@ -1,10 +1,9 @@
 package com.github.edurbs.datsa.api.v2.dto.input;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -15,9 +14,5 @@ public class CityInputV2 {
 
     @NotNull
     private Long stateId;
-
-//    @Valid
-//    @NotNull
-//    private StateIdInput state;
 
 }
