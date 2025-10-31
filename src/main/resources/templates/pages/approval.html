@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -43,12 +43,13 @@
                 <input type="hidden" name="state" th:value="${state}">
 
                 <div th:each="scope: ${scopesToApprove}" class="form-group form-check py-1">
-                    <input class="form-check-input"
-                           type="checkbox"
-                           name="scope"
-                           th:value="${scope}"
-                           th:id="${scope}">
-                    <label class="form-check-label font-weight-bold" th:for="${scope}" th:text="${scope}"></label>
+                    <label class="form-check-label font-weight-bold" th:for="${scope}" th:text="${scope}">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="scope"
+                               th:value="${scope}"
+                               th:id="${scope}">
+                    </label>
                 </div>
 
                 <p th:if="${not #lists.isEmpty(scopesPreviouslyApproved)}">You already approved the permissions below:</p>
