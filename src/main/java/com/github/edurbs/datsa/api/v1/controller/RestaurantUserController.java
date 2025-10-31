@@ -40,9 +40,9 @@ public class RestaurantUserController implements RestaurantUserControllerOpenApi
         collectionModel.add(linksAdder.toRestaurantUsers(restaurantId));
         if(this.mySecurity.canEditAndManageRestaurant(restaurantId)){
             collectionModel.add(linksAdder.toAssociateUser(restaurantId, "associate"));
-            collectionModel.getContent().forEach(userOutput -> {
-                userOutput.add(linksAdder.toDisassociateUser(restaurantId, userOutput.getId(), "disassociate"));
-            });
+            collectionModel.getContent().forEach(userOutput ->
+                userOutput.add(linksAdder.toDisassociateUser(restaurantId, userOutput.getId(), "disassociate"))
+            );
 
         }
         return collectionModel;
