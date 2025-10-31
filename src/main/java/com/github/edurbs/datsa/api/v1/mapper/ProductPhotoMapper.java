@@ -1,31 +1,27 @@
 package com.github.edurbs.datsa.api.v1.mapper;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.stereotype.Component;
-
 import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.controller.RestaurantProductPhotoController;
 import com.github.edurbs.datsa.api.v1.dto.input.ProductPhotoInput;
 import com.github.edurbs.datsa.api.v1.dto.output.ProductPhotoOutput;
 import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.ProductPhoto;
+import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ProductPhotoMapper extends RepresentationModelAssemblerSupport<ProductPhoto, ProductPhotoOutput> {
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+    private final LinksAdder linksAdder;
+    private final MySecurity mySecurity;
 
-    @Autowired
-    private LinksAdder linksAdder;
-
-    @Autowired
-    private MySecurity mySecurity;
-
-    public ProductPhotoMapper() {
+    public ProductPhotoMapper(ModelMapper modelMapper, LinksAdder linksAdder, MySecurity mySecurity) {
         super(RestaurantProductPhotoController.class, ProductPhotoOutput.class );
+        this.modelMapper = modelMapper;
+        this.linksAdder = linksAdder;
+        this.mySecurity = mySecurity;
     }
 
     public ProductPhoto toDomain(ProductPhotoInput inputModel) {
