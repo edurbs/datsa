@@ -130,7 +130,7 @@ class SmtpSenderServiceTest {
     }
 
     @Test
-    void givenMimeMessage_whenCreateMimeMessageHelper_thenReturnsMimeMessageHelper() throws MessagingException {
+    void givenMimeMessage_whenCreateMimeMessageHelper_thenReturnsMimeMessageHelper() {
 
         // When
         MimeMessageHelper helper = sut.createMimeMessageHelper(mimeMessage);
