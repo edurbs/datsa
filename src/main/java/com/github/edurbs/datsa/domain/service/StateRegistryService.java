@@ -1,21 +1,23 @@
 package com.github.edurbs.datsa.domain.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.StateNotFoundException;
 import com.github.edurbs.datsa.domain.model.State;
 import com.github.edurbs.datsa.domain.repository.StateRepository;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class StateRegistryService {
-    @Autowired
-    private StateRepository stateRepository;
+
+    private final StateRepository stateRepository;
+
+    public StateRegistryService(StateRepository stateRepository) {
+        this.stateRepository = stateRepository;
+    }
 
     @Transactional
     public State save(State state) {
