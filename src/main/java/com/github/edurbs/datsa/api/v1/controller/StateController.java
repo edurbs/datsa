@@ -6,22 +6,22 @@ import com.github.edurbs.datsa.api.v1.mapper.StateMapper;
 import com.github.edurbs.datsa.api.v1.openapi.controller.StateControllerOpenApi;
 import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.service.StateRegistryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/v1/states")
 public class StateController implements StateControllerOpenApi {
 
-    @Autowired
-    private StateRegistryService stateRegistryService;
+    private final StateRegistryService stateRegistryService;
+    private final StateMapper stateMapper;
 
-    @Autowired
-    private StateMapper stateMapper;
+    public StateController(StateRegistryService stateRegistryService, StateMapper stateMapper) {
+        this.stateRegistryService = stateRegistryService;
+        this.stateMapper = stateMapper;
+    }
 
     @CheckSecurity.State.CanConsult
     @GetMapping
