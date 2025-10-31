@@ -17,7 +17,6 @@ public class StorageProperties {
 
     private Local local = new Local();
     private S3 s3 = new S3();
-    //private StorageType storageType;
 
     public enum StorageType {
         LOCAL, S3
