@@ -1,18 +1,19 @@
 package com.github.edurbs.datsa.domain.listeners;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionalEventListener;
-
 import com.github.edurbs.datsa.domain.event.OrderConfirmedEvent;
 import com.github.edurbs.datsa.domain.model.Order;
 import com.github.edurbs.datsa.domain.service.EmailSenderService;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 public class UserNotificationOrderConfirmedListener {
 
-    @Autowired
-    EmailSenderService emailSenderService;
+    private final EmailSenderService emailSenderService;
+
+    public UserNotificationOrderConfirmedListener(EmailSenderService emailSenderService) {
+        this.emailSenderService = emailSenderService;
+    }
 
     @TransactionalEventListener
     public void whenOrderConfirmed(OrderConfirmedEvent event){
