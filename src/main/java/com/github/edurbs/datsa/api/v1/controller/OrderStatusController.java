@@ -3,7 +3,6 @@ package com.github.edurbs.datsa.api.v1.controller;
 import com.github.edurbs.datsa.api.v1.openapi.controller.OrderStatusControllerOpenApi;
 import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.service.StatusOrderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/v1/orders/{uuid}")
 public class OrderStatusController implements OrderStatusControllerOpenApi {
 
-    @Autowired
-    private StatusOrderService statusOrderService;
+    private final StatusOrderService statusOrderService;
+
+    public OrderStatusController(StatusOrderService statusOrderService) {
+        this.statusOrderService = statusOrderService;
+    }
 
     @CheckSecurity.Orders.CanManageOrders
     @PutMapping("/confirm")
