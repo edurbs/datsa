@@ -6,7 +6,6 @@ import com.github.edurbs.datsa.api.v2.dto.input.KitchenInputV2;
 import com.github.edurbs.datsa.api.v2.dto.output.KitchenOutputV2;
 import com.github.edurbs.datsa.domain.model.Kitchen;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -14,14 +13,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class KitchenMapperV2 extends RepresentationModelAssemblerSupport<Kitchen, KitchenOutputV2>{
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private LinksAdderV2 linksAdder;
+    private final LinksAdderV2 linksAdder;
 
-    public KitchenMapperV2(){
+    public KitchenMapperV2(ModelMapper modelMapper, LinksAdderV2 linksAdder) {
         super(KitchenControllerV2.class, KitchenOutputV2.class);
+        this.modelMapper = modelMapper;
+        this.linksAdder = linksAdder;
     }
 
     public Kitchen toDomain(KitchenInputV2 kitchenInput) {
