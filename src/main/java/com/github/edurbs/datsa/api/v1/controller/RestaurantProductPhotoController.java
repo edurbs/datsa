@@ -8,11 +8,12 @@ import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.model.Product;
 import com.github.edurbs.datsa.domain.model.ProductPhoto;
-import com.github.edurbs.datsa.domain.service.PhotoStorageService;
 import com.github.edurbs.datsa.domain.service.PhotoStorageService.FetchedPhoto;
 import com.github.edurbs.datsa.domain.service.ProductPhotoCatalogService;
 import com.github.edurbs.datsa.domain.service.ProductRegistryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,26 +23,24 @@ import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/v1/restaurants/{restaurantId}/products/{productId}/photo")
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class RestaurantProductPhotoController implements RestaurantProductPhotoControllerOpenApi {
 
-    @Autowired
     ProductPhotoCatalogService productPhotoCatalogService;
-
-    @Autowired
     ProductRegistryService productRegistryService;
-
-    @Autowired
     ProductPhotoMapper productPhotoMapper;
 
-    @Autowired
-    PhotoStorageService photoStorageService;
+    public RestaurantProductPhotoController(ProductPhotoCatalogService productPhotoCatalogService, ProductRegistryService productRegistryService, ProductPhotoMapper productPhotoMapper) {
+        this.productPhotoCatalogService = productPhotoCatalogService;
+        this.productRegistryService = productRegistryService;
+        this.productPhotoMapper = productPhotoMapper;
+    }
 
     @CheckSecurity.Restaurants.CanEditAndManage
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
