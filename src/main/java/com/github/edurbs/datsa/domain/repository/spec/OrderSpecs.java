@@ -8,6 +8,9 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;
 
 public class OrderSpecs {
+
+    private OrderSpecs(){}
+
     public static Specification<Order> withFilter(OrderFilter filter){
         return (root, query, builder) -> {
             if (query != null && Order.class.equals(query.getResultType())) { // to fix exception when sql count
