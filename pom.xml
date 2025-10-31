@@ -192,7 +192,6 @@
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>${aws-java-sdk-s3.version}</version>
-            <!--            TODO upgrade aws -->
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.logback-extensions/logback-ext-loggly -->
