@@ -9,7 +9,7 @@ import org.springframework.lang.NonNull;
 @EqualsAndHashCode(callSuper = false)
 public class PageWrapper<T> extends PageImpl<T> {
 
-    private Pageable pageable;
+    private final transient Pageable pageable;
 
     public PageWrapper(Page<T> page, Pageable pageable){
         super(page.getContent(), pageable, page.getNumberOfElements());
