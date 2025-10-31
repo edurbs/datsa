@@ -9,7 +9,6 @@ import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +31,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -41,8 +41,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final String GENERIC_USER_ERROR_MESSAGE = "An unexpected internal system error has occurred. Please try again and if the problem persists, contact your system administrator.";
 
-    @Autowired
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
+
+    public ApiExceptionHandler(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @Override
     protected @NonNull ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -55,7 +58,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(@NonNull HttpMediaTypeNotAcceptableException ex, @NonNull  HttpHeaders headers, @NonNull HttpStatusCode status, @NonNull WebRequest request) {
         return ResponseEntity.status(status).headers(headers).build();
     }
 
@@ -81,9 +84,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleGenericException(Exception ex, WebRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         ProblemType problemType = ProblemType.SYSTEM_ERROR;
-        String detail = GENERIC_USER_ERROR_MESSAGE;
         log.error("Context message", ex);
-        Problem problem = createProblemBuilder(status, problemType, detail).build();
+        Problem problem = createProblemBuilder(status, problemType, GENERIC_USER_ERROR_MESSAGE).build();
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }
 
@@ -109,7 +111,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             return handleMethodArgumentTypeMismatchException(
                     methodArgumentTypeMismatchException, headers, status, request);
         }
-        return super.handleTypeMismatch(ex, headers, status, request);
+        return Objects.requireNonNull(super.handleTypeMismatch(ex, headers, status, request));
     }
 
     private ResponseEntity<Object> handleMethodArgumentTypeMismatchException(
@@ -241,7 +243,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                     .userMessage(GENERIC_USER_ERROR_MESSAGE+ " "+ex.getMessage())
                     .build();
         }
-        return super.handleExceptionInternal(ex, body, headers, status, request);
+        return Objects.requireNonNull(super.handleExceptionInternal(ex, body, headers, status, request));
     }
 
     private Problem.ProblemBuilder createProblemBuilder(HttpStatusCode status, ProblemType problemType, String detail) {
