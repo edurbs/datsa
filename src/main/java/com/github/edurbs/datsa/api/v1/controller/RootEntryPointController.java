@@ -3,7 +3,6 @@ package com.github.edurbs.datsa.api.v1.controller;
 import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.core.security.MySecurity;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1")
 public class RootEntryPointController {
 
+    private final LinksAdder linksAdder;
+    private final MySecurity mySecurity;
 
-    @Autowired
-    private LinksAdder linksAdder;
-
-    @Autowired
-    private MySecurity mySecurity;
-
+    public RootEntryPointController(LinksAdder linksAdder, MySecurity mySecurity) {
+        this.linksAdder = linksAdder;
+        this.mySecurity = mySecurity;
+    }
 
     private static class RootEntryPointModel extends RepresentationModel<RootEntryPointModel>{}
 
