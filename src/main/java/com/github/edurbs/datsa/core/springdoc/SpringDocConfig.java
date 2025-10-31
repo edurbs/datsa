@@ -43,8 +43,6 @@ public class SpringDocConfig {
 
     @Bean
     public OpenAPI openAPI() {
-//        SpringDocUtils.getConfig()
-//                .replaceWithClass(org.springframework.hateoas.Links.class, LinksModelOpenApi.class);
         return new OpenAPI()
             .info(new Info()
                 .title("Datsa API")
