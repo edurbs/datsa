@@ -32,7 +32,7 @@ public class ProductPhotoCatalogService {
         if(currentPhoto.isPresent()){
             currentPhotoFileName = currentPhoto.get().getFileName();
             productRepository.delete(currentPhoto.get());
-        };
+        }
         var savePhotoOnDb = productRepository.save(photo);
         productRepository.flush(); // avoid problems when saving photo data file
         NewPhoto newPhoto = NewPhoto.builder()
