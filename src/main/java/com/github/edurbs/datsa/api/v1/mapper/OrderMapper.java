@@ -1,32 +1,28 @@
 package com.github.edurbs.datsa.api.v1.mapper;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
-
 import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.controller.OrderController;
 import com.github.edurbs.datsa.api.v1.dto.input.OrderInput;
 import com.github.edurbs.datsa.api.v1.dto.output.OrderOutput;
 import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.Order;
+import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 @Component
 public class OrderMapper extends RepresentationModelAssemblerSupport<Order, OrderOutput> {
 
-    @Autowired
-    private LinksAdder linksAdder;
+    private final LinksAdder linksAdder;
+    private final ModelMapper modelMapper;
+    private final MySecurity mySecurity;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
-    private MySecurity mySecurity;
-
-    public OrderMapper() {
+    public OrderMapper(Class<?> controllerClass, Class<OrderOutput> resourceType, LinksAdder linksAdder, ModelMapper modelMapper, MySecurity mySecurity) {
         super(OrderController.class, OrderOutput.class);
+        this.linksAdder = linksAdder;
+        this.modelMapper = modelMapper;
+        this.mySecurity = mySecurity;
     }
 
     public Order toDomain(OrderInput inputModel) {
