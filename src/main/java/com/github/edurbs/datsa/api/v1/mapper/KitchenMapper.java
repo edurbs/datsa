@@ -1,32 +1,30 @@
 package com.github.edurbs.datsa.api.v1.mapper;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
-
 import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.controller.KitchenController;
 import com.github.edurbs.datsa.api.v1.dto.input.KitchenInput;
 import com.github.edurbs.datsa.api.v1.dto.output.KitchenOutput;
 import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.Kitchen;
+import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 @Component
 public class KitchenMapper extends RepresentationModelAssemblerSupport<Kitchen, KitchenOutput>{
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private LinksAdder linksAdder;
+    private final LinksAdder linksAdder;
 
-    @Autowired
-    private MySecurity mySecurity;
+    private final MySecurity mySecurity;
 
-    public KitchenMapper(){
+    public KitchenMapper(ModelMapper modelMapper, LinksAdder linksAdder, MySecurity mySecurity) {
         super(KitchenController.class, KitchenOutput.class);
+        this.modelMapper = modelMapper;
+        this.linksAdder = linksAdder;
+        this.mySecurity = mySecurity;
     }
 
     public Kitchen toDomain(KitchenInput kitchenInput) {
