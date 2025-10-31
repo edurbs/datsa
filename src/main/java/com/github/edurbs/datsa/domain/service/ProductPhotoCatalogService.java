@@ -1,26 +1,26 @@
 package com.github.edurbs.datsa.domain.service;
 
-import java.io.InputStream;
-import java.util.Optional;
-
 import com.github.edurbs.datsa.domain.exception.ProductPhotoNotFoundException;
 import com.github.edurbs.datsa.domain.model.Product;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.github.edurbs.datsa.domain.model.ProductPhoto;
 import com.github.edurbs.datsa.domain.repository.ProductRepository;
 import com.github.edurbs.datsa.domain.service.PhotoStorageService.NewPhoto;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.InputStream;
+import java.util.Optional;
 
 @Service
 public class ProductPhotoCatalogService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final PhotoStorageService photoStorageService;
 
-    @Autowired
-    private PhotoStorageService photoStorageService;
+    public ProductPhotoCatalogService(ProductRepository productRepository, PhotoStorageService photoStorageService) {
+        this.productRepository = productRepository;
+        this.photoStorageService = photoStorageService;
+    }
 
     @Transactional
     public ProductPhoto save(ProductPhoto photo, InputStream photoData){
