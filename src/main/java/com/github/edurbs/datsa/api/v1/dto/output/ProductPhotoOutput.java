@@ -2,6 +2,7 @@ package com.github.edurbs.datsa.api.v1.dto.output;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -10,6 +11,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode(callSuper = false)
 public class ProductPhotoOutput extends RepresentationModel<ProductPhotoOutput> {
 
     @Schema(example = "filename.jpg")

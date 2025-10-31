@@ -2,6 +2,7 @@ package com.github.edurbs.datsa.api.v1.dto.output;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -15,6 +16,7 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode(callSuper = false)
 public class OrderSummaryOutput extends RepresentationModel<OrderSummaryOutput> {
 
     @Schema(example = "eb1b17c8-5f0d-464e-8384-bd38f60b9784")

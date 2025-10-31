@@ -1,6 +1,7 @@
 package com.github.edurbs.datsa.api.v1.dto.output;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 @Relation(collectionRelation = "restaurants")
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = false)
 public class RestaurantSummaryOutput extends RepresentationModel<RestaurantSummaryOutput> {
 
     @Schema(example = "1")

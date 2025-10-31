@@ -1,10 +1,12 @@
 package com.github.edurbs.datsa.core.data;
 
+import lombok.EqualsAndHashCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 
+@EqualsAndHashCode(callSuper = false)
 public class PageWrapper<T> extends PageImpl<T> {
 
     private Pageable pageable;

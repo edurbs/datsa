@@ -1,6 +1,7 @@
 package com.github.edurbs.datsa.api.v1.dto.output;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
@@ -13,6 +14,7 @@ import java.util.List;
 @Relation(collectionRelation = "orders")
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = false)
 public class OrderOutput extends RepresentationModel<OrderOutput> {
 
     @Schema(example = "eb1b17c8-5f0d-464e-8384-bd38f60b9784")

@@ -1,6 +1,7 @@
 package com.github.edurbs.datsa.api.v1.dto.output;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = false)
 public class OrderItemOutput extends RepresentationModel<OrderItemOutput> {
 
     @Schema(example = "1")
