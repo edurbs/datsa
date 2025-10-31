@@ -104,7 +104,8 @@ class LocalPhotoStorageServiceTest {
                     .thenThrow(new IOException());
 
             // Act & Assert
-            assertThrows(StorageException.class, () -> sut.delete(newPhoto.getFileName()));
+            String fileName = newPhoto.getFileName();
+            assertThrows(StorageException.class, () -> sut.delete(fileName));
         }
     }
 
