@@ -1,12 +1,5 @@
 package com.github.edurbs.datsa.api.v1.mapper;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
-
 import com.github.edurbs.datsa.api.v1.LinksAdder;
 import com.github.edurbs.datsa.api.v1.controller.UserController;
 import com.github.edurbs.datsa.api.v1.dto.input.UserInput;
@@ -14,23 +7,25 @@ import com.github.edurbs.datsa.api.v1.dto.input.UserUpdateInput;
 import com.github.edurbs.datsa.api.v1.dto.output.UserOutput;
 import com.github.edurbs.datsa.core.security.MySecurity;
 import com.github.edurbs.datsa.domain.model.MyUser;
+import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper extends RepresentationModelAssemblerSupport<MyUser, UserOutput> {
 
-    @Autowired
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
+    private final LinksAdder linksAdder;
+    private final MySecurity mySecurity;
 
-    @Autowired
-    private LinksAdder linksAdder;
-
-    @Autowired
-    private MySecurity mySecurity;
-
-    public UserMapper() {
+    public UserMapper(ModelMapper mapper, LinksAdder linksAdder, MySecurity mySecurity) {
         super(UserController.class, UserOutput.class);
+        this.mapper = mapper;
+        this.linksAdder = linksAdder;
+        this.mySecurity = mySecurity;
     }
-
 
     public MyUser toDomain(UserInput inputModel) {
         return mapper.map(inputModel, MyUser.class);
