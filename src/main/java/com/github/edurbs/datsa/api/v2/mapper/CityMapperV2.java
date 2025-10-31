@@ -7,7 +7,6 @@ import com.github.edurbs.datsa.api.v2.dto.output.CityOutputV2;
 import com.github.edurbs.datsa.domain.model.City;
 import com.github.edurbs.datsa.domain.model.State;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.lang.NonNull;
@@ -16,14 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class CityMapperV2 extends RepresentationModelAssemblerSupport<City, CityOutputV2> {
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private LinksAdderV2 linksAdder;
+    private final LinksAdderV2 linksAdder;
 
-    public CityMapperV2() {
+    public CityMapperV2(ModelMapper modelMapper, LinksAdderV2 linksAdder) {
         super(CityControllerV2.class, CityOutputV2.class);
+        this.modelMapper = modelMapper;
+        this.linksAdder = linksAdder;
     }
 
     public City toDomain(CityInputV2 cityInput) {
@@ -39,14 +38,13 @@ public class CityMapperV2 extends RepresentationModelAssemblerSupport<City, City
     public @NonNull CityOutputV2 toModel(@NonNull City city) {
         CityOutputV2 cityOutput = createModelWithId(city.getId(), city);
         modelMapper.map(city, cityOutput);
-        //cityOutput.getState().add(linksAdder.toState(cityOutput.getState().getId()));
         return cityOutput;
     }
 
     @Override
     public @NonNull CollectionModel<CityOutputV2> toCollectionModel(@NonNull Iterable<? extends City> entities) {
         return super.toCollectionModel(entities)
-                // add the link to the this in the bottom
+                // add the link to the "this" in the bottom
                 .add(linksAdder.toCities());
     }
 
