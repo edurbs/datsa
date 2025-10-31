@@ -1,25 +1,26 @@
 package com.github.edurbs.datsa.domain.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.github.edurbs.datsa.domain.exception.CityNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelInUseException;
 import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.model.City;
 import com.github.edurbs.datsa.domain.repository.CityRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class CityRegistryService {
 
-    @Autowired
-    private CityRepository cityRepository;
+    private final CityRepository cityRepository;
 
-    @Autowired
-    private StateRegistryService stateRegistryService;
+    private final StateRegistryService stateRegistryService;
+
+    public CityRegistryService(CityRepository cityRepository, StateRegistryService stateRegistryService) {
+        this.cityRepository = cityRepository;
+        this.stateRegistryService = stateRegistryService;
+    }
 
     @Transactional
     public City save(City city) {
