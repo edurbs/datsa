@@ -41,6 +41,8 @@ import java.util.Set;
 @Configuration
 public class AuthorizationServerConfig {
 
+    public static final String LOGIN = "/login";
+
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE) // the first is filter to Auth Server
     public SecurityFilterChain authFilterChain(HttpSecurity http) throws Exception {
@@ -50,18 +52,16 @@ public class AuthorizationServerConfig {
                 customizer -> customizer.consentPage("/oauth2/consent"));
         RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
         http.securityMatcher(endpointsMatcher)
-                .authorizeHttpRequests(authorize ->{
-                    authorize.anyRequest().authenticated();
-                })
+                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
                 .csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher))
-                .formLogin(customizer -> customizer.loginPage("/login"))
-                .exceptionHandling(exceptions -> {
-                    exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
-                })
+                .formLogin(customizer -> customizer.loginPage(LOGIN))
+                .exceptionHandling(exceptions ->
+                    exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(LOGIN))
+                )
                 .with(authorizationServerConfigurer, Customizer.withDefaults());
 
         return http
-                .formLogin(customizer -> customizer.loginPage("/login"))
+                .formLogin(customizer -> customizer.loginPage(LOGIN))
                 .build();
     }
 
