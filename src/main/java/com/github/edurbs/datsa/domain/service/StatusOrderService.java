@@ -1,21 +1,20 @@
 package com.github.edurbs.datsa.domain.service;
 
-import jakarta.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.github.edurbs.datsa.domain.model.Order;
 import com.github.edurbs.datsa.domain.repository.OrderRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class StatusOrderService {
 
-    @Autowired
-    private OrderRegistryService orderRegistryService;
+    private final OrderRegistryService orderRegistryService;
+    private final OrderRepository orderRepository;
 
-    @Autowired
-    private OrderRepository orderRepository;
+    public StatusOrderService(OrderRegistryService orderRegistryService, OrderRepository orderRepository) {
+        this.orderRegistryService = orderRegistryService;
+        this.orderRepository = orderRepository;
+    }
 
     @Transactional
     public void confirm(String uuid){
