@@ -1,22 +1,23 @@
 package com.github.edurbs.datsa.core.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.edurbs.datsa.domain.repository.OrderRepository;
+import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
-import com.github.edurbs.datsa.domain.repository.OrderRepository;
-import com.github.edurbs.datsa.domain.repository.RestaurantRepository;
-
 @Component
 public class MySecurity {
 
-    @Autowired
-    private RestaurantRepository restaurantRepository;
+    private final RestaurantRepository restaurantRepository;
 
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+
+    public MySecurity(RestaurantRepository restaurantRepository, OrderRepository orderRepository) {
+        this.restaurantRepository = restaurantRepository;
+        this.orderRepository = orderRepository;
+    }
 
     public Authentication getAuthentication(){
         return SecurityContextHolder.getContext().getAuthentication();
