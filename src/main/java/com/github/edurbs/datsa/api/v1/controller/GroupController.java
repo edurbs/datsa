@@ -8,7 +8,6 @@ import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.exception.GroupNotFoundException;
 import com.github.edurbs.datsa.domain.exception.ModelNotFoundException;
 import com.github.edurbs.datsa.domain.service.GroupRegistryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/groups")
 public class GroupController implements GroupControllerOpenApi {
 
-    @Autowired
-    private GroupRegistryService registryService;
+    private final GroupRegistryService registryService;
 
-    @Autowired
-    private GroupMapper mapper;
+    private final GroupMapper mapper;
+
+    public GroupController(GroupRegistryService registryService, GroupMapper mapper) {
+        this.registryService = registryService;
+        this.mapper = mapper;
+    }
 
     @CheckSecurity.UsersGroupsPermissions.CanConsult
     @GetMapping
