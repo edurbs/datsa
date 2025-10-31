@@ -18,7 +18,7 @@ public class OrderMapper extends RepresentationModelAssemblerSupport<Order, Orde
     private final ModelMapper modelMapper;
     private final MySecurity mySecurity;
 
-    public OrderMapper(Class<?> controllerClass, Class<OrderOutput> resourceType, LinksAdder linksAdder, ModelMapper modelMapper, MySecurity mySecurity) {
+    public OrderMapper(LinksAdder linksAdder, ModelMapper modelMapper, MySecurity mySecurity) {
         super(OrderController.class, OrderOutput.class);
         this.linksAdder = linksAdder;
         this.modelMapper = modelMapper;
