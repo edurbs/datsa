@@ -72,7 +72,7 @@ public class SpringDocConfig {
 
     @Bean
     public OpenApiCustomizer openApiCustomizer() {
-        return openApi -> {
+        return openApi ->
             openApi.getPaths()
                 .values()
                 .forEach(pathItem -> pathItem.readOperationsMap()
@@ -104,13 +104,12 @@ public class SpringDocConfig {
 
                     })
                 );
-        };
     }
 
     private HashMap<String, ApiResponse> getResponse(String code) {
-        HashMap<String, ApiResponse> responseMap = new HashMap<>();
-        responseMap.put(code, getResponseMap().get(code));
-        return responseMap;
+        HashMap<String, ApiResponse> newResponseMap = new HashMap<>();
+        newResponseMap.put(code, getResponseMap().get(code));
+        return newResponseMap;
     }
 
     private HashMap<String, ApiResponse> getResponseMap() {
