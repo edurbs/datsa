@@ -9,23 +9,24 @@ import com.github.edurbs.datsa.api.v1.openapi.controller.UserControllerOpenApi;
 import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.model.MyUser;
 import com.github.edurbs.datsa.domain.service.UserRegistryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/v1/users")
 public class UserController implements UserControllerOpenApi {
 
-    @Autowired
-    private UserMapper mapper;
+    private final UserMapper mapper;
+    private final UserRegistryService service;
 
-    @Autowired
-    private UserRegistryService service;
+    public UserController(UserMapper mapper, UserRegistryService service) {
+        this.mapper = mapper;
+        this.service = service;
+    }
 
     @CheckSecurity.UsersGroupsPermissions.CanConsult
     @GetMapping
