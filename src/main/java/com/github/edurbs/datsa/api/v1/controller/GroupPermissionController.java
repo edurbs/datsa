@@ -43,9 +43,9 @@ public class GroupPermissionController implements GroupPermissionControllerOpenA
         permissionOutputs.add(linksAdder.toPermissions(groupId, "permissions"));
         if(this.mySecurity.canEditUsersGroupsPermissions()){
             permissionOutputs.add(linksAdder.toAssociatePermissions(groupId, "associate"));
-            permissionOutputs.getContent().forEach(permissionOutput -> {
-                permissionOutput.add(linksAdder.toDissociatePermission(groupId, permissionOutput.getId(), "dissociate"));
-            });
+            permissionOutputs.getContent().forEach(permissionOutput ->
+                permissionOutput.add(linksAdder.toDissociatePermission(groupId, permissionOutput.getId(), "dissociate"))
+            );
         }
         return  permissionOutputs;
     }
