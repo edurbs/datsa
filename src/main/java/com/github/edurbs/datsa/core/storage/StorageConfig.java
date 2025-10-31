@@ -39,13 +39,4 @@ public class StorageConfig {
                 .build();
     }
 
-//    @Bean
-//    public PhotoStorageService photoStorageService(S3PhotoStorageService s3, LocalPhotoStorageService local) {
-//        if (StorageProperties.StorageType.S3.equals(storageProperties.getStorageType())) {
-//            return s3;
-//        } else {
-//            return local;
-//        }
-//    }
-
 }
