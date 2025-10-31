@@ -7,8 +7,8 @@ import com.github.edurbs.datsa.api.v1.openapi.controller.KitchenControllerOpenAp
 import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.model.Kitchen;
 import com.github.edurbs.datsa.domain.service.KitchenRegistryService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -16,21 +16,22 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-
 @RestController
 @RequestMapping("/v1/kitchens")
 @Slf4j
 public class KitchenController implements KitchenControllerOpenApi {
 
-    @Autowired
-    private KitchenRegistryService kitchenRegistryService;
+    private final KitchenRegistryService kitchenRegistryService;
 
-    @Autowired
-    private KitchenMapper kitchenMapper;
+    private final KitchenMapper kitchenMapper;
 
-    @Autowired
-    private PagedResourcesAssembler<Kitchen> pagedResourcesAssembler;
+    private final PagedResourcesAssembler<Kitchen> pagedResourcesAssembler;
+
+    public KitchenController(KitchenRegistryService kitchenRegistryService, KitchenMapper kitchenMapper, PagedResourcesAssembler<Kitchen> pagedResourcesAssembler) {
+        this.kitchenRegistryService = kitchenRegistryService;
+        this.kitchenMapper = kitchenMapper;
+        this.pagedResourcesAssembler = pagedResourcesAssembler;
+    }
 
     @CheckSecurity.Kitchens.CanConsult
     @GetMapping()
