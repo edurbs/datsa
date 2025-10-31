@@ -6,7 +6,7 @@ import com.github.edurbs.datsa.api.v1.mapper.PaymentMethodMapper;
 import com.github.edurbs.datsa.api.v1.openapi.controller.PaymentMethodControllerOpenApi;
 import com.github.edurbs.datsa.core.security.CheckSecurity;
 import com.github.edurbs.datsa.domain.service.PaymentMethodRegistryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
-import jakarta.validation.Valid;
 import java.time.OffsetDateTime;
 import java.util.concurrent.TimeUnit;
 
@@ -24,12 +23,13 @@ import java.util.concurrent.TimeUnit;
 public class PaymentMethodController implements PaymentMethodControllerOpenApi {
 
     private static final String ETAG_NOT_MODIFIED = "0";
+    private final PaymentMethodRegistryService registryService;
+    private final PaymentMethodMapper mapper;
 
-    @Autowired
-    private PaymentMethodRegistryService registryService;
-
-    @Autowired
-    private PaymentMethodMapper mapper;
+    public PaymentMethodController(PaymentMethodRegistryService registryService, PaymentMethodMapper mapper) {
+        this.registryService = registryService;
+        this.mapper = mapper;
+    }
 
     @CheckSecurity.PaymentMethods.CanConsult
     @GetMapping
