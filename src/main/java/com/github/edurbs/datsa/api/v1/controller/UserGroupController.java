@@ -32,9 +32,9 @@ public class UserGroupController implements UserGroupControllerOpenApi {
         CollectionModel<GroupOutput>  groupOutputCollectionModel = groupMapper.toCollectionModel(userRegistryService.getGroups(userId));
         groupOutputCollectionModel.removeLinks();
         if(this.mySecurity.canEditUsersGroupsPermissions()){
-            groupOutputCollectionModel.getContent().forEach(groupOutput -> {
-                groupOutput.add(linksAdder.toDissociateGroup(userId, groupOutput.getId(), "dissociate"));
-            });
+            groupOutputCollectionModel.getContent().forEach(groupOutput ->
+                groupOutput.add(linksAdder.toDissociateGroup(userId, groupOutput.getId(), "dissociate"))
+            );
             groupOutputCollectionModel.add(linksAdder.toAssociateGroup(userId, "associate"));
         }
         return groupOutputCollectionModel;
