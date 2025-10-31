@@ -35,10 +35,10 @@ public class RestaurantPaymentMethodController implements RestaurantPaymentMetho
         collectionModel.add(linksAdder.toRestaurantPaymentMethods(restaurantId));
         if (this.mySecurity.canEditAndManageRestaurant(restaurantId)) {
             collectionModel.add(linksAdder.associatePaymentMethod(restaurantId, "associate"));
-            collectionModel.getContent().forEach(paymentMethod -> {
+            collectionModel.getContent().forEach(paymentMethod ->
                 paymentMethod.add(
-                        linksAdder.toDisassociatePaymentMethod(restaurantId, paymentMethod.getId(), "disassociate"));
-            });
+                        linksAdder.toDisassociatePaymentMethod(restaurantId, paymentMethod.getId(), "disassociate"))
+            );
         }
         return collectionModel;
 
