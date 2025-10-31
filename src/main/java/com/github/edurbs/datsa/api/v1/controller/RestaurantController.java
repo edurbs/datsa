@@ -14,13 +14,12 @@ import com.github.edurbs.datsa.domain.exception.ModelValidationException;
 import com.github.edurbs.datsa.domain.exception.RestaurantNotFoundException;
 import com.github.edurbs.datsa.domain.exception.StateNotFoundException;
 import com.github.edurbs.datsa.domain.service.RestaurantRegistryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -28,17 +27,17 @@ import java.util.List;
 @RequestMapping("/v1/restaurants")
 public class RestaurantController implements RestaurantControllerOpenApi {
 
-    @Autowired
-    private RestaurantRegistryService restaurantRegistryService;
+    private final RestaurantRegistryService restaurantRegistryService;
+    private final RestaurantMapper restaurantMapper;
+    private final RestaurantSummaryMapper restaurantSummaryMapper;
+    private final RestaurantNameMapper restaurantNameMapper;
 
-    @Autowired
-    private RestaurantMapper restaurantMapper;
-
-    @Autowired
-    private RestaurantSummaryMapper restaurantSummaryMapper;
-
-    @Autowired
-    private RestaurantNameMapper restaurantNameMapper;
+    public RestaurantController(RestaurantRegistryService restaurantRegistryService, RestaurantMapper restaurantMapper, RestaurantSummaryMapper restaurantSummaryMapper, RestaurantNameMapper restaurantNameMapper) {
+        this.restaurantRegistryService = restaurantRegistryService;
+        this.restaurantMapper = restaurantMapper;
+        this.restaurantSummaryMapper = restaurantSummaryMapper;
+        this.restaurantNameMapper = restaurantNameMapper;
+    }
 
     @CheckSecurity.Restaurants.CanConsult
     @GetMapping
