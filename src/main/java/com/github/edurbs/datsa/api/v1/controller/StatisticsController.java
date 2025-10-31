@@ -9,7 +9,6 @@ import com.github.edurbs.datsa.domain.service.DailySalesReportService;
 import com.github.edurbs.datsa.domain.service.DailySalesService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -23,17 +22,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/v1/statistics")
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class StatisticsController implements StatisticsControllerOpenApi {
 
-    @Autowired
     DailySalesService dailySalesService;
-
-    @Autowired
     DailySalesReportService dailySalesReportService;
-
-    @Autowired
     LinksAdder linksAdder;
+
+    public StatisticsController(DailySalesService dailySalesService, DailySalesReportService dailySalesReportService, LinksAdder linksAdder) {
+        this.dailySalesService = dailySalesService;
+        this.dailySalesReportService = dailySalesReportService;
+        this.linksAdder = linksAdder;
+    }
 
     @CheckSecurity.Statistics.CanConsult
     @GetMapping
