@@ -27,6 +27,7 @@ class StateRegistryServiceTest {
 
     @InjectMocks
     StateRegistryService sut;
+
     private State newState;
     private State stateWithId;
 
